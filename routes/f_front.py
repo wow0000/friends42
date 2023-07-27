@@ -121,24 +121,6 @@ def friends_tmp(userid):
 	return render_template('friends.html', friends=friend_list, theme=theme)
 
 
-@app.route('/friends/demo_speed_test/donotuse')
-def demo():
-	return render_template('friends.html', friends=[
-		{'id': 129333, 'who': 129333, 'has': 129333, 'relation': 0, 'name': 'psage',
-		 'image': None,
-		 'image_medium': None,
-		 'pool': 'august 2022', 'lang': 'fr', 'active': '2023-06-23 23:02:02', 'campus': 1, 'position': None,
-		 'last_active': 'depuis un mois'}, {'id': 91771, 'who': 129333, 'has': 91771, 'relation': 0, 'name': 'tbrowang',
-		                                    'image': 'https://cdn.intra.42.fr/users/add6b6635f86243b57282b5e4b087e53/pingu.png',
-		                                    'image_medium': 'https://cdn.intra.42.fr/users/add6b6635f86243b57282b5e4b087e53/pingu.png',
-		                                    'pool': 'july 2021', 'lang': 'fr', 'active': '2023-07-24 21:49:28',
-		                                    'campus': 1, 'position': None, 'last_active': 'depuis 6 heures'},
-		{'id': 130128, 'who': 129333, 'has': 130128, 'relation': 0, 'name': 'tesvienn',
-		 'image': 'https://cdn.intra.42.fr/users/c370157bfdffaeaa1911d955ad7ddb5b/tesvienn.gif',
-		 'image_medium': 'https://cdn.intra.42.fr/users/10a801c33a57baf821283f94e4e7a42b/medium_tesvienn.gif',
-		 'pool': 'august 2022', 'lang': 'fr', 'active': None, 'campus': 53, 'position': None, 'last_active': ''}])
-
-
 # Manual things that need to be routed on /
 
 @app.route('/static/<path:path>')
