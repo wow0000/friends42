@@ -1,0 +1,362 @@
+{% extends 'template.html' %}
+{% block css %}
+	<style>
+		.input-size {
+			width: 6.5rem;
+		}
+
+		.addition_card {
+			background-color: #27ae60;
+			color: #fff;
+			font-weight: bold;
+			font-size: 1.2rem;
+		}
+
+		.modification_card {
+			background-color: #de8a10;
+			color: #fff;
+			font-weight: bold;
+			font-size: 1.2rem;
+		}
+
+		.suppression_card {
+			background-color: #c0392b;
+			color: #fff;
+			font-weight: bold;
+			font-size: 1.2rem;
+		}
+
+		.date {
+			text-align: center;
+		}
+
+		.card {
+			margin-top: 0.4rem;
+		}
+	</style>
+{% endblock %}
+{% block content %}
+
+	<div class="container">
+		<div class="row mt-3">
+			<div class="col-md-2 p-1 rounded">
+				<ul class="list-group">
+					<button type="button" class="list-group-item settings-switcher list-group-item-action active"
+					        data-category="profile" aria-current="true">
+						<i class="fa-solid fa-user"></i> Profile
+					</button>
+					<button type="button" class="list-group-item settings-switcher list-group-item-action"
+					        data-category="settings">
+						<i class="fa-solid fa-gear"></i> Paramètres
+					</button>
+					<button type="button" class="list-group-item settings-switcher list-group-item-action"
+					        data-category="sessions">
+						<i class="fa-solid fa-key"></i> Sessions
+					</button>
+					<button type="button" class="list-group-item settings-switcher list-group-item-action"
+					        data-category="questions">
+						<i class="fa-solid fa-question-circle"></i> Questions
+					</button>
+					<button type="button" class="list-group-item settings-switcher list-group-item-action"
+					        data-category="changelog">
+						<i class="fa-solid fa-newspaper"></i> Changelog
+					</button>
+				</ul>
+			</div>
+			<div class="col-md-9">
+				<div id="profile">
+					<form action="/settings/profile" method="post" id="form-settings-profile">
+						<div class="input-group mb-3">
+							<span class="input-group-text input-size" id="github-input">
+								<i class="fa-brands fa-github"></i>&nbsp;GitHub
+							</span>
+							<input type="text" name="github" class="form-control"
+							       value="{{ '' if user['github'] == None else user.github }}"
+							       placeholder="https://github.com/username" aria-label="github link"
+							       aria-describedby="github-input">
+						</div>
+						<div class="input-group mb-3">
+							<span class="input-group-text input-size" id="discord-input">
+								<i class="fa-brands fa-discord"></i>&nbsp;Discord
+							</span>
+							<input type="text" name="discord" class="form-control"
+							       value="{{ '' if user['discord'] == None else user.discord }}"
+							       placeholder="Norminet#1234" aria-label="discord tag"
+							       aria-describedby="discord-input">
+						</div>
+						<div class="input-group mb-3">
+							<span class="input-group-text input-size" id="website-input"><i
+									class="fa-solid fa-globe"></i>&nbsp;Website</span>
+							<input type="text" name="website" class="form-control"
+							       value="{{ '' if user['website'] == None else user.website }}"
+							       placeholder="https://example.com" aria-label="Website url"
+							       aria-describedby="website-input">
+						</div>
+						<div class="form-floating">
+							<textarea class="form-control" name="description" id="biographyArea" style="height: 100px"
+							          maxlength="1500">{{ '' if user['recit'] == None else user.recit }}</textarea>
+							<label for="biographyArea">Biographie (<span
+									id="biocounter">{{ len(user['recit'] or '') or 0 }}</span>/1500)</label>
+						</div>
+						<button type="submit" class="btn btn-primary mt-2">Sauvegarder</button>
+						<button type="submit" class="btn btn-secondary mt-2"
+						        onclick="location.href = '/profile/{{ user.name }}';">Voir mon profil
+						</button>
+					</form>
+				</div>
+				<div hidden id="settings">
+					<!-- Telegram -->
+					<div class="card m-1">
+						<div class="card-body">
+							<h5 class="card-title"><i class="fa-solid fa-bell"></i> Notifications</h5>
+							{% if not notif %}
+								<a hidden id="redirect" href="https://friends42.fr/settings/">
+									Cliquez-ici pour aller sur friends42.fr
+								</a>
+								<script async src="https://telegram.org/js/telegram-widget.js?22"
+								        data-telegram-login="friends42bot"
+								        data-size="large" data-userpic="false" data-onauth="onTelegramAuth(user)"
+								        data-request-access="write"></script>
+							{% else %}
+								<p>
+									Compte lié avec l'id: <kbd>{{ notif.telegram_id }}</kbd><br>
+									Les notifications de connexions ne fonctionnent uniquement si vous êtes tout deux en
+									ami
+									proche. <i class="fa-solid fa-star text-warning"></i>
+								</p>
+								<div class="form-check mb-3">
+									<input class="form-check-input" {{ 'checked' if notif.enabled else '' }} type="checkbox" value="" id="tg-enabled">
+									<label class="form-check-label" for="tg-enabled">
+										Recevoir les notifications
+									</label>
+								</div>
+
+								<div class="mb-3">
+									<label for="tg-msg" class="form-label">Message à recevoir</label>
+									<input type="email" class="form-control" id="tg-msg" value="{{ notif.message if notif.message else '' }}" placeholder="🧑‍💻 |id| s'est connecté en |dump|">
+								</div>
+
+								<button class="btn btn-primary" onclick="tg_save();">Sauvegarder</button>
+								<button class="btn btn-danger" onclick="tg_unlink();">Délier le compte</button>
+							{% endif %}
+						</div>
+					</div>
+					<!-- Custom theme -->
+					<div class="card m-1">
+						<div class="card-body">
+							<h5 class="card-title"><i class="fa-solid fa-paint-roller"></i> Thème</h5>
+							<p>
+								Vous pouvez insérer un style CSS et du Javascript pour créer des thèmes et extension
+								personnalisé.
+								Ils seront chargé à chaque page. (5 000 caractères maximum)<br>
+								<i class="fa-solid fa-warning text-warning"></i>Si le site est inaccessible suite à un
+								changement, accédez à
+								<a href="/reset">https://friends42.fr/reset</a>
+							</p>
+							<div class="form-check mb-3">
+								<input class="form-check-input" {{ 'checked' if theme.enabled == 1 else '' }} type="checkbox" value="" id="theme-enabled">
+								<label class="form-check-label" for="theme-enabled">
+									Activer le thème
+								</label>
+							</div>
+
+							<div class="row mb-3">
+								<div class="col-md">
+									<h6 class="card-title">JavaScript</h6>
+									<textarea id="theme-js" class="form-control" maxlength="5000">{{ theme.javascript }}</textarea>
+								</div>
+								<div class="col-md">
+									<h6 class="card-title">CSS</h6>
+									<textarea id="theme-css" class="form-control" maxlength="5000">{{ theme.css }}</textarea>
+								</div>
+							</div>
+							<button class="btn btn-primary" onclick="theme_save();">Sauvegarder</button>
+							<button class="btn btn-primary" onclick="theme_reload();">Sauvegarder & Recharger la page
+							</button>
+						</div>
+					</div>
+					<!-- User -->
+					<div class="card m-1">
+						<div class="card-body">
+							<h5 class="card-title"><i class="fa-solid fa-user"></i> Utilisateur</h5>
+							<button class="btn btn-danger" id="disconnect">Se déconnecter</button>
+						</div>
+					</div>
+				</div>
+				<div hidden id="sessions">
+					<table class="table table-striped">
+						<thead>
+						<tr>
+							<th scope="col">Création</th>
+							<th scope="col">User-Agent</th>
+						</tr>
+						</thead>
+						<tbody>
+						{% for cookie in cookies %}
+							<tr>
+								<td>{{ cookie.creation }}</td>
+								<td>{{ cookie.name }}</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+					<button class="btn btn-danger" onclick="reset_sessions();">Déconnecter toutes les sessions</button>
+				</div>
+				<div hidden id="changelog">
+					{% include 'changelog.html' %}
+				</div>
+				<div hidden id="questions">
+					{% include 'questions.html' %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		addEventListener("load", (event) => {
+			if (window.location.hostname !== "friends42.fr") {
+				if (document.getElementById('redirect')) {
+					document.getElementById('redirect').hidden = false;
+					document.getElementById('telegram-login-friends42bot').hidden = true;
+				}
+			}
+		});
+
+		function onTelegramAuth(user) {
+			console.log(user)
+			fetch('/telegram/add/', {
+				method: 'POST',
+				headers: {'Content-Type': 'application/json'},
+				body: JSON.stringify(user)
+			}).then(r => {
+				if (r.status === 200) {
+					triggerToast('Vos informations ont bien été mis à jour !', true);
+					setTimeout(() => {
+						location.reload()
+					}, 1500);
+				} else
+					triggerToast("Une erreur s'est produite.", false);
+			})
+		}
+
+		function reset_sessions() {
+			fetch('/sessions/reset').then(() => {
+				location.reload();
+			})
+		}
+
+		function theme_reload() {
+			theme_save(() => {
+				location.reload();
+			})
+		}
+
+		function theme_save(cb) {
+			let theme_enabled = document.getElementById('theme-enabled').checked ? '1' : '0';
+			let js = document.getElementById('theme-js').value;
+			let css = document.getElementById('theme-css').value;
+
+			fetch('/theme/set/', {
+				method: 'POST',
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify({enabled: theme_enabled, javascript: js, css: css})
+			}).then(req => {
+				if (req.status === 200) {
+					triggerToast('Votre compte à bien été délié', true);
+					if (cb)
+						cb();
+				} else
+					triggerToast("Une erreur s'est produite", false);
+			})
+		}
+
+		function tg_save() {
+			let tgmsg = encodeURIComponent(document.getElementById('tg-msg').value || '');
+			let tgenabled = document.getElementById('tg-enabled').checked ? '1' : '0';
+			if (tgmsg.length === 0)
+				tgmsg = 'NONONON';
+			fetch(`/telegram/set_status/${tgenabled}/${tgmsg}`).then(req => {
+				if (req.status === 200) {
+					triggerToast('Vos paramètres ont bien été sauvegardés', true);
+				} else
+					triggerToast("Une erreur s'est produite", false);
+			})
+		}
+
+		function tg_unlink() {
+			fetch('/telegram/remove').then(req => {
+				if (req.status === 200) {
+					triggerToast('Votre compte à bien été délié', true);
+					setTimeout(() => {
+						location.reload()
+					}, 1500);
+				} else
+					triggerToast("Une erreur s'est produite", false);
+			})
+		}
+
+		let buttons = document.querySelectorAll(".settings-switcher")
+		buttons.forEach(e => {
+			e.addEventListener('click', () => {
+				let category = e.dataset.category;
+				buttons.forEach(e2 => {
+					document.getElementById(e2.dataset.category).hidden = true;
+					e2.classList.remove("active");
+				})
+				document.getElementById(category).hidden = false;
+				e.classList.add("active");
+				if (history.pushState) {
+					history.pushState(null, null, '#' + e.dataset.category);
+				} else {
+					location.hash = '#' + e.dataset.category;
+				}
+			})
+			if (window.location.hash) {
+				let hash = window.location.hash.substring(1);
+				if (e.dataset.category === hash)
+					e.click();
+			}
+		})
+
+		let profile_form = document.getElementById('form-settings-profile');
+		profile_form.addEventListener('submit', e => {
+			let elems = profile_form.querySelectorAll('[name]');
+			let data = {};
+			elems.forEach(e => {
+				if (e.type == 'text')
+					data[e.name] = e.value;
+				else if (e.type == 'textarea')
+					data[e.name] = e.value;
+			})
+			fetch('/settings/profile', {
+				method: 'POST',
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify(data)
+			}).then(req => {
+				if (req.status === 200) {
+					triggerToast('Vos informations ont bien été mis à jour !', true);
+				} else {
+					triggerToast("Une erreur s'est produite", false);
+				}
+			})
+			e.preventDefault();
+		})
+
+		let disconnect = document.getElementById('disconnect');
+
+		disconnect.addEventListener('click', () => {
+			location.href = '/logout';
+		});
+
+		let biocounter = document.getElementById('biocounter');
+		let biographyArea = document.getElementById('biographyArea');
+
+		biographyArea.addEventListener('input', () => {
+			biocounter.innerText = biographyArea.value.length;
+		});
+
+	</script>
+{% endblock %}

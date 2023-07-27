@@ -1,0 +1,77 @@
+<div class="modal fade" id="openFriendModal" tabindex="-1" aria-labelledby="openFriendLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="openFriendLabel"></h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+
+			<!-- PP - Name - Pool -->
+			<div class="modal-body">
+				<div class="mb-3 text-center">
+					<img alt="" class="rounded-pill profile-pic" style="height:9rem;" id="openFriendModalPic" src="">
+					<div class="display-inline-grid ms-3">
+                        <span id="openFriendModalName">
+                            <h5 class="name display-5 fw-bold"></h5>
+							<span id="addCloseFriend">
+	                            <i class="fa-regular fa-star text-warning"></i>
+								<i hidden class="spinner-border spinner-border-sm"></i>
+	                        </span>
+	                        <span id="removeCloseFriend">
+	                            <i class="fa-solid fa-star text-warning"></i>
+		                        <i hidden class="spinner-border spinner-border-sm"></i>
+	                        </span>
+                            <span class="fs-6 text-muted pool">Piscine de </span>
+                        </span>
+					</div>
+				</div>
+
+				<!-- Bio & Socials -->
+				<div hidden class="rounded bg-dark-subtle m-2 p-1" id="FP-bio">
+					<div hidden class="row text-center" id="FP-socials-row">
+						<div hidden class="col no-wrap" id="FP-github">
+							<i class="fa-brands fa-github icon-length"></i> <a href=""></a>
+						</div>
+						<div hidden class="col no-wrap" id="FP-website">
+							<i class="fa-solid fa-globe icon-length"></i> <a href=""></a>
+						</div>
+						<div hidden class="col no-wrap" id="FP-discord">
+							<i class="fa-brands fa-discord icon-length"></i> <a></a>
+						</div>
+					</div>
+					<div hidden class="div text-center m-1" style="text-align: justify;" id="FP-text">
+
+					</div>
+				</div>
+
+				<!-- Buttons -->
+				<div class="row text-center">
+					<div class="col-md mb-1">
+						<button type="button" class="btn btn-sm btn-primary" id="openFriendShowCluster">
+							<i class="fa-solid fa-magnifying-glass"></i> Afficher dans le Cluster
+						</button>
+					</div>
+					<div class="col-md mb-1">
+						<button type="button" class="btn btn-sm btn-secondary" id="openFriendProfile">
+							<i class="fa-solid fa-circle-info"></i> Voir l'intra de l'utilisateur
+						</button>
+					</div>
+					<div class="col-md mb-1">
+						<button hidden type="button" class="btn btn-sm btn-danger" id="openFriendLabelDeleteFriend">
+							<i class="fa-solid fa-user-minus"></i>
+							<i hidden class="spinner-border spinner-border-sm"></i>
+							Supprimer des contacts
+						</button>
+						<button type="button" class="btn btn-sm btn-success" id="openFriendLabelAddFriend">
+							<i class="fa-solid fa-user-plus"></i><i hidden class="spinner-border spinner-border-sm"></i>
+							Ajouter au contacts
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+			</div>
+		</div>
+	</div>
+</div>

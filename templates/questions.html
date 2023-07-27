@@ -1,0 +1,99 @@
+{% block content %}
+	<div class="card m-1">
+		<div class="card-body">
+			<h5 class="card-title"><i class="fa-solid fa-phone"></i> Vous avez une suggestion, un
+				soucis, une question ?</h5>
+			Vous pouvez nous contacter via Discord
+			<ul>
+				<li><i class="fa-brands fa-discord"></i> wow000</li>
+				<li><i class="fa-brands fa-discord"></i> neoblacks</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="card m-1">
+		<div class="card-body">
+			<h5 class="card-title"><i class="fa-solid fa-lock"></i> Quelles données sont sauvegardés ?
+			</h5>
+			Pour les utilisateurs du site
+			<ul>
+				<li>Votre user-agent associé à chaque nouvelle session</li>
+				<li>Vos amis, profils et signalements</li>
+				<li>Les journaux d'accès au site</li>
+			</ul>
+			Depuis l'API de 42 pour les étudiants connecté en Cluster ou bien ajouté en ami
+			<ul>
+				<li>Le login et son id</li>
+				<li>Le lien vers son image de profil cdn.intra.42.fr</li>
+				<li>Sa position actuelle ainsi que l'heure de sa dernière activité</li>
+				<li>La date de sa piscine</li>
+			</ul>
+			Pourquoi sauvegardons-nous ces données ?
+			<ul>
+				L'API de 42 dispose d'un rate-limit, c'est-à-dire que nous avons le droit qu'à un
+				certain nombre de requêtes par secondes. Il serait impossible de proposer de consulter
+				le cluster ou bien consulter la position de ces amis sans sauvegarder ces informations.
+			</ul>
+			Où sont sauvegardés les données ?
+			<ul>
+				Les données sont sauvegardés aux Pays-Bas sur un serveur appartenant à l'hébergeur
+				Hostkey. Les données transitent par le CDN CloudFlare.
+			</ul>
+			Quels sont les cookies utilisés sur le site ?
+			<ul>
+				<li>Cookies d'authentification et de session</li>
+				<li><a href="https://developers.cloudflare.com/fundamentals/get-started/reference/cloudflare-cookies/">Cookies
+					de CloudFlare</a></li>
+			</ul>
+			Pourquoi les images transitent-elles par un proxy ?
+			<ul>
+				Dans l'objectif de réduire le temps de chargement de la page, principalement sur les
+				connexions mobiles, ADSL et bas-débit, les images de l'intra passent par un proxy qui
+				permet HTTP/2, la compression gzip ainsi que l'ajout de headers de cache.
+			</ul>
+		</div>
+	</div>
+
+	<div class="card m-1">
+		<div class="card-body">
+			<h5 class="card-title"><i class="fa-solid fa-bullseye"></i> Quel est l'objectif de ce projet ?</h5>
+			Le projet est fortement inspiré d'un autre service proposé par un alumni de 42. Néanmoins,
+			nous avons des objectifs fondamentalement différents
+			<ul>
+				<li>Une attention particulière sur le temps de chargement des pages</li>
+				<li>Un support mobile travaillé</li>
+				<li>Un thème sombre agréable et sobre</li>
+				<li>Signalement des postes inutilisables</li>
+				<li>Une attention aux données collectées</li>
+			</ul>
+			Les fonctionnalités prévues sont-elles toutes implémentées ?
+			<ul>
+				Non ! Le site est continuellement en amélioration, il est encore incomplet et est
+				susceptible d'être modifié à tout moment. N'hésitez pas à envoyer un DM à @neoblacks ou
+				@wow000 si vous avez des suggestions.
+			</ul>
+		</div>
+	</div>
+
+	<div class="card m-1">
+		<div class="card-body">
+			<h5 class="card-title"><i class="fa-solid fa-question-circle"></i> FAQ </h5>
+			Les données seront-elles conservées après la bêta ?
+			<ul>
+				Oui !
+			</ul>
+			Je souhaite une copie de mes données est-ce possible ?
+			<ul>
+				Oui ! Envoyez une demande à @wow000 via Discord.
+			</ul>
+			Comment fonctionne le système de multi-campus et pourquoi ne vois-je que les clusters de mon
+			campus sur le site ?
+			<ul>
+				Le site dispose d'un système de multi-campus qui affiche uniquement les plans du campus
+				où vous êtes inscrit. Si vous souhaitez ajouter votre campus, envoyez un DM à @neoblacks
+				ou @wow000 sur Discord.
+			</ul>
+		</div>
+	</div>
+
+{% endblock %}

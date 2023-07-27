@@ -1,0 +1,107 @@
+{% extends 'template.html' %}
+{% block css %}
+	<link href="/static/css/friends.css" rel="stylesheet">
+	<link href="/static/css/profile.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+	<div class="container mt-2">
+		<div class="p-5 mb-4 bg-light-subtle rounded-3 shadow-sm">
+			<div class="container-fluid py-5">
+				<div class="mb-4 text-center">
+					<img class="rounded-pill profile-pic" style="height:9rem;" src="{{ user.image_medium }}"
+					     alt="{{ user.name }}'s pic">
+					<div class="display-inline-grid ms-3">
+						<h1 class="display-5 fw-bold">
+							{{ user.name }}
+							{% if 'None' not in user.pool %}
+								<span class="fs-6 text-muted ">Piscine de {{ user.pool }}</span>
+							{% endif %}
+						</h1>
+						<span class="text-left">
+							<i class="fa-solid {{ "fa-2=xs fa-circle online" if user.position else "fa-xs fa-person-walking offline" }}"></i>
+							{{ user.position if user.position else 'Absent' }} {{ user.last_active }}
+						</span>
+						<span class="text-left">
+							{% if userid.userid != user.id %}
+								<button {{ 'hidden' if is_friend else '' }} type="button"
+								                                            class="btn btn-sm btn-outline-success online"
+								                                            id="addLocalFriend">
+									<i class="fa-solid fa-user-plus"></i>
+									<i hidden class="spinner-border spinner-border-sm"></i>
+									Ajouter {{ user.name }} en ami
+								</button>
+								<button {{ 'hidden' if not is_friend else '' }} type="button"
+								                                                class="btn btn-sm btn-outline-danger"
+								                                                id="removeLocalFriend">
+									<i class="fa-solid fa-user-minus"></i>
+									<i hidden class="spinner-border spinner-border-sm"></i>
+									Retirer {{ user.name }} des amis
+								</button>
+							{% endif %}
+							<button type="button" onclick="newTab('https://profile.intra.42.fr/users/{{ user.name }}');"
+							        class="btn btn-sm btn-outline-secondary">
+								<i class="fa-solid fa-circle-info"></i>
+								Profil intra de {{ user.name }}
+							</button>
+
+						</span>
+					</div>
+				</div>
+				<div class="fs-5">
+					{% if is_banned %}
+						<div class="alert alert-danger" role="alert">
+							L'utilisateur a été banni de certaines fonctionnalités du site suite à un abus.
+						</div>
+					{% endif %}
+					<div class="row">
+						<div class="col-md-3">
+							{%- if user.github or user.website or user.discord -%}
+								<p class="mb-0">Contacts</p>
+								<ul>
+									{%- if 'github' in user and len(user.github) >= 1 -%}
+										<li><i class="fa-brands fa-github icon-length"></i> <a
+												href="{{ user.github }}">{{ user.github.replace("https://github.com/", '') }}</a>
+										</li>
+									{%- endif -%}
+									{%- if 'website' in user and len(user.website) >= 1 -%}
+										<li><i class="fa-solid fa-globe icon-length"></i> <a
+												href="{{ user.website }}">{{ user.website.replace("https://", '').replace("http://", "") }}</a>
+										</li>
+									{%- endif -%}
+									{%- if 'discord' and len(user.discord) >= 1 -%}
+										<li><i class="fa-brands fa-discord icon-length"></i> <a>{{ user.discord }}</a>
+										</li>
+									{%- endif -%}
+								</ul>
+							{% endif %}
+						</div>
+						<div class="col-md-8" style="text-align: justify;">
+							{{ user.recit if user.recit and len(user.recit) > 0 else '' }}
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		let addLocalFriend = document.getElementById('addLocalFriend');
+		let removeLocalFriend = document.getElementById('removeLocalFriend');
+
+		addLocalFriend.addEventListener('click', async () => {
+			await addFriend('{{ user.name }}', '#addLocalFriend');
+			addLocalFriend.hidden = true;
+			removeLocalFriend.hidden = false;
+		})
+
+		removeLocalFriend.addEventListener('click', async () => {
+			await deleteFriend('{{ user.name }}', '#removeLocalFriend');
+			addLocalFriend.hidden = false;
+			removeLocalFriend.hidden = true;
+		})
+	</script>
+{% endblock %}

@@ -1,0 +1,74 @@
+.grow {
+	transition: all .15s ease-in-out;
+	cursor: pointer;
+}
+
+.grow:hover {
+	transform: scale(1.1);
+}
+
+.card-size {
+	width: 10rem;
+}
+
+.profile-pic {
+	filter: drop-shadow(0 0 1.6rem rgb(0, 0, 0));
+	height: 9rem;
+	width: 9rem;
+	object-fit: cover;
+}
+
+.display-inline-grid {
+	display: inline-grid;
+}
+
+.text-left {
+	text-align: left;
+}
+
+/* small */
+@media screen and (max-width: 1400px) {
+	.card-size {
+		width: 10.5rem;
+	}
+
+	.card-img-size {
+		width: 100%;
+		height: 10rem;
+		object-fit: cover;
+	}
+
+	.card-not-img-size {
+		height: 10rem;
+		width: 10rem;
+		line-height: 13rem;
+	}
+}
+
+/* large */
+@media screen and (min-width: 1400px) {
+	.card-size {
+		width: 14rem;
+	}
+
+	.card-img-size {
+		width: 100%;
+		height: 12rem;
+		object-fit: cover;
+	}
+
+	.card-not-img-size {
+		height: 12rem;
+		width: 12rem;
+		line-height: 15rem;
+	}
+}
+
+/* fix for bootstrap flex */
+.pl-fix {
+	padding-left: 4px;
+}
+
+.offline {
+	color: #e74c3c;
+}

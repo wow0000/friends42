@@ -1,0 +1,132 @@
+{% extends 'template.html' %}
+{% block css %}
+	<link href="/static/css/friends.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+	<div class="modal fade" id="addFriendModal" tabindex="-1" aria-labelledby="addFriendLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="addFriendLabel">Ajouter un ami</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="input-group mb-3">
+						<span class="input-group-text" id="loginAddon">Login</span>
+						<input autofocus list="suggestions" type="text" class="form-control" id="addFriendInput"
+						       aria-label="Login42" aria-describedby="loginAddon" placeholder="ami1, ami2, ami3">
+						<datalist id="suggestions">
+						</datalist>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="button" class="btn btn-primary" id="addFriendButton">
+						<i class="fa-solid fa-user-plus"></i> <i hidden class="spinner-border spinner-border-sm"></i>
+						Ajouter en ami
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{% include 'open_modal.html' %}
+
+	<div class="container">
+		<div class="row text-center justify-content-center">
+			{% for friend in friends %}
+				<div id="case-{{ friend.name }}" class="card shadow m-2 pl-fix card-size grow"
+				     onclick="openFriend('{{ friend.name }}', true)">
+					<img src="{{ proxy_images(friend.image_medium) }}" class="m-1 card-img-top card-img-size"
+					     alt="{{ friend.name }}'s image">
+					<div class="card-body">
+						<h5 class="card-title">
+							<i class="fa-solid {{ "fa-2xs fa-circle online" if friend.position else "fa-xs fa-person-walking offline" }}"></i> {{ friend.name }}
+						</h5>
+						<p class="card-text">{{ friend.position if friend.position else 'Absent' }} {{ friend.last_active }}</p>
+					</div>
+				</div>
+			{% endfor %}
+			<div class="card p-0 m-2 shadow card-size grow" onclick="openAddFriend();">
+				<div class="m-1 w-100 card-img-top text-center card-not-img-size">
+					<i class="fa-solid fa-plus fa-5x"></i>
+				</div>
+				<div class="card-body">
+					<h5 class="card-title">Ajouter un ami</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		let openAddFriendModal;
+		let openFriendModal;
+		let addFriendInput = document.getElementById('addFriendInput');
+		let addFriendButton = document.getElementById('addFriendButton');
+
+		function fillSuggestions(element, suggestions) {
+			let list = document.querySelector(element);
+
+			list.innerHTML = ''
+			suggestions.forEach(function (item) {
+				let option = document.createElement('option');
+				option.value = item;
+				list.appendChild(option);
+			});
+		}
+
+		function openAddFriend() {
+			const modal = new bootstrap.Modal('#addFriendModal', {});
+			openAddFriendModal = modal;
+			modal.show();
+			setTimeout(() => {
+				addFriendInput.focus();
+				addFriendInput.select();
+			}, 500)
+		}
+
+		async function deleteLocalFriend() {
+			let friend_name = document.getElementById('openFriendLabel').innerText.trim();
+			let resp = await deleteFriend(friend_name, "#deleteFriend")
+			if (resp === 200) {
+				openFriendModal.hide();
+				document.getElementById('case-' + friend_name).remove();
+			}
+		}
+
+		addFriendInput.addEventListener('keyup', function (key) {
+			let name = addFriendInput.value.trim().toLowerCase();;
+			if (key.key === 'Enter') {
+				if (name.length <= 3) {
+					addFriendInput.focus();
+					return;
+				}
+				addFriend(name, '#addFriendButton', true);
+				fillSuggestions('#suggestions', []);
+			}
+			if (name.trim() === '') return fillSuggestions('#suggestions', []);
+			if (name.length < 3) return;
+			setTimeout(() => {
+				if (name !== addFriendInput.value) return;
+				fetch('/search/' + name).then((response) => {
+					response.json().then((json) => {
+						fillSuggestions('#suggestions', json)
+					})
+				})
+			}, 200)
+		})
+
+		addFriendButton.addEventListener('click', function () {
+			let val = addFriendInput.value.trim().toLowerCase();
+			if (val.length <= 3) {
+				addFriendInput.focus();
+				return;
+			}
+			addFriend(val, '#addFriendButton', true)
+		})
+	</script>
+{% endblock %}
