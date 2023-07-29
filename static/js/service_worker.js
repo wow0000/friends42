@@ -1,7 +1,7 @@
 let g_permanent = [
-	'/static/css/bootstrap530a1.min.css',
+	'/static/css/bootstrap.min.css',
 	'/static/js/popper.min.js',
-	'/static/js/bootstrap530a1.min.js',
+	'/static/js/bootstrap.min.js',
 	'/static/fontawesome/css/fontawesome.min.css',
 	'/static/fontawesome/css/solid.min.css',
 	'/static/fontawesome/css/regular.min.css',
