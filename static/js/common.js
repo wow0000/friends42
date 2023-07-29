@@ -238,6 +238,12 @@ function newTab(url) {
 	window.open(url, '_blank').focus();
 }
 
+function isTouchDevice() {
+	return (('ontouchstart' in window) ||
+		(navigator.maxTouchPoints > 0) ||
+		(navigator.msMaxTouchPoints > 0));
+}
+
 (() => {
 	let globalAddFriend = document.getElementById('globalAddFriend');
 	let globalSearchInput = document.getElementById('globalSearch');

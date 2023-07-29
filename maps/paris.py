@@ -89,7 +89,7 @@ map = {
 		['paul-f5Ar1s1', 'paul-f5Ar1s2', 'paul-f5Ar1s3', 'paul-f5Ar1s4', 'paul-f5Ar1s5', '', '', '', '', '', '', '', 'x', '', '', '', '', '', 'paul-f5Br1s1', 'paul-f5Br1s2', 'paul-f5Br1s3']
 	],
 	"allowed": ['bess-f1', 'bess-f2', 'bess-f3', 'bess-f4', 'paul-f3', 'paul-f4', 'paul-f5'],
-	"piscine": ['bess-f1', 'bess-f2'],
+	"piscine": ['bess-f1', 'bess-f2', 'bess-f3', 'bess-f4', 'paul-f3', 'paul-f4'],
 	"default": 'bess-f1',
 	"exrypz": exrypz
 }

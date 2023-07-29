@@ -8,6 +8,7 @@
 				width: 100%;
 			}
 		}
+
 		.btn-width {
 			overflow-x: auto;
 		}
@@ -53,8 +54,8 @@
 				<input type="radio" class="btn-check cluster_radios" name="btnradio"
 				       data-cluster="{{ cluster.name }}" id="radio{{ cluster.name }}"
 				       autocomplete="off" {{ "checked" if actual_cluster == cluster['name'] else "" }}>
-				<label class="btn btn-outline-{{ place_to_btn(cluster) }} m-t"
-				       for="radio{{ cluster.name }}">{{ ('<i class="fa-solid fa-person-swimming text-info"></i>' if cluster.name in piscine else '') | safe }}{{ cluster.name }}
+				<label class="btn btn-outline-{{ place_to_btn(cluster) }} m-t" for="radio{{ cluster.name }}">
+					{{ ('<i class="fa-solid fa-person-swimming text-info"></i>' if cluster.name in piscine else '') | safe }}{{ cluster.name }}
 					<span class="text-muted">({{ cluster.places }} places)</span></label>
 			{%- endfor -%}
 		</div>
@@ -153,6 +154,7 @@
 			if (!e.dataset.login)
 				return;
 			e.addEventListener('mouseover', () => {
+				if (isTouchDevice()) return;
 				tooltip.hidden = false;
 				tooltip.querySelector('img').src = e.querySelector('img').src
 				tooltip.querySelector('.name').innerText = e.dataset.login
