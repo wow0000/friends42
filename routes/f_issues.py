@@ -5,7 +5,7 @@ from flask import Blueprint
 app = Blueprint('issues', __name__, template_folder='templates')
 
 
-@app.route('/addissue/<pc>/<issue_type>')
+@app.route('/addissue/<pc>/<int:issue_type>')
 @auth_required
 def create_issue(pc, issue_type, userid):
 	db = Db("database.db")

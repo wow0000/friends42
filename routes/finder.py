@@ -1,8 +1,9 @@
 import os
 
+
 def get_all_routes():
-    ret = []
-    for dir in os.listdir('./routes/'):
-        if '.py' in dir and '__' not in dir and 'f_' in dir:
-            ret.append(dir.replace('.py', ''))
-    return ret
+	ret = []
+	for folder in os.listdir('./routes/'):
+		if '.py' in folder and '__' not in folder and 'f_' in folder:
+			ret.append(folder.replace('.py', ''))
+	return ret

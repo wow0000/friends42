@@ -65,7 +65,6 @@ def index(userid):
 	cluster_name = pos if request.args.get('cluster') is None else request.args.get('cluster')
 	if cluster_name not in campus_map['allowed']:
 		cluster_name = campus_map['default']
-		pos = campus_map['default']
 	cache_tab = get_cached_locations(campus_id)
 	location_map = {}
 	friends = db.get_friends(userid['userid'])
@@ -101,7 +100,7 @@ def index(userid):
 
 @app.route('/friends/')
 @auth_required
-def friends_tmp(userid):
+def friends_route(userid):
 	db = Db("database.db")
 	theme = db.get_theme(userid['userid'])
 	friend_list = db.get_friends(userid['userid'])
@@ -109,16 +108,20 @@ def friends_tmp(userid):
 	for friend in friend_list:
 		friend["position"] = get_position(friend["name"])
 		if friend['active'] and friend['position'] is None:
-			friend["last_active"] = "depuis " + (
-				arrow.get(friend['active'], "YYYY-MM-DD HH:mm:ss", tzinfo='UTC')).humanize(locale='FR',
-			                                                                               only_distance=True)
+			date = arrow.get(friend['active'], "YYYY-MM-DD HH:mm:ss", tzinfo='UTC')
+			friend["last_active"] = "depuis " + date.humanize(locale='FR', only_distance=True)
 		else:
 			friend["last_active"] = ""
 	friend_list = sorted(friend_list, key=lambda d: d['name'])
 	friend_list = sorted(friend_list, key=lambda d: 0 if d['relation'] == 1 else 1)
 	friend_list = sorted(friend_list, key=lambda d: 0 if d['position'] else 1)
-	print(friend_list)
 	return render_template('friends.html', friends=friend_list, theme=theme)
+
+
+@app.route('/mates/')
+@auth_required
+def mates_route(userid):
+	return render_template('mate.html')
 
 
 # Manual things that need to be routed on /

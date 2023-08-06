@@ -74,11 +74,11 @@ def send_tg_dm(tg: dict, who: str, place: str):
 		token = config.telegram_token
 		if not token:
 			print('Missing tg token')
-		r = requests.get(f'https://api.telegram.org/bot{token}/sendMessage?chat_id={tg_id}&text={msg}')
-		if r.status_code != 200:
-			print('[Telegram] Request failed: ', r.status_code, r.text)
-	except:
-		print("[Telegram] Request failed")
+		req = requests.get(f'https://api.telegram.org/bot{token}/sendMessage?chat_id={tg_id}&text={msg}')
+		if req.status_code != 200:
+			print('[Telegram] Request failed: ', req.status_code, req.text)
+	except requests.exceptions.RequestException as e:
+		print("[Telegram] Request failed ", e)
 
 
 def create_users(db, profiles):

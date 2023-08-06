@@ -11,11 +11,11 @@ def exrypz(computer):
 
 # @formatter:off
 map = {
-	"e1": [], # Clusters
-	"allowed": ['e1'], # "Enabled" clusters
-	"piscine": ['e1'], # "Piscine" reserved clusters
-	"default": 'e1', # Default cluster to appear on the site
-	"exrypz": exrypz # Function to parse locations
+	"e1": [],           # Clusters
+	"allowed": ['e1'],  # "Enabled" clusters
+	"piscine": ['e1'],  # "Piscine" reserved clusters
+	"default": 'e1',    # Default cluster to appear on the site
+	"exrypz": exrypz    # Function to parse locations
 }
 
 # @formatter:on

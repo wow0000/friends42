@@ -11,7 +11,7 @@ if __name__ == '__main__':
 			try:
 				req = requests.get(f'http://127.0.0.1:8000/locations/{config.update_key}/{campus}')
 				print(req.status_code)
-			except:
+			except requests.exceptions.RequestException:
 				print('failed req')
 			time.sleep(5)
 		print('waiting 45s')

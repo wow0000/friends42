@@ -35,13 +35,17 @@ def telegram_status(status, msg, userid):
 		return '', 400
 	return '', 200
 
-@app.route('/telegram/admin/add/<id>')
+
+"""
+@app.route('/telegram/admin/add/<login>')
 @auth_required
-def telegram_add_admin(id, userid):
+def telegram_add_admin(login, userid):
 	db = Db("database.db")
-	db.enable_notification(userid['userid'], id)
+	db.enable_notification(userid['userid'], login)
 	db.close()
 	return '', 200
+"""
+
 
 @app.route('/telegram/remove')
 @auth_required

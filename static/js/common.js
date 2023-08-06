@@ -87,7 +87,7 @@ function setRelation(friend_name, relation, button_descriptor, auto_reload = fal
 }
 
 function isValidURL(string) {
-	let res = string.match(/(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,40}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+	let res = string.match(/(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,40}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&/=]*)/g);
 	return (res !== null)
 }
 

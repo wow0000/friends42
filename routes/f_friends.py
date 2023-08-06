@@ -43,7 +43,7 @@ def remove_friend(remove, userid):
 	return '', 200 if success else 404
 
 
-@app.route('/friends/set_relation/<who>/<relation>')
+@app.route('/friends/set_relation/<who>/<int:relation>')
 @auth_required
 def set_relation(who, relation, userid):
 	db = Db("database.db")

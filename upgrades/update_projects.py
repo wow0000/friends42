@@ -16,7 +16,7 @@ while 1:
 		f"https://api.intra.42.fr/v2/cursus/42cursus/projects?page[size]=100&filter[visible]=true&filter[exam]=false&page[number]={i}",
 		headers={"Authorization": "Bearer " + token})
 	if req.status_code != 200:
-		break;
+		break
 	if int(req.headers['X-Total']) == i:
 		break
 	num_proj = len(req.json())
