@@ -1,5 +1,6 @@
 import maps.paris as map_paris
 import maps.vienna as map_vienna
+import maps.forty2 as map_forty2
 
 
 def places(exrypz, _map: list[list[str]]):
@@ -36,7 +37,9 @@ def available_seats(cluster: str, _map: list, exrypz, locations_map: dict, error
 
 paris = map_paris.map
 vienna = map_vienna.map
+forty2 = map_forty2.map
 available = {
+	66: map_forty2,
 	53: map_vienna,
 	1: map_paris
 }
