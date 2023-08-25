@@ -113,7 +113,7 @@ map = {
 		['made-f0Cr4s1', 'made-f0Cr4s2', 'made-f0Cr4s3', 'made-f0Cr4s4', 'made-f0Cr4s5', 'made-f0Cr4s6'],
 		['made-f0Cr3s1', 'made-f0Cr3s2', 'made-f0Cr3s3', 'made-f0Cr3s4', 'made-f0Cr3s5', 'made-f0Cr3s6'],
 		['made-f0Cr2s1', 'made-f0Cr2s2', 'made-f0Cr2s3', 'made-f0Cr2s4', 'made-f0Cr2s5', 'made-f0Cr2s6'],
-		['made-f0Cr1s1', 'made-f0Cr1s2', 'made-f0Cr1s3']
+		['', 'made-f0Cr1s1', '', 'made-f0Cr1s2', '', 'made-f0Cr1s3']
 	],
 	"made-f0D": [
 		['R11', 'R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
