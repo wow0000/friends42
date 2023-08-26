@@ -127,7 +127,7 @@ map = {
 		['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'made-f0Dr4s1', 'made-f0Dr4s2', 'made-f0Dr4s3', 'made-f0Dr4s4', 'made-f0Dr4s5', 'made-f0Dr4s6'],
 		['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'made-f0Dr3s1', 'made-f0Dr3s2', 'made-f0Dr3s3', 'made-f0Dr3s4', 'made-f0Dr3s5', 'made-f0Dr3s6'],
 		['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'made-f0Dr2s1', 'made-f0Dr2s2', 'made-f0Dr2s3', 'made-f0Dr2s4', 'made-f0Dr2s5', 'made-f0Dr2s6'],
-		['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'made-f0Dr1s1', '', 'made-f0Dr1s2', '', 'made-f0Dr1s3'],
+		['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'made-f0Dr1s1', '', 'made-f0Dr1s2', '', 'made-f0Dr1s3'],
 	],
 	"allowed": ['bess-f1', 'bess-f2', 'bess-f3', 'bess-f4', 'paul-f3', 'paul-f4', 'paul-f5', 'made-f0B', 'made-f0C', 'made-f0D'],
 	"piscine": [],
