@@ -88,6 +88,22 @@ map = {
 		['paul-f5Ar2s1', 'paul-f5Ar2s2', 'paul-f5Ar2s3', 'paul-f5Ar2s4', 'paul-f5Ar2s5', '', '', '', '', '', '', '', 'x', '', '', '', '', '', 'paul-f5Br2s1', 'x', 'paul-f5Br2s2'],
 		['paul-f5Ar1s1', 'paul-f5Ar1s2', 'paul-f5Ar1s3', 'paul-f5Ar1s4', 'paul-f5Ar1s5', '', '', '', '', '', '', '', 'x', '', '', '', '', '', 'paul-f5Br1s1', 'paul-f5Br1s2', 'paul-f5Br1s3']
 	],
+	"made-f0A": [
+		['R13', 'R12', 'R11', 'R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
+		['made-f0Ar13s1', 'made-f0Ar13s2', 'made-f0Ar13s3', 'made-f0Ar13s4', 'made-f0Ar13s5', 'made-f0Ar13s6', '', '', '', '', '', '', ''],
+		['made-f0Ar12s1', 'made-f0Ar12s2', 'made-f0Ar12s3', 'made-f0Ar12s4', 'made-f0Ar12s5', 'made-f0Ar12s6', '', 'made-f0Ar12s7', 'made-f0Ar12s8', 'made-f0Ar12s9', 'made-f0Ar12s10', 'made-f0Ar12s11', 'made-f0Ar12s12'],
+		['made-f0Ar11s1', 'made-f0Ar11s2', 'made-f0Ar11s3', 'made-f0Ar11s4', 'made-f0Ar11s5', 'made-f0Ar11s6', '', 'made-f0Ar11s7', 'made-f0Ar11s8', 'made-f0Ar11s9', 'made-f0Ar11s10', 'made-f0Ar11s11', 'made-f0Ar11s12'],
+		['made-f0Ar10s1', 'made-f0Ar10s2', 'made-f0Ar10s3', 'made-f0Ar10s4', 'made-f0Ar10s5', 'made-f0Ar10s6', '', 'made-f0Ar10s7', 'made-f0Ar10s8', 'made-f0Ar10s9', 'made-f0Ar10s10', 'made-f0Ar10s11', 'made-f0Ar10s12'],
+		['made-f0Ar9s1', 'made-f0Ar9s2', 'made-f0Ar9s3', 'made-f0Ar9s4', 'made-f0Ar9s5', 'made-f0Ar9s6', '', 'made-f0Ar9s7', '', 'made-f0Ar9s8', 'made-f0Ar9s9', 'made-f0Ar9s10', 'made-f0Ar9s11'],
+		['made-f0Ar8s1', 'made-f0Ar8s2', 'made-f0Ar8s3', 'made-f0Ar8s4', 'made-f0Ar8s5', 'made-f0Ar8s6', '', 'made-f0Ar8s7', 'made-f0Ar8s8', 'made-f0Ar8s9', 'made-f0Ar8s10', 'made-f0Ar8s11', 'made-f0Ar8s12'],
+		['made-f0Ar7s1', 'made-f0Ar7s2', 'made-f0Ar7s3', 'made-f0Ar7s4', 'made-f0Ar7s5', 'made-f0Ar7s6', '', 'made-f0Ar7s7', 'made-f0Ar7s8', 'made-f0Ar7s9', 'made-f0Ar7s10', 'made-f0Ar7s11', 'made-f0Ar7s12'],
+		['made-f0Ar6s1', 'made-f0Ar6s2', 'made-f0Ar6s3', 'made-f0Ar6s4', 'made-f0Ar6s5', 'made-f0Ar6s6', '', 'made-f0Ar6s7', 'made-f0Ar6s8', 'made-f0Ar6s9', 'made-f0Ar6s10', 'made-f0Ar6s11', 'made-f0Ar6s12'],
+		['made-f0Ar5s1', 'made-f0Ar5s2', 'made-f0Ar5s3', 'made-f0Ar5s4', 'made-f0Ar5s5', 'made-f0Ar5s6', '', 'made-f0Ar5s7', 'made-f0Ar5s8', 'made-f0Ar5s9', 'made-f0Ar5s10', 'made-f0Ar5s11', 'made-f0Ar5s12'],
+		['made-f0Ar4s1', 'made-f0Ar4s2', 'made-f0Ar4s3', 'made-f0Ar4s4', 'made-f0Ar4s5', 'made-f0Ar4s6', '', 'made-f0Ar4s7', 'made-f0Ar4s8', 'made-f0Ar4s9', 'made-f0Ar4s10', 'made-f0Ar4s11', 'made-f0Ar4s12'],
+		['made-f0Ar3s1', 'made-f0Ar3s2', 'made-f0Ar3s3', 'made-f0Ar3s4', 'made-f0Ar3s5', 'made-f0Ar3s6', '', 'made-f0Ar3s7', 'made-f0Ar3s8', 'made-f0Ar3s9', 'made-f0Ar3s10', 'made-f0Ar3s11', 'made-f0Ar3s12'],
+		['made-f0Ar2s1', 'made-f0Ar2s2', 'made-f0Ar2s3', 'made-f0Ar2s4', 'made-f0Ar2s5', 'made-f0Ar2s6', '', 'made-f0Ar2s7', 'made-f0Ar2s8', 'made-f0Ar2s9', 'made-f0Ar2s10', 'made-f0Ar2s11', 'made-f0Ar2s12'],
+		['made-f0Ar1s1', 'made-f0Ar1s2', 'made-f0Ar1s3', 'made-f0Ar1s4', 'made-f0Ar1s5', 'made-f0Ar1s6', '', 'made-f0Ar1s7', '', 'made-f0Ar1s8', '', 'made-f0Ar1s9', '']
+	],
 	"made-f0B": [
 		['R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
 		['made-f0Br8s1', 'made-f0Br8s2', 'made-f0Br8s3', 'made-f0Br8s4', 'made-f0Br8s5', 'made-f0Br8s6', '', 'made-f0Br8s7', 'made-f0Br8s8', 'made-f0Br8s9', 'made-f0Br8s10', 'made-f0Br8s11', 'made-f0Br8s12', 'made-f0Br8s13', '', 'made-f0Br8s14', 'made-f0Br8s15', 'made-f0Br8s16', 'made-f0Br8s17', 'made-f0Br8s18', 'made-f0Br8s19'],
@@ -129,7 +145,7 @@ map = {
 		['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'made-f0Dr2s1', 'made-f0Dr2s2', 'made-f0Dr2s3', 'made-f0Dr2s4', 'made-f0Dr2s5', 'made-f0Dr2s6'],
 		['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'made-f0Dr1s1', '', 'made-f0Dr1s2', '', 'made-f0Dr1s3', ''],
 	],
-	"allowed": ['bess-f1', 'bess-f2', 'bess-f3', 'bess-f4', 'paul-f3', 'paul-f4', 'paul-f5', 'made-f0B', 'made-f0C', 'made-f0D'],
+	"allowed": ['bess-f1', 'bess-f2', 'bess-f3', 'bess-f4', 'paul-f3', 'paul-f4', 'paul-f5', 'made-f0A', 'made-f0B', 'made-f0C', 'made-f0D'],
 	"piscine": ['bess-f1', 'bess-f2', 'bess-f3', 'bess-f4', 'paul-f3', 'paul-f4'],
 	"default": 'bess-f1',
 	"exrypz": exrypz
