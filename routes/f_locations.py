@@ -7,13 +7,15 @@ app = Blueprint('locations', __name__, template_folder='templates')
 
 
 @app.route('/locations/<token>/<int:campus>')
-def update_locs2(token, campus):
+def update_locs(token, campus):
 	if token != config.update_key:
 		return 'Bad token', 400
 	locs(campus)
 	return 'OK', 200
 
 
-@app.route('/locations/monitoring/<token>')
-def monitoring(token):
-	return '', 200 if api.get_token() else 500
+@app.route('/locations/<token>/<int:campus>/dbg')
+def update_locs_dbg(token, campus):
+	if token != config.update_key:
+		return 'Bad token', 400
+	return locs(campus)
