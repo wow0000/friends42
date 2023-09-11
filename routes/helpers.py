@@ -81,13 +81,22 @@ def send_tg_dm(tg: dict, who: str, place: str):
 		print("[Telegram] Request failed ", e)
 
 
+def find_correct_campus(elem):
+	if 'campus_users' in elem['user']:
+		for campus_data in elem['user']['campus_users']:
+			campus_id = campus_data['campus_id']
+			if campus_data['is_primary']:
+				return campus_id
+	if 'campus_id' in elem:
+		return elem['campus_id']
+	if 'campus' in elem['user']:
+		return elem['user']['campus'][0]['id']
+	return 1
+
+
 def create_users(db, profiles):
 	for elem in profiles:
-		campus = 1
-		if 'campus_id' in elem:
-			campus = elem['campus_id']
-		if 'campus' in elem['user']:
-			campus = elem['user']['campus'][0]['id']
+		campus = find_correct_campus(elem)
 		db.create_user(elem["user"], campus)
 		if elem['user']["location"]:
 			db.delete_issues(elem['user']['location'])
@@ -114,7 +123,7 @@ def locs(campus=1):
 		create_users(db, data)
 		db.close()
 		r.set("locations/" + str(campus), json.dumps(data))
-		return data
+		return data, 200
 	else:
 		return data, status
 
