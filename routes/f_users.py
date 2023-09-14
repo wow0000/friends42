@@ -5,23 +5,6 @@ from flask import Blueprint, make_response
 app = Blueprint('users', __name__, template_folder='templates')
 
 
-@app.route('/search/<start>')
-@auth_required
-def search(start, userid):
-	if len(start) < 3 or '%' in start:
-		return '', 400
-	if ',' in start:
-		start = start.split(',')[-1].strip()
-		if len(start) < 3:
-			return '', 400
-	start = start.lower()
-	db = Db("database.db")
-	req = db.search(start)
-	db.close()
-	resp = [e['name'] for e in req]
-	return resp, 200
-
-
 @app.route('/getuser/<login>')
 @auth_required
 def getuser(login, userid):

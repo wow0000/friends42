@@ -15,8 +15,7 @@
 						<span class="input-group-text" id="loginAddon">Login</span>
 						<input autofocus list="suggestions" type="text" class="form-control" id="addFriendInput"
 						       aria-label="Login42" aria-describedby="loginAddon" placeholder="ami1, ami2, ami3">
-						<datalist id="suggestions">
-						</datalist>
+						<datalist id="suggestions"></datalist>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -73,8 +72,9 @@
 
 			list.innerHTML = ''
 			suggestions.forEach(function (item) {
+				if (item['type'] !== "user") return;
 				let option = document.createElement('option');
-				option.value = item;
+				option.value = item['v'];
 				list.appendChild(option);
 			});
 		}
@@ -99,7 +99,8 @@
 		}
 
 		addFriendInput.addEventListener('keyup', function (key) {
-			let name = addFriendInput.value.trim().toLowerCase();;
+			let name = addFriendInput.value.trim().toLowerCase();
+
 			if (key.key === 'Enter') {
 				if (name.length <= 3) {
 					addFriendInput.focus();
@@ -112,7 +113,7 @@
 			if (name.length < 3) return;
 			setTimeout(() => {
 				if (name !== addFriendInput.value) return;
-				fetch('/search/' + name).then((response) => {
+				fetch('/search/' + encodeURIComponent(name) + "/1").then((response) => {
 					response.json().then((json) => {
 						fillSuggestions('#suggestions', json)
 					})

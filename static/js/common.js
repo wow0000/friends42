@@ -265,6 +265,18 @@ function isTouchDevice() {
 			triggerToast("L'utilisateur est introuvable", false);
 	}
 
+	function fillGlobalSuggestions(element, suggestions) {
+		let list = document.querySelector(element);
+
+		list.innerHTML = ''
+		suggestions.forEach(function (item) {
+			let option = document.createElement('option');
+			option.value = item['s'];
+			option.innerText = item['v'];
+			list.appendChild(option);
+		});
+	}
+
 	globalAddFriend.addEventListener('click', async () => {
 		let val = globalSearchInput.value.trim();
 
@@ -272,18 +284,60 @@ function isTouchDevice() {
 			globalSearchInput.focus();
 			return;
 		}
-		addFriend(globalSearchInput.value, '#globalAddFriend', true);
+		await addFriend(globalSearchInput.value, '#globalAddFriend', true);
 	});
-	globalSearchInput.addEventListener('keydown', async (e) => {
+
+	function search_text(text, callback) {
+		fetch('/search/' + encodeURIComponent(text) + "/0").then((response) => {
+			response.json().then((json) => {
+				callback(json);
+			})
+		})
+	}
+
+	let lastSearch = "";
+	globalSearchInput.addEventListener('keyup', async (e) => {
 		let val = globalSearchInput.value.trim().toLowerCase();
 
-		if (e.key === 'Enter')
-			redirect_profile(val);
+		if (e.key === 'Enter') {
+			if (val.length <= 3)
+				await redirect_profile(val);
+			else {
+				search_text(val, (json) => {
+					let found = 0;
+					json.forEach((item) => {
+						if (item['v'].toLowerCase() === val || item['s'].toLowerCase() === val) {
+							if (item['type'] === 'user') {
+								redirect_profile(item['s']);
+								found = 1;
+							} else if (item['type'] === 'project') {
+								open('/mates/' + item['s']);
+								found = 1;
+							}
+						}
+					})
+					if (found === 0)
+						triggerToast(`Aucun résultat pour ${val}`)
+				});
+			}
+		}
+		if (val.length >= 3) {
+			setTimeout(() => {
+				if (val !== globalSearchInput.value.trim().toLowerCase()) return;
+				if (val === lastSearch) return;
+				console.log(val, globalSearchInput.value.trim().toLowerCase())
+				lastSearch = val;
+				search_text(val, (json) => {
+					fillGlobalSuggestions('#global_suggestions', json)
+				});
+			}, 200)
+
+		}
 	});
 
 	globalSearchButton.addEventListener('click', async () => {
 		let val = globalSearchInput.value.trim().toLowerCase();
-		redirect_profile(val);
+		await redirect_profile(val);
 	})
 })();
 

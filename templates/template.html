@@ -23,9 +23,11 @@
 		<a class="navbar-brand position-relative" href="/">
 			<img src="/static/img/android-chrome-192x192.png" alt="Logo" width="24" height="24" class="d-inline-block align-text-top">
 			Friends42<span class="text-muted text-beta">βeta</span></a>
-		<button class="btn btn-secondary hide-navbar" hidden id="qc-friends"><i class="fa-solid fa-user-group"></i>
+		<button class="btn btn-secondary hide-navbar" hidden id="qc-friends">
+			<i class="fa-solid fa-user-group"></i>
 		</button>
-		<button class="btn btn-secondary hide-navbar" hidden id="qc-cluster"><i class="fa-solid fa-layer-group"></i>
+		<button class="btn btn-secondary hide-navbar" hidden id="qc-cluster">
+			<i class="fa-solid fa-layer-group"></i>
 		</button>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 		        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +46,8 @@
 				</li>
 			</ul>
 			<div class="d-flex" role="search">
-				<input class="form-control" id="globalSearch" type="search" placeholder="Rechercher..." aria-label="Search">
+				<input class="form-control" list="global_suggestions" id="globalSearch" type="search" placeholder="Rechercher..." aria-label="Search">
+				<datalist id="global_suggestions"></datalist>
 				<button type="button" id="globalSearchButton" aria-label="Search" class="btn btn-outline-light mx-1">
 					<i class="fa-solid fa-magnifying-glass"></i>
 				</button>
@@ -54,7 +57,8 @@
 				</button>
 				<button type="button" class="btn btn-secondary" aria-label="Settings"
 				        onclick="location.href = '/settings/';">
-					<i class="fa-solid fa-gear"></i></button>
+					<i class="fa-solid fa-gear"></i>
+				</button>
 			</div>
 		</div>
 	</div>

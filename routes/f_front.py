@@ -114,6 +114,28 @@ def friends_route(userid):
 	return render_template('friends.html', friends=friend_list, theme=theme)
 
 
+@app.route('/search/<keyword>/<int:friends_only>')
+@auth_required
+def search_route(keyword, friends_only, userid):
+	if len(keyword) < 2 or '%' in keyword:
+		return '', 400
+	if ',' in keyword:
+		keyword = keyword.split(',')[-1].strip()
+		if len(keyword) < 3:
+			return '', 400
+	keyword = keyword.lower()
+	db = Db("database.db")
+	req_friends = db.search(keyword)
+	projects = []
+	if friends_only == 0:
+		projects = find_keyword_project(keyword)
+	db.close()
+	resp = [{"type": "user", "v": e['name'], "s": e['name']} for e in req_friends]
+	if friends_only == 0:
+		resp += [{"type": "project", "v": e['name'], "s": e['slug']} for e in projects]
+	return resp, 200
+
+
 # Manual things that need to be routed on /
 
 @app.route('/static/<path:path>')

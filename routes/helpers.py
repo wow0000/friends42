@@ -162,6 +162,13 @@ def get_projects():
 	r.set('project_list_group', json.dumps(res), ex=3600)
 	return res
 
+def find_keyword_project(keyword: str) -> list:
+	projects = get_projects()
+	res = []
+	for project in projects:
+		if keyword.lower() in project['name'].lower() or keyword.lower() in project['slug'].lower():
+			res.append(project)
+	return res
 
 def does_group_project_exists(slug: str) -> bool:
 	projects = get_projects()
