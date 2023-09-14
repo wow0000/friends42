@@ -38,6 +38,10 @@
 		.text-right {
 			text-align: right;
 		}
+
+		.no_under {
+			text-decoration: none;
+		}
 	</style>
 {% endblock %}
 {% block content %}
@@ -61,7 +65,10 @@
 	<div class="container mt-2">
 		<div class="h-100">
 			{% if project %}
-				<h2>{{ project }}</h2>
+				<h2>{{ project }}
+					<a class="no_under text-sm" href="https://projects.intra.42.fr/projects/{{ project }}">
+						<i class="fa-solid fa-link"></i>Intra</a>
+				</h2>
 			{% else %}
 				<h2>Recherchez un groupe</h2>
 			{% endif %}
