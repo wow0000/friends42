@@ -56,7 +56,7 @@
 				       autocomplete="off" {{ "checked" if actual_cluster == cluster['name'] else "" }}>
 				<label class="btn btn-outline-{{ place_to_btn(cluster) }} m-t" for="radio{{ cluster.name }}">
 					{{ ('<i class="fa-solid fa-person-swimming text-info"></i>' if cluster.name in piscine else '') | safe }}{{ cluster.name }}
-					<span class="text-muted">({{ cluster.places }} places)</span></label>
+					<span class="text-muted">({{ cluster.places }}	/ {{ cluster.maximum_places}} places)</span></label>
 			{%- endfor -%}
 		</div>
 	</div>
