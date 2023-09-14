@@ -1,0 +1,105 @@
+{% extends 'template.html' %}
+{% block css %}
+	<style>
+		.l_opacity {
+			color: var(--bs-secondary-text-emphasis);
+		}
+
+		.text-sm {
+			font-size: 0.8em;
+		}
+	</style>
+{% endblock %}
+{% block content %}
+	<div class="container mt-3 p-4 bg-body-tertiary rounded">
+		<h2>Créer une nouvelle annonce pour {{ project }}</h2>
+		<div class="mb-3">
+			<label for="f-project" class="form-label">Projet</label>
+			<input class="form-control" id="f-project" disabled value="{{ project }}">
+		</div>
+		<div class="mb-3">
+			<label for="f-length" class="form-label">Deadline / Durée estimée [optionnel]</label>
+			<input class="form-control" id="f-length" maxlength="10" value="{{ edit.deadline }}" placeholder="1 mois">
+		</div>
+		<div class="mb-3">
+			<label for="f-progress" class="form-label">Progression actuelle du projet</label>
+			<div class="input-group">
+				<input class="form-control" id="f-progress" type="number" placeholder="0" value="{{ edit.progress or 0 }}" min="0" max="100">
+				<span class="input-group-text">%</span>
+			</div>
+		</div>
+		<div class="mb-3">
+			<label for="f-people" class="form-label">Nombre de participants du groupe maximum <span class="text-muted">(vous compris)</span></label>
+			<div class="input-group">
+				<input class="form-control" id="f-people" type="number" placeholder="2" value="{{ edit.people or 2 }}" min="2" max="8">
+				<span class="input-group-text">étudiants</span>
+			</div>
+		</div>
+		<div class="mb-3">
+			<label for="f-quick-contact" class="form-label">Vos moyens de contacts</label>
+			<input class="form-control" id="f-quick-contact" value="{{ edit.quick_contacts }}" maxlength="35" placeholder="Discord, Skype, Telegram">
+		</div>
+		<div class="mb-3">
+			<label for="f-mates" class="form-label">Identifiants de vos mates (séparés par une virgule)</label>
+			<input class="form-control" id="f-mates" value="{{ edit.mates }}" maxlength="60" placeholder="norminet, test">
+		</div>
+		<div class="mb-3">
+			<label for="f-description" class="form-label mb-0">Description</label><br>
+			<span class="l_opacity mb-2 text-sm">Pensez à noter vos critères et obligations (deadlines, langues, travail restant et accompli, horaires de travail, présentiel/distanciel, bonus, etc). 1000 caractères maximum</span>
+			<textarea class="form-control" id="f-description" maxlength="1000" rows="3">{{ edit.description }}</textarea>
+		</div>
+		<div class="mb-3">
+			<label for="f-contact" class="form-label mb-0">Où vous contacter ?</label><br>
+			<span class="l_opacity mb-2 text-sm">Écrivez ici vos moyens de contacts (identifiant Discord, Telegram, Instagram, IRC, etc)</span>
+			<textarea class="form-control" id="f-contact" maxlength="500" rows="3">{{ edit.contact }}</textarea>
+		</div>
+
+		<button class="btn btn-primary" id="publish">Publier !</button>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		document.getElementById("publish").addEventListener("click", () => {
+			let length = document.getElementById("f-length").value;
+			let progress = document.getElementById("f-progress").value;
+			let quick_contact = document.getElementById("f-quick-contact").value;
+			let mates = document.getElementById("f-mates").value;
+			let description = document.getElementById("f-description").value;
+			let contact = document.getElementById("f-contact").value;
+			let people = document.getElementById("f-people").value;
+
+			let data = {
+				"length": length,
+				"progress": progress || 0,
+				"quick_contact": quick_contact,
+				"mates": mates,
+				"description": description,
+				"contact": contact,
+				"people": people
+			};
+
+			if (description.length < 5 || description.length > 1000) return triggerToast("La description doit faire entre 5 et 1000 caractères");
+			if (contact.length < 5 || contact.length > 500) return triggerToast("Le contact doit faire entre 5 et 500 caractères");
+
+			document.getElementById('publish').disabled = true;
+			fetch("/mates/{{project}}/post", {
+				method: "POST",
+				body: JSON.stringify(data),
+				headers: {
+					"Content-Type": "application/json"
+				}
+			}).then(async res => {
+				if (res.status === 200) {
+					triggerToast("Annonce publiée avec succès !", true);
+					setTimeout(() => {
+						window.location.href = "/mates/{{project}}";
+					}, 1000);
+				} else {
+					document.getElementById('publish').disabled = false;
+					triggerToast(`Une erreur s'est produite pendant l'ajout de l'annonce. ${res.status}: ${await res.text()}`);
+				}
+			});
+		})
+	</script>
+{% endblock %}

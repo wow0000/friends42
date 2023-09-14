@@ -26,7 +26,7 @@ def search(start, userid):
 @auth_required
 def getuser(login, userid):
 	db = Db("database.db")
-	user = db.get_user_profile(login)
+	user = db.get_user_profile(login, api)
 	if user is None:
 		return '', 404
 	is_friend = db.is_friend(userid['userid'], user['id'])

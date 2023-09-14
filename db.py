@@ -60,7 +60,11 @@ class Db:
 		return query.fetchone()
 
 	def get_user_by_id(self, user_id: int):
-		query = self.cur.execute("SELECT name, campus FROM USERS WHERE id = ?", [user_id])
+		query = self.cur.execute("SELECT name, campus, image_medium FROM USERS WHERE id = ?", [user_id])
+		return query.fetchone()
+
+	def get_user_by_login(self, login: str):
+		query = self.cur.execute("SELECT name, campus, image_medium FROM USERS WHERE name = ?", [login])
 		return query.fetchone()
 
 	def search(self, start: str):
@@ -178,7 +182,7 @@ class Db:
 		return True
 
 	# Cookies
-	def get_user_by_bookie(self, cookie: str) -> int:
+	def get_user_by_bookie(self, cookie: str) -> dict:
 		req = self.cur.execute('SELECT userid FROM COOKIES WHERE uuid = ?', [cookie])
 		ret = req.fetchone()
 		if ret is None:
@@ -268,14 +272,21 @@ class Db:
 		self.commit()
 		return True
 
-	def get_user_profile(self, login):
+	def get_user_profile(self, login, api=None):
 		"""
 		:param login: Login 42 str
 		:return: SELECT * FROM USERS
 		"""
 		query = self.cur.execute("SELECT * FROM USERS LEFT JOIN PROFILES ON PROFILES.userid = USERS.id WHERE name = ?",
 		                         [str(login)])
-		return query.fetchone()
+		ret = query.fetchone()
+		if api and ret is None:
+			ret_status, ret_data = api.get_unknown_user(login)
+			if ret_status != 200:
+				return None
+			self.create_user(ret_data)
+			return self.get_user_profile(login)
+		return ret
 
 	def get_user_profile_id(self, login):
 		"""
@@ -290,3 +301,59 @@ class Db:
 	def is_banned(self, user_id: int) -> bool:
 		query = self.cur.execute('SELECT 1 FROM BAN_lIST WHERE userid = ?', [user_id])
 		return query.fetchone() is not None
+
+	# Mates
+	"""
+	id             INTEGER PRIMARY KEY AUTOINCREMENT,
+	project        TEXT,
+	created        DATETIME DEFAULT CURRENT_TIMESTAMP,
+	creator_id     INTEGER,
+	campus         INTEGER,
+	deadline       TEXT     DEFAULT NULL,
+	progress       INTEGER  DEFAULT 0,
+	quick_contacts TEXT,
+	mates          TEXT,
+	description    TEXT,
+	contact        TEXT,
+	UNIQUE (project, creator_id),
+	FOREIGN KEY (creator_id) REFERENCES USERS (id)
+	"""
+
+	def get_mate_by_id(self, id):
+		req = self.cur.execute("SELECT * FROM MATES WHERE id = ?", [id])
+		return req.fetchone()
+
+	def get_mates(self, project: str, campus: int):
+		req = self.cur.execute("SELECT * FROM MATES WHERE project = ? AND campus = ? ORDER BY created DESC",
+		                       [project, campus])
+		return req.fetchall()
+
+	def get_latest_mates(self, campus: int):
+		req = self.cur.execute("SELECT * FROM MATES WHERE campus = ? ORDER BY created DESC LIMIT 5",
+		                       [campus])
+		return req.fetchall()
+
+	def delete_mate(self, project_id):
+		self.cur.execute("DELETE FROM MATES WHERE id = ?", [project_id])
+		self.commit()
+
+	def new_mate(self, creator: int, project: str, deadline: str, progress: int, quick_contacts: str, mates: str,
+	             description: str, contact: str, people: int) -> int:
+		if len(quick_contacts) > 35 or len(mates) > 60 or len(description) > 1000 or len(contact) > 500 or len(
+				deadline) > 10:
+			return 1
+		if creator <= 0 or progress > 100 or progress < 0:
+			return 2
+		if people > 8 or people < 2:
+			return 4
+
+		creator_details = self.get_user_by_id(creator)
+		if not creator_details:
+			return 3
+
+		self.cur.execute(
+			"INSERT OR REPLACE INTO MATES(project, creator_id, campus, deadline, progress, quick_contacts, mates, description, contact, people) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			[project, creator, creator_details['campus'], deadline, progress, quick_contacts, mates, description,
+			 contact, people])
+		self.commit()
+		return 0

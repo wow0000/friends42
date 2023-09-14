@@ -1,0 +1,212 @@
+{% extends 'template.html' %}
+{% block css %}
+	<style>
+		.flex-basis-min-content {
+			flex-basis: min-content;
+		}
+
+		@media (max-width: 900px) {
+			.flex-hide-small {
+				display: none !important;
+			}
+		}
+
+		@media (min-width: 900px) {
+			.flex-show-small {
+				display: none !important;
+			}
+		}
+
+		.mw-176 {
+			max-width: 200px;
+			flex-wrap: wrap;
+			flex-flow: column;
+		}
+
+		.l_opacity {
+			color: var(--bs-secondary-text-emphasis);
+		}
+
+		.text-sm {
+			font-size: 0.6em;
+		}
+
+		.weird-full-size {
+			flex-direction: column;
+		}
+
+		.text-right {
+			text-align: right;
+		}
+	</style>
+{% endblock %}
+{% block content %}
+
+	<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="contactModalLabel">Informations de contact</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="contactModalText">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container mt-2">
+		<div class="h-100">
+			{% if project %}
+				<h2>{{ project }}</h2>
+			{% else %}
+				<h2>Recherchez un projet</h2>
+			{% endif %}
+			<div class="input-group mb-3">
+				<input type="text" id="projectName" list="projectList" class="form-control" placeholder="{{ project if project else '42cursus-minishell' }}">
+				<datalist id="projectList">
+					{% for proj in projectsList %}
+						<option value="{{ proj.slug }}">{{ proj.name }}</option>
+					{% endfor %}
+				</datalist>
+				<button class="btn btn-outline-secondary" type="button" id="button-search-project">
+					<i class="fa-solid fa-magnifying-glass"></i> Rechercher
+				</button>
+			</div>
+
+		</div>
+		{% if projects != False %}
+			<div class="list-group mb-2">
+				{% for proj in projects %}
+					<div class="list-group-item list-group-item-action d-flex">
+						<div class="flex-basis-min-content mw-176 me-2 d-flex flex-hide-small">
+							{% for people in proj['a_mates'] %}
+								<div class="text-center">
+									<img src="{{ people.image_medium }}" width="60"
+									     height="60" class="rounded-circle flex-shrink-0 me-2" alt="{{ people.name }} picture">
+									<span>{{ people.name }}</span>
+								</div>
+							{% endfor %}
+						</div>
+						<div class="d-flex gap-2 w-100 justify-content-between weird-full-size">
+							<div>
+								<h4 class="mb-0">{{ proj['project'] }}
+									({{ len(proj['a_mates']) }}/{{ proj['people'] }})</h4>
+								<span class="opacity-50 text-nowrap text-sm">{{ proj.date }}</span>
+
+								<div class="l_opacity">
+									<div class="flex-show-small">
+								<span class="me-2">
+									{% for people in proj['a_mates'] %}
+										{{ people.name }}
+										<img src="{{ people.image_medium }}" alt="{{ people.name }} picture" width="40" height="40" class="rounded-circle flex-shrink-0 me-2">
+									{% endfor %}
+								</span>
+									</div>
+									<span class="me-2"><i class="fa-regular fa-calendar"></i> {{ proj.deadline }}</span>
+									<span class="me-2"><i class="fa-solid fa-list-check"></i> {{ proj.progress }}%</span>
+									<span class="me-2"><i class="fa-solid fa-address-book"></i> {{ proj.quick_contacts }}</span>
+								</div>
+								<p>{{ proj.description }}</p>
+								<div class="text-right">
+									<button class="btn btn-outline-secondary" onclick="call_contact_modal({{ proj.id }})" type="button">
+										Contacter
+									</button>
+									{% if proj.creator_id == creator_id %}
+										<button class="btn btn-outline-warning" onclick="call_edit({{ proj.id }})" type="button">
+											Éditer
+										</button>
+										<button class="btn btn-outline-danger" onclick="call_delete({{ proj.id }})" type="button">
+											Supprimer
+										</button>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+
+			<div class="h-100 p-2 text-center mb-2">
+				{% if project != False %}
+					<a href="/mates/{{ project }}/new">
+						<button class="btn btn-primary text-right" type="button">Poster une nouvelle annonce</button>
+					</a>
+				{% else %}
+					Pour parcourir l'ensemble des projets, utilisez la barre de recherche.
+				{% endif %}
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		function valid_name(name) {
+			name = name.toLowerCase();
+			let datalist = document.getElementById('projectList');
+			for (let i = 0; i < datalist.options.length; i++) {
+				if (datalist.options[i].innerText.toLowerCase() === name)
+					return datalist.options[i].value;
+				if (datalist.options[i].value.toLowerCase() === name)
+					return datalist.options[i].value;
+			}
+			return false;
+		}
+
+		function search_name(name) {
+			name = valid_name(name);
+			if (!name) {
+				triggerToast("Le projet spécifié est introuvable");
+				return;
+			}
+			window.location.href = `/mates/${name}`;
+		}
+
+		function trigger_search() {
+			let data = document.getElementById('projectName').value;
+			if (data)
+				search_name(data.trim());
+		}
+
+		function call_delete(offer_id) {
+			fetch(`/mates/${offer_id}/delete`).then(async res => {
+				if (res.status === 200) {
+					triggerToast("L'annonce a bien été supprimée", true);
+					setTimeout(() => {
+						window.location.reload();
+					}, 1000);
+				} else
+					triggerToast(`Une erreur s'est produite pendant la suppression de l'annonce. (${res.status})`);
+			});
+		}
+
+		function call_edit(offer_id) {
+			location.href = `/mates/${offer_id}/edit`;
+		}
+
+		function call_contact_modal(offer_id) {
+			fetch(`/mates/${offer_id}/contact`).then(async res => {
+				if (res.status === 200) {
+					let contactModal = new bootstrap.Modal('#contactModal');
+					document.getElementById('contactModalText').innerText = await res.text();
+					contactModal.show();
+				} else
+					triggerToast(`Une erreur s'est produite pendant la récupération des informations. (${res.status})`);
+			});
+		}
+
+		document.getElementById("projectName").addEventListener("keyup", function (event) {
+			if (event.key === 'Enter')
+				trigger_search();
+		});
+
+		document.getElementById("button-search-project").addEventListener("click", function (event) {
+			trigger_search();
+		});
+
+	</script>
+{% endblock %}

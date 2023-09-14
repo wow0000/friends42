@@ -11,14 +11,9 @@ app = Blueprint('front', __name__, template_folder='templates', static_folder='s
 @auth_required
 def profile(login, userid):
 	db = Db("database.db")
-	user = db.get_user_profile(login)
+	user = db.get_user_profile(login, api)
 	if user is None:
-		status, resp = api.get_unknown_user(login)
-		if status == 200:
-			create_users(db, [{'user': resp}])
-			user = db.get_user_profile(login)
-		else:
-			return '', 404
+		return '', 404
 	is_friend = db.is_friend(userid['userid'], user['id']) is not False
 	is_banned = db.is_banned(user['id'])
 	theme = db.get_theme(userid['userid'])
@@ -90,7 +85,8 @@ def index(userid):
 		issues_map[issue['station']]['issue'] = issue['issue']
 		issues_map[issue['station']]['count'] += 1
 	clusters_list = [
-		{"name": cluster, "exrypz": campus_map['exrypz'], "map": campus_map[cluster], "maximum_places" : maps.places(campus_map['exrypz'], campus_map[cluster]),
+		{"name": cluster, "exrypz": campus_map['exrypz'], "map": campus_map[cluster],
+		 "maximum_places": maps.places(campus_map['exrypz'], campus_map[cluster]),
 		 "places": maps.available_seats(cluster, campus_map[cluster], campus_map['exrypz'], location_map, issues_map)}
 		for cluster in campus_map['allowed']]
 	return render_template('index.html', map=campus_map[cluster_name], locations=location_map,
@@ -116,12 +112,6 @@ def friends_route(userid):
 	friend_list = sorted(friend_list, key=lambda d: 0 if d['relation'] == 1 else 1)
 	friend_list = sorted(friend_list, key=lambda d: 0 if d['position'] else 1)
 	return render_template('friends.html', friends=friend_list, theme=theme)
-
-
-@app.route('/mates/')
-@auth_required
-def mates_route(userid):
-	return render_template('mate.html')
 
 
 # Manual things that need to be routed on /

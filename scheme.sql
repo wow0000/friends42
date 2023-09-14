@@ -6,8 +6,8 @@ CREATE TABLE IF NOT EXISTS USERS
 	image_medium VARCHAR(100),
 	pool         VARCHAR(100),
 	lang         VARCHAR(3) DEFAULT 'fr',
-	active       TIMESTAMP DEFAULT 0,
-	campus		 INTEGER DEFAULT 1
+	active       TIMESTAMP  DEFAULT 0,
+	campus       INTEGER    DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS COOKIES
@@ -63,20 +63,38 @@ CREATE TABLE IF NOT EXISTS BAN_LIST
 
 CREATE TABLE IF NOT EXISTS NOTIFICATIONS_TELEGRAM
 (
-	userid		INTEGER PRIMARY KEY,
-	telegram_id	INTEGER,
-	message		TEXT DEFAULT NULL,
-	enabled		INTEGER DEFAULT 1,
+	userid      INTEGER PRIMARY KEY,
+	telegram_id INTEGER,
+	message     TEXT    DEFAULT NULL,
+	enabled     INTEGER DEFAULT 1,
 	FOREIGN KEY (userid) REFERENCES USERS (id)
 );
 
 CREATE TABLE IF NOT EXISTS THEME
 (
-	userid		INTEGER PRIMARY KEY,
-	javascript	TEXT DEFAULT NULL,
-	css			TEXT DEFAULT NULL,
-	enabled		INTEGER DEFAULT 0,
+	userid     INTEGER PRIMARY KEY,
+	javascript TEXT    DEFAULT NULL,
+	css        TEXT    DEFAULT NULL,
+	enabled    INTEGER DEFAULT 0,
 	FOREIGN KEY (userid) REFERENCES USERS (id)
+);
+
+CREATE TABLE IF NOT EXISTS MATES
+(
+	id             INTEGER PRIMARY KEY AUTOINCREMENT,
+	project        TEXT,
+	created        DATETIME DEFAULT CURRENT_TIMESTAMP,
+	creator_id     INTEGER,
+	campus         INTEGER,
+	people         INTEGER,
+	deadline       TEXT     DEFAULT NULL,
+	progress       INTEGER  DEFAULT 0,
+	quick_contacts TEXT,
+	mates          TEXT,
+	description    TEXT,
+	contact        TEXT,
+	UNIQUE (project, creator_id),
+	FOREIGN KEY (creator_id) REFERENCES USERS (id)
 );
 
 /*

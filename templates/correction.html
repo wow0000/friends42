@@ -6,24 +6,26 @@
 {% block content %}
 	<div class="container">
 		<div class="input-group mb-3">
-  			<span class="input-group-text">Project</span>
+			<span class="input-group-text">Project</span>
 			<input class="form-control" list="datalistOptions" id="projectDL" placeholder="42cursus-minishell">
 			<datalist id="datalistOptions">
 				{% for project in projects %}
-					<option value="{{project.slug}}">{{ project.slug }}</option>
+					<option value="{{ project.slug }}">{{ project.slug }}</option>
 				{% endfor %}
 			</datalist>
-			<button id="button-search" type="button" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+			<button id="button-search" type="button" class="btn btn-primary">
+				<i class="fa-solid fa-magnifying-glass"></i> Search
+			</button>
 		</div>
 	</div>
 {% endblock %}
 
 {% block scripts %}
-<script>
-document.getElementById('button-search').onclick = function() {
-	if (document.getElementById('projectDL').value.trim().length == 0)
-		return;
-	window.location.href += '/' + document.getElementById('projectDL').value;
-}
-</script>
+	<script>
+		document.getElementById('button-search').onclick = function () {
+			if (document.getElementById('projectDL').value.trim().length == 0)
+				return;
+			window.location.href += '/' + document.getElementById('projectDL').value;
+		}
+	</script>
 {% endblock %}

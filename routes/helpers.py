@@ -27,9 +27,14 @@ def auth_required(function):
 		token = request.cookies.get('token')
 		db = Db("database.db")
 		userid = db.get_user_by_bookie(token)
-		db.close()
 		if userid == 0:
+			db.close()
 			return redirect("/redirect_42", 307)
+		details = db.get_user_by_id(userid['userid'])
+		db.close()
+		userid['campus'] = details['campus']
+		userid['login'] = details['name']
+		userid['image_medium'] = proxy_images(details['image_medium'])
 		kwargs["userid"] = userid
 		return function(*args, **kwargs)
 
@@ -128,5 +133,39 @@ def locs(campus=1):
 		return data, status
 
 
-def date_relative(date):
-	return arrow.get(date).humanize(locale='fr', granularity=["day"])
+def date_relative(date, granularity=None):
+	if granularity is None:
+		granularity = ['day']
+	return arrow.get(date).humanize(locale='fr', granularity=granularity)
+
+
+def get_projects():
+	projects = r.get('project_list_group')
+	if projects is not None:
+		return json.loads(projects)
+	with open('projects.json') as json_file:
+		projects = json.load(json_file)
+	res = []
+	for project in projects:
+		if project['exam']:
+			continue
+		if len(project['project_sessions']) == 0:
+			res.append({"name": project['name'], "slug": project['slug']})
+		solo = True
+		for session in project['project_sessions']:
+			if not session['solo']:
+				solo = False
+				break
+		if not solo:
+			res.append({"name": project['name'], "slug": project['slug']})
+	res = sorted(res, key=lambda d: d['name'])
+	r.set('project_list_group', json.dumps(res), ex=3600)
+	return res
+
+
+def does_group_project_exists(slug: str) -> bool:
+	projects = get_projects()
+	for project in projects:
+		if project['slug'] == slug:
+			return True
+	return False
