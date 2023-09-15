@@ -71,6 +71,7 @@
 				</h2>
 			{% else %}
 				<h2>Recherchez un groupe</h2>
+				<p>Postez une annonce pour trouver votre prochain mate ou bien, rejoignez un groupe existant</p>
 			{% endif %}
 			<div class="input-group mb-3">
 				<input type="text" id="projectName" list="projectList" class="form-control" placeholder="{{ project if project else '42cursus-minishell' }}">
@@ -79,7 +80,7 @@
 						<option value="{{ proj.slug }}">{{ proj.name }}</option>
 					{% endfor %}
 				</datalist>
-				<button class="btn btn-outline-secondary" type="button" id="button-search-project">
+				<button class="btn btn-primary" type="button" id="button-search-project">
 					<i class="fa-solid fa-magnifying-glass"></i> Rechercher
 				</button>
 			</div>
@@ -143,7 +144,8 @@
 						<button class="btn btn-primary text-right" type="button">Poster une nouvelle annonce</button>
 					</a>
 				{% else %}
-					Pour parcourir l'ensemble des projets, utilisez la barre de recherche.
+					<i class="fa-solid fa-hand-point-up"></i> Pour parcourir l'ensemble des projets, utilisez la barre
+					de recherche <i class="fa-solid fa-hand-point-up"></i>
 				{% endif %}
 			</div>
 		{% endif %}
