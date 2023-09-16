@@ -88,6 +88,7 @@ def index(userid):
 		{"name": cluster, "exrypz": campus_map['exrypz'], "map": campus_map[cluster],
 		 "maximum_places": maps.places(campus_map['exrypz'], campus_map[cluster]),
 		 "users": maps.count_in_cluster(cluster, location_map),
+		 "dead_pc": maps.count_in_cluster(cluster, issues_map),
 		 "places": maps.available_seats(cluster, campus_map[cluster], campus_map['exrypz'], location_map, issues_map)}
 		for cluster in campus_map['allowed']]
 	return render_template('index.html', map=campus_map[cluster_name], locations=location_map,
