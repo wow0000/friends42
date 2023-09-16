@@ -21,9 +21,10 @@ def mates_default_route(userid):
 	db = Db("database.db")
 	latest = db.get_latest_mates(userid['campus'])
 	apply_modifications_mates(db, latest)
+	theme = db.get_theme(userid['userid'])
 	db.close()
 	return render_template('mate.html', project=False, projects=latest, projectsList=get_projects(),
-	                       creator_id=userid['userid'])
+	                       creator_id=userid['userid'], theme=theme)
 
 
 @app.route('/mates/<project>')
@@ -33,10 +34,11 @@ def mates_route(project, userid):
 		return 'Unknown project', 404
 	db = Db("database.db")
 	projects = db.get_mates(project, userid['campus'])
+	theme = db.get_theme(userid['userid'])
 	apply_modifications_mates(db, projects)
 	db.close()
 	return render_template('mate.html', project=project, projects=projects or {}, projectsList=get_projects(),
-	                       creator_id=userid['userid'])
+	                       creator_id=userid['userid'], theme=theme)
 
 
 @app.route("/mates/<project_id>/contact")
@@ -123,8 +125,9 @@ def new_mates_route(project, userid):
 def edit_mates_route(project_id, userid):
 	db = Db("database.db")
 	project = db.get_mate_by_id(project_id)
+	theme = db.get_theme(userid['userid'])
 	db.close()
 	if project is None or project['creator_id'] != userid['userid']:
 		db.close()
 		return '', 403
-	return render_template('new_mate.html', project=project['project'], edit=project)
+	return render_template('new_mate.html', project=project['project'], edit=project, theme=theme)
