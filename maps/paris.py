@@ -3,6 +3,9 @@ def exrypz(computer):
 	if '-' in computer and len(computer) >= 8:
 		floor = computer.split('r')[0]
 		row = computer.split('r')[1].split('s')[0]
+		# fix for invalid seat
+		if 's' not in computer:
+			return {"building": computer.split('-')[0], "p_sep": "s", "etage": floor, "range": row, "place": "1"}
 		seat = computer.split('s')[1]
 		res = {"building": computer.split('-')[0], "p_sep": "s", "etage": floor, "range": row,
 		       "place": seat}
