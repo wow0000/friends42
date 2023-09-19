@@ -30,7 +30,7 @@
 			<i class="fa-solid fa-layer-group"></i>
 		</button>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-		        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -46,17 +46,19 @@
 				</li>
 			</ul>
 			<div class="d-flex" role="search">
+				<button type="button" class="btn btn-outline-primary me-1" onclick="newTab('https://discord.gg/E8jbpgxz2s');" aria-label="Discord">
+					<i class="fa-brands fa-discord"></i> <i hidden class="spinner-border spinner-border-sm"></i>
+				</button>
+				<button type="button" class="btn btn-outline-secondary me-1" onclick="newTab('https://github.com/wow0000/friends42');" aria-label="Github">
+					<i class="fa-brands fa-github"></i> <i hidden class="spinner-border spinner-border-sm"></i>
+				</button>
 				<input class="form-control" list="global_suggestions" id="globalSearch" type="search" placeholder="Rechercher..." aria-label="Search">
 				<datalist id="global_suggestions"></datalist>
 				<button type="button" id="globalSearchButton" aria-label="Search" class="btn btn-outline-light mx-1">
 					<i class="fa-solid fa-magnifying-glass"></i>
 				</button>
-				<button type="button" class="btn btn-outline-success online me-1" aria-label="Add friend"
-				        id="globalAddFriend">
-					<i class="fa-solid fa-user-plus"></i> <i hidden class="spinner-border spinner-border-sm"></i>
-				</button>
-				<button type="button" class="btn btn-secondary" aria-label="Settings"
-				        onclick="location.href = '/settings/';">
+				<button type="button" class="btn btn-outline-light" aria-label="Settings"
+						onclick="location.href = '/settings/';">
 					<i class="fa-solid fa-gear"></i>
 				</button>
 			</div>
@@ -65,12 +67,12 @@
 </nav>
 <div class="toast-container position-fixed top-0 end-0 p-3">
 	<div id="liveToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
-	     aria-atomic="true">
+		 aria-atomic="true">
 		<div class="d-flex">
 			<div class="toast-body" id="toast_body">
 			</div>
 			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-			        aria-label="Close"></button>
+					aria-label="Close"></button>
 		</div>
 	</div>
 </div>
