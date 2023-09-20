@@ -276,7 +276,7 @@ function isTouchDevice() {
 			list.appendChild(option);
 		});
 	}
-
+	/*
 	globalAddFriend.addEventListener('click', async () => {
 		let val = globalSearchInput.value.trim();
 
@@ -286,7 +286,7 @@ function isTouchDevice() {
 		}
 		await addFriend(globalSearchInput.value, '#globalAddFriend', true);
 	});
-
+	*/
 	function search_text(text, callback) {
 		fetch('/search/' + encodeURIComponent(text) + "/0").then((response) => {
 			response.json().then((json) => {
