@@ -64,15 +64,35 @@
 
 	<div class="container mt-2">
 		<div class="h-100">
-			{% if project %}
-				<h2>{{ project }}
-					<a class="no_under text-sm" href="https://projects.intra.42.fr/projects/{{ project }}">
-						<i class="fa-solid fa-link"></i>Intra</a>
-				</h2>
-			{% else %}
-				<h2>Recherchez un groupe</h2>
-				<p>Postez une annonce pour trouver votre prochain mate ou bien, rejoignez un groupe existant</p>
-			{% endif %}
+			<div class="mb-2">
+				{% if project %}
+					<h2>{{ project }}
+						<a class="no_under text-sm me-2" href="https://projects.intra.42.fr/projects/{{ project }}">
+							<i class="fa-solid fa-link"></i>Intra
+						</a>
+						{% if project_info['subject'] %}
+							<a class="no_under text-sm me-2" href="{{ project_info['subject'] }}">
+								<i class="fa-solid fa-link"></i>Sujet
+							</a>
+						{% endif %}
+					</h2>
+					{% if project_info['description'] %}
+						<p class="mb-0">{{ project_info['description'] }}</p>
+					{% endif %}
+					{% if project_info['attachements'] and len(project_info['attachements']) > 1 %}
+						{% for attachment in project_info['attachements'] %}
+							{% if 'subject' not in attachment['name'] %}
+								<a class="no_under me-2" href="{{ attachment['url'] }}">
+									<i class="fa-solid fa-link"></i>{{ attachment['name'] }}
+								</a>
+							{% endif %}
+						{% endfor %}
+					{% endif %}
+				{% else %}
+					<h2>Recherchez un groupe</h2>
+					<p>Postez une annonce pour trouver votre prochain mate ou bien, rejoignez un groupe existant</p>
+				{% endif %}
+			</div>
 			<div class="input-group mb-3">
 				<input type="text" id="projectName" list="projectList" class="form-control" placeholder="{{ project if project else '42cursus-minishell' }}">
 				<datalist id="projectList">
@@ -139,11 +159,11 @@
 			</div>
 
 			<div class="h-100 p-2 text-center mb-2">
-				{% if project != False %}
+				{% if project != False and not project_info['solo'] %}
 					<a href="/mates/{{ project }}/new">
 						<button class="btn btn-primary text-right" type="button">Poster une nouvelle annonce</button>
 					</a>
-				{% else %}
+				{% elif project == False %}
 					<i class="fa-solid fa-hand-point-up"></i> Pour parcourir l'ensemble des projets, utilisez la barre
 					de recherche <i class="fa-solid fa-hand-point-up"></i>
 				{% endif %}

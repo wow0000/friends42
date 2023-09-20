@@ -139,40 +139,29 @@ def date_relative(date, granularity=None):
 	return arrow.get(date).humanize(locale='fr', granularity=granularity)
 
 
-def get_projects():
-	projects = r.get('project_list_group')
-	if projects is not None:
-		return json.loads(projects)
-	with open('projects.json') as json_file:
-		projects = json.load(json_file)
-	res = []
-	for project in projects:
-		if project['exam']:
-			continue
-		if len(project['project_sessions']) == 0:
-			res.append({"name": project['name'], "slug": project['slug']})
-		solo = True
-		for session in project['project_sessions']:
-			if not session['solo']:
-				solo = False
-				break
-		if not solo:
-			res.append({"name": project['name'], "slug": project['slug']})
-	res = sorted(res, key=lambda d: d['name'])
-	r.set('project_list_group', json.dumps(res), ex=3600)
-	return res
+def get_projects(group=False):
+	db = Db("database.db")
+	projects = []
+	if group:
+		projects = db.get_group_projects_list(r)
+	else:
+		projects = db.get_project_list(r)
+	db.close()
+	return projects
 
-def find_keyword_project(keyword: str) -> list:
-	projects = get_projects()
-	res = []
-	for project in projects:
-		if keyword.lower() in project['name'].lower() or keyword.lower() in project['slug'].lower():
-			res.append(project)
-	return res
+
+def find_keyword_project(keyword: str, group: False) -> list:
+	db = Db("database.db")
+	if group:
+		projects = db.search_project_solo(keyword, False)
+	else:
+		projects = db.search_project(keyword)
+	db.close()
+	return projects
+
 
 def does_group_project_exists(slug: str) -> bool:
-	projects = get_projects()
-	for project in projects:
-		if project['slug'] == slug:
-			return True
-	return False
+	db = Db("database.db")
+	ret = db.is_project_a_thing(slug)
+	db.close()
+	return ret

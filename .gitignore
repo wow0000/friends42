@@ -170,3 +170,6 @@ cython_debug/
 database.db
 # wip
 routes/f_wip_*
+wip_*
+session.txt
+projects*.json

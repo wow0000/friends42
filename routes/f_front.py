@@ -130,7 +130,7 @@ def search_route(keyword, friends_only, userid):
 	req_friends = db.search(keyword)
 	projects = []
 	if friends_only == 0:
-		projects = find_keyword_project(keyword)
+		projects = find_keyword_project(keyword, False)
 	db.close()
 	resp = [{"type": "user", "v": e['name'], "s": e['name']} for e in req_friends]
 	if friends_only == 0:

@@ -1,6 +1,7 @@
 import sqlite3
 import secrets
 import base64
+import json
 
 
 def read_file(filename: str):
@@ -182,7 +183,7 @@ class Db:
 		return True
 
 	# Cookies
-	def get_user_by_bookie(self, cookie: str) -> dict:
+	def get_user_by_bookie(self, cookie: str):
 		req = self.cur.execute('SELECT userid FROM COOKIES WHERE uuid = ?', [cookie])
 		ret = req.fetchone()
 		if ret is None:
@@ -273,10 +274,6 @@ class Db:
 		return True
 
 	def get_user_profile(self, login, api=None):
-		"""
-		:param login: Login 42 str
-		:return: SELECT * FROM USERS
-		"""
 		query = self.cur.execute("SELECT * FROM USERS LEFT JOIN PROFILES ON PROFILES.userid = USERS.id WHERE name = ?",
 		                         [str(login)])
 		ret = query.fetchone()
@@ -319,8 +316,8 @@ class Db:
 	FOREIGN KEY (creator_id) REFERENCES USERS (id)
 	"""
 
-	def get_mate_by_id(self, id):
-		req = self.cur.execute("SELECT * FROM MATES WHERE id = ?", [id])
+	def get_mate_by_id(self, mate_id):
+		req = self.cur.execute("SELECT * FROM MATES WHERE id = ?", [mate_id])
 		return req.fetchone()
 
 	def get_mates(self, project: str, campus: int):
@@ -357,3 +354,51 @@ class Db:
 			 contact, people])
 		self.commit()
 		return 0
+
+	# Projects
+
+	def get_project_list(self, redis):
+		rds_ret = redis.get('db_project_list')
+		if rds_ret:
+			return json.loads(rds_ret)
+		req = self.cur.execute("SELECT * FROM PROJECTS")
+		data = req.fetchall()
+		redis.set('db_project_list', json.dumps(data), ex=3600)
+		return data
+
+	def get_group_projects_list(self, redis):
+		rds_ret = redis.get('db_project_list_group')
+		if rds_ret:
+			return json.loads(rds_ret)
+		req = self.cur.execute("SELECT * FROM PROJECTS WHERE solo = 0")
+		data = req.fetchall()
+		redis.set('db_project_list_group', json.dumps(data), ex=3600)
+		return data
+
+	def get_project(self, project_slug, redis):
+		rds_ret = redis.get('db_project_name_' + project_slug)
+		if rds_ret:
+			return json.loads(rds_ret)
+		req = self.cur.execute("SELECT * FROM PROJECTS WHERE slug = ?", [project_slug])
+		data = req.fetchone()
+		redis.set('db_project_name_' + project_slug, json.dumps(data), ex=3600)
+		return data
+
+	def is_project_a_thing(self, project_slug) -> bool:
+		req = self.cur.execute("SELECT 1 FROM PROJECTS WHERE slug = ?", [project_slug])
+		return True if req.fetchone() is not None else False
+
+	def search_project_solo(self, keyword: str, solo: False) -> list:
+		keyword = f"%{keyword}%"
+		req = self.cur.execute("SELECT * FROM PROJECTS WHERE (name LIKE ? OR slug LIKE ?) AND solo = ?", [keyword, keyword, solo])
+		return req.fetchall()
+
+	def search_project(self, keyword: str) -> list:
+		keyword = f"%{keyword}%"
+		req = self.cur.execute("SELECT * FROM PROJECTS WHERE name LIKE ? OR slug LIKE ?",
+		                       [keyword, keyword])
+		return req.fetchall()
+
+	# Update process
+	def raw_query(self, query, args):
+		return self.cur.execute(query, args)

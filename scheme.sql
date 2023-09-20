@@ -46,10 +46,10 @@ CREATE TABLE IF NOT EXISTS DEAD_PC
 CREATE TABLE IF NOT EXISTS PROFILES
 (
 	userid  INTEGER PRIMARY KEY REFERENCES USERS (id),
-	website TEXT        DEFAULT "",
-	github  TEXT        DEFAULT "",
-	discord VARCHAR(40) DEFAULT "",
-	recit   TEXT        DEFAULT ""
+	website TEXT        DEFAULT '',
+	github  TEXT        DEFAULT '',
+	discord VARCHAR(40) DEFAULT '',
+	recit   TEXT        DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS BAN_LIST
@@ -96,6 +96,18 @@ CREATE TABLE IF NOT EXISTS MATES
 	UNIQUE (project, creator_id),
 	FOREIGN KEY (creator_id) REFERENCES USERS (id)
 );
+
+CREATE TABLE IF NOT EXISTS PROJECTS
+(
+	id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL,
+    solo INTEGER DEFAULT 1,
+    subject TEXT DEFAULT NULL,
+    description TEXT DEFAULT NULL,
+    experience INTEGER DEFAULT 0,
+    attachements TEXT DEFAULT '[]'
+)
 
 /*
 CREATE TABLE IF NOT EXISTS PREFERENCES

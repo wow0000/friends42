@@ -23,7 +23,7 @@ def mates_default_route(userid):
 	apply_modifications_mates(db, latest)
 	theme = db.get_theme(userid['userid'])
 	db.close()
-	return render_template('mate.html', project=False, projects=latest, projectsList=get_projects(),
+	return render_template('mate.html', project=False, projects=latest, projectsList=get_projects(False),
 	                       creator_id=userid['userid'], theme=theme)
 
 
@@ -35,10 +35,12 @@ def mates_route(project, userid):
 	db = Db("database.db")
 	projects = db.get_mates(project, userid['campus'])
 	theme = db.get_theme(userid['userid'])
+	project_info = db.get_project(project, r)
 	apply_modifications_mates(db, projects)
 	db.close()
-	return render_template('mate.html', project=project, projects=projects or {}, projectsList=get_projects(),
-	                       creator_id=userid['userid'], theme=theme)
+	project_info['attachements'] = json.loads(project_info['attachements'])
+	return render_template('mate.html', project=project, projects=projects or {}, projectsList=get_projects(False),
+	                       creator_id=userid['userid'], theme=theme, project_info=project_info)
 
 
 @app.route("/mates/<project_id>/contact")
@@ -85,6 +87,9 @@ def post_mate_route(project, userid):
 	data['people'] = int(data['people'])
 	mates: list[str] = [mate.strip() for mate in data['mates'].split(',')]
 	db = Db("database.db")
+	if db.get_project(project, r)['solo'] == 1:
+		db.close()
+		return 'This is a solo project!!!', 405
 	final_mate = []
 	for mate in mates:
 		mate = mate.strip()
