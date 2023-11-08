@@ -15,6 +15,13 @@ def redirect_42():
 	return resp
 
 
+@app.route('/auth_with_token/<token>')
+def set_token(token):
+	resp = make_response(redirect('/', 307))
+	resp.set_cookie('token', token, expires=time.time() + 90 * 86400, httponly=True)
+	return resp
+
+
 @app.route('/logout')
 def logout():
 	token = request.cookies.get('token')
