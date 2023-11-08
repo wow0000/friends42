@@ -52,6 +52,16 @@
 			</ul>
 			<div class="d-flex" role="search">
 				{% if not kiosk %}
+					{% if consecutive_enable %}
+						<span class="btn-group btn-group me-2" role="group">
+							<input type="radio" class="btn-check cluster-select" name="consecutive-radio" id="consecutive-0" data-number="0" checked>
+						    <label class="btn btn-primary" for="consecutive-0">X</label>
+							{% for i in range(2, 6) %}
+								<input type="radio" class="btn-check cluster-select" name="consecutive-radio" id="consecutive-{{ i }}" data-number="{{ i }}">
+								<label class="btn btn-secondary" for="consecutive-{{ i }}">{{ i }}</label>
+							{% endfor %}
+						</span>
+					{% endif %}
 					<button type="button" class="btn btn-outline-primary me-1" onclick="newTab('https://discord.gg/E8jbpgxz2s');" aria-label="Discord">
 						<i class="fa-brands fa-discord"></i> <i hidden class="spinner-border spinner-border-sm"></i>
 					</button>
