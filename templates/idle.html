@@ -1,0 +1,262 @@
+{% extends 'template.html' %}
+{%- set consecutive_enable=True -%}
+{% block css %}
+	<link href="/static/css/friends.css?v={{ version }}" rel="stylesheet">
+	<link href="/static/css/index.css?v={{ version }}" rel="stylesheet">
+	<style>
+		.grid-bg {
+			max-width: 99%;
+			overflow-x: auto;
+		}
+
+		.spinner-grow {
+			--bs-spinner-animation-speed: 1.5s !important;
+		}
+
+		.consecutive_seats {
+			background-color: #5a228b !important;
+		}
+	</style>
+{% endblock %}
+{% block content %}
+	{% include 'open_modal.html' %}
+	<div class="list-group list-group-horizontal mx-5 m-2">
+		{% for build in buildings %}
+			<a href="/idle/{{ build.name }}" class="list-group-item list-group-item-action list-group-item-{{ percent_to_btn(build['free'], build['all_place'], '') }} {{ 'active' if build.name == building else '' }}">
+				<div class="d-flex w-100 justify-content-between">
+				<span class="mb-1 fw-bold">
+					<i class="fa-solid fa-building"></i> {{ build.name }}
+				</span>
+				</div>
+				<small>
+					{% for class in build.classes %}
+						{{ class|safe }}
+					{% endfor %}
+					{{ build.taken }}/{{ build.all_place }}
+				</small>
+			</a>
+		{% endfor %}
+	</div>
+
+	<div class="list-group list-group-horizontal mx-5">
+		{% for cluster in clusters %}
+			<a href="#goto-{{ cluster.name }}" class="list-group-item list-group-item-{{ place_to_btn(cluster, '') }} list-group-item-action">
+				<div class="d-flex w-100 justify-content-between">
+				<span class="mb-1 fw-bold">
+					{{ cluster.name }}
+				</span>
+				</div>
+				<small>
+					{% for class in kiosk_class.keys() %}
+						{% if cluster.name in kiosk_class[class] %}
+							{{ class|safe }}
+						{% endif %}
+					{% endfor %}
+					{{ cluster.users }}/{{ cluster.maximum_places - cluster.dead_pc }}
+				</small>
+			</a>
+		{% endfor %}
+	</div>
+
+	{% for cluster_info in clusters %}
+		<div class="mt-3 rounded bg-dark-subtle p-4 grid-bg mx-4 shadow" id="goto-{{ cluster_info.name }}">
+			<h4>
+				<div class="row">
+					<div class="col">
+						{% for class in kiosk_class.keys() %}
+							{% if cluster_info.name in kiosk_class[class] %}
+								{{ class|safe }}
+							{% endif %}
+						{% endfor %}
+						{{ cluster_info['name'] }}
+					</div>
+					<div class="col text-end">
+						{{ cluster_info.users }}/{{ cluster_info.maximum_places - cluster_info.dead_pc }}
+						{% if cluster_info.name in piscine %}
+							<i class="fa-solid fa-person-swimming text-info"></i>
+						{% endif %}
+						<i class="fa-solid fa-circle text-{{ place_to_btn(cluster_info, 'success') }}"></i>
+					</div>
+				</div>
+			</h4>
+			<hr>
+			<table class="grid text-center">
+				<tbody>
+				{% for index, x in enumerate(cluster_info['map'][1:], 0) %}
+					<tr>
+						{%- set countB = namespace(value=1) -%}
+						<td class="range">{{ cluster_info['map'][0][index] }}</td>
+						{%- for y in x -%}
+							{%- if y == 'x' -%}
+								<td class="range block">&nbsp;</td>
+							{%- elif y == 'h' -%}
+								<td class="block"></td>
+							{%- elif exrypz(y) == False -%}
+								<td class="small-colors block"></td>
+							{%- else -%}
+								{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<img class="rounded-pill profile-pic2" alt="" src="' + proxy_images(locations[y]['user']['image']['versions']['small']) + '">' -%}
+								<td data-pos="{{ y }}"
+								    data-login="{{ locations[y]['user']['login'] if y in locations else '' }}"
+								    class="sm-t block case {{ "dead" if y in issues_map and issues_map[y]['count'] >= 1 and issues_map[y]['issue'] == 1 else '' }}">
+									{%- if countB.value % 2 == 0 -%}
+										{{ img|safe }}<br>{{ y.replace(cluster_info['name'], '') }}
+									{%- else -%}
+										{{ y.replace(cluster_info['name'], '') }}<br>{{ img|safe }}
+									{%- endif -%}
+								</td>
+							{%- endif -%}
+							{%- set countB.value = countB.value + 1 -%}
+						{%- endfor -%}
+						<td class="range">{{ cluster_info['map'][0][index] }}</td>
+					</tr>
+				{%- endfor -%}
+				</tbody>
+			</table>
+		</div>
+	{% endfor %}
+
+	<div class="mb-4"></div>
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		// load local kiosk config
+		let kiosk = JSON.parse(localStorage.getItem("kiosk"));
+		if (!kiosk) {
+			kiosk = {
+				inactivity: 30,
+				showtime: 10,
+				building: 'bess'
+			};
+		}
+
+		// user modal
+		(() => {
+			let cases = document.querySelectorAll('.case');
+			cases.forEach(e => {
+				e.addEventListener('click', () => {
+					let login = e.dataset.login
+					if (login.length === 0)
+						return;
+					openFriend(login, true)
+				})
+			});
+		})();
+
+		// scrolling
+		(() => {
+			let clusters = {{ scroll|tojson }};
+			let last_activity = 0;
+			let i = 0;
+
+			function update_activity() {
+				last_activity = Date.now() / 1000;
+			}
+
+			document.querySelector('html').scrollIntoView();
+			setInterval(() => {
+				if (last_activity + kiosk.inactivity > Math.floor(Date.now() / 1000))
+					return;
+				if (i >= clusters.length) {
+					if (kiosk.building !== '{{ building }}')
+						return location.replace(`/idle/${kiosk.building}`)
+					history.replaceState({}, document.title, window.location.pathname);
+					location.reload();
+					return;
+				}
+				document.getElementById(`goto-${clusters[i]}`).scrollIntoView();
+				i++;
+			}, 1000 * kiosk.showtime);
+			document.addEventListener('mousemove', update_activity);
+			document.addEventListener('click', update_activity);
+			document.addEventListener('touchmove', update_activity);
+		})();
+
+		// place finder
+		(() => {
+			// We suppose that the desktops are reversed 1/2
+
+			function gen_map_from_table(table_elem) {
+				let res = []
+				let y_es = table_elem.querySelectorAll("tr");
+				for (let y = 0; y < y_es.length; y++) {
+					res.push([])
+					let x_es = y_es[y].querySelectorAll(".block");
+					for (let x = 0; x < x_es.length; x++) {
+						if ('login' in x_es[x].dataset)
+							res[y].push(x_es[x].dataset['login'] === '' ? `F${x_es[x].dataset['pos']}` : 'O')
+						else
+							res[y].push('O')
+					}
+				}
+				return res;
+			}
+
+			function colorize_seats(data) {
+				data.forEach(seat => {
+					let seat_elem = document.querySelector(`[data-pos='${seat.slice(1)}']`)
+					if (!seat_elem)
+						return;
+					seat_elem.classList.add("consecutive_seats");
+				})
+			}
+
+			function reset_seats() {
+				let seats = document.querySelectorAll(".consecutive_seats");
+				for (let i = 0; i < seats.length; i++)
+					seats[i].classList.remove('consecutive_seats');
+			}
+
+			function calc_consecutive(map, x, y) {
+				let number_of_seats = 0;
+				let down = x % 2 === 0;
+				let seats = []
+				while (1) {
+					if (y < 0 || y >= map.length || x < 0 || x >= map[y].length)
+						break;
+					if (map[y][x][0] === 'F') {
+						seats.push(map[y][x])
+						number_of_seats++;
+						x++;
+						if (down)
+							y++;
+						else
+							y--;
+						down = !down;
+					} else
+						break;
+				}
+				return [number_of_seats, seats]
+			}
+
+			function get_free_pos_map(table_elem, consecutive) {
+				let map = gen_map_from_table(table_elem);
+				for (let y = 0; y < map.length; y++) {
+					for (let x = 0; x < map[y].length; x++) {
+						if (map[y][x][0] === 'F') {
+							let ret = calc_consecutive(map, x, y);
+							if (ret[0] >= consecutive) {
+								x += consecutive;
+								colorize_seats(ret[1]);
+							}
+						}
+					}
+				}
+			}
+
+			document.querySelectorAll('input[name="consecutive-radio"]').forEach(input => {
+				input.addEventListener('click', () => {
+					let number = parseInt(document.querySelector('input[name="consecutive-radio"]:checked').dataset.number);
+					console.log("??", number)
+					reset_seats();
+					if (number <= 1)
+						return;
+					document.querySelectorAll("table.grid").forEach(async table => {
+						console.log(table)
+						get_free_pos_map(table, number);
+					})
+				})
+			})
+		})();
+	</script>
+{% endblock %}

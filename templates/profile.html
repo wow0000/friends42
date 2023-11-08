@@ -1,7 +1,7 @@
 {% extends 'template.html' %}
 {% block css %}
-	<link href="/static/css/friends.css" rel="stylesheet">
-	<link href="/static/css/profile.css" rel="stylesheet">
+	<link href="/static/css/friends.css?v={{ version }}" rel="stylesheet">
+	<link href="/static/css/profile.css?v={{ version }}" rel="stylesheet">
 {% endblock %}
 {% block content %}
 	<div class="container mt-2">

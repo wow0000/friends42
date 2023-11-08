@@ -149,6 +149,11 @@ map = {
 		['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'made-f0Dr1s1', '', 'made-f0Dr1s2', '', 'made-f0Dr1s3', ''],
 	],
 	"allowed": ['bess-f1', 'bess-f2', 'bess-f3', 'bess-f4', 'paul-f3', 'paul-f4', 'paul-f5', 'made-f0A', 'made-f0B', 'made-f0C', 'made-f0D'],
+	"buildings": {'bess': ['bess-f1', 'bess-f2', 'bess-f3', 'bess-f4'], 'paul': ['paul-f3', 'paul-f4', 'paul-f5'], 'made': ['made-f0A', 'made-f0B', 'made-f0C', 'made-f0D']},
+	"kiosk_classes": {
+		"<i class='fa-brands fa-apple'></i>": ['bess-f1', 'bess-f4', 'made-f0A', 'paul-f3'],
+		"<i class='fa-solid fa-display'></i>": ['bess-f2', 'bess-f3', 'made-f0B', 'made-f0C', 'made-f0D', 'paul-f4', 'paul-f5'],
+	},
 	"piscine": [],
 	"default": 'bess-f1',
 	"exrypz": exrypz

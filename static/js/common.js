@@ -276,6 +276,7 @@ function isTouchDevice() {
 			list.appendChild(option);
 		});
 	}
+
 	/*
 	globalAddFriend.addEventListener('click', async () => {
 		let val = globalSearchInput.value.trim();
@@ -295,64 +296,68 @@ function isTouchDevice() {
 		})
 	}
 
-	let lastSearch = "";
-	globalSearchInput.addEventListener('keyup', async (e) => {
-		let val = globalSearchInput.value.trim().toLowerCase();
+	if (globalSearchInput) {
+		let lastSearch = "";
+		globalSearchInput.addEventListener('keyup', async (e) => {
+			let val = globalSearchInput.value.trim().toLowerCase();
 
-		if (e.key === 'Enter') {
-			if (val.length <= 3)
-				await redirect_profile(val);
-			else {
-				search_text(val, (json) => {
-					let found = 0;
-					json.forEach((item) => {
-						if (item['v'].toLowerCase() === val || item['s'].toLowerCase() === val) {
-							if (item['type'] === 'user') {
-								redirect_profile(item['s']);
-								found = 1;
-							} else if (item['type'] === 'project') {
-								open('/mates/' + item['s']);
-								found = 1;
+			if (e.key === 'Enter') {
+				if (val.length <= 3)
+					await redirect_profile(val);
+				else {
+					search_text(val, (json) => {
+						let found = 0;
+						json.forEach((item) => {
+							if (item['v'].toLowerCase() === val || item['s'].toLowerCase() === val) {
+								if (item['type'] === 'user') {
+									redirect_profile(item['s']);
+									found = 1;
+								} else if (item['type'] === 'project') {
+									open('/mates/' + item['s']);
+									found = 1;
+								}
 							}
-						}
-					})
-					if (found === 0)
-						triggerToast(`Aucun résultat pour ${val}`)
-				});
+						})
+						if (found === 0)
+							triggerToast(`Aucun résultat pour ${val}`)
+					});
+				}
 			}
-		}
-		if (val.length >= 3) {
-			setTimeout(() => {
-				if (val !== globalSearchInput.value.trim().toLowerCase()) return;
-				if (val === lastSearch) return;
-				console.log(val, globalSearchInput.value.trim().toLowerCase())
-				lastSearch = val;
-				search_text(val, (json) => {
-					fillGlobalSuggestions('#global_suggestions', json)
-				});
-			}, 200)
+			if (val.length >= 3) {
+				setTimeout(() => {
+					if (val !== globalSearchInput.value.trim().toLowerCase()) return;
+					if (val === lastSearch) return;
+					console.log(val, globalSearchInput.value.trim().toLowerCase())
+					lastSearch = val;
+					search_text(val, (json) => {
+						fillGlobalSuggestions('#global_suggestions', json)
+					});
+				}, 200)
 
-		}
-	});
+			}
+		});
 
-	globalSearchButton.addEventListener('click', async () => {
-		let val = globalSearchInput.value.trim().toLowerCase();
-		await redirect_profile(val);
-	})
+		globalSearchButton.addEventListener('click', async () => {
+			let val = globalSearchInput.value.trim().toLowerCase();
+			await redirect_profile(val);
+		})
+	}
 })();
 
 (() => {
 	let cluster = document.getElementById('qc-cluster');
 	let friends = document.getElementById('qc-friends');
 
-	if (location.pathname === '/')
-		friends.hidden = false;
-	else
-		cluster.hidden = false;
-	cluster.addEventListener('click', () => {
-		location.href = '/';
-	})
-	friends.addEventListener('click', () => {
-		location.href = '/friends/';
-	})
+	if (cluster && friends) {
+		if (location.pathname === '/')
+			friends.hidden = false;
+		else
+			cluster.hidden = false;
+		cluster.addEventListener('click', () => {
+			location.href = '/';
+		})
+		friends.addEventListener('click', () => {
+			location.href = '/friends/';
+		})
+	}
 })();

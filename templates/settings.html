@@ -54,6 +54,10 @@
 						<i class="fa-solid fa-key"></i> Sessions
 					</button>
 					<button type="button" class="list-group-item settings-switcher list-group-item-action"
+					        data-category="kiosk">
+						<i class="fa-solid fa-info-circle"></i> Kiosk
+					</button>
+					<button type="button" class="list-group-item settings-switcher list-group-item-action"
 					        data-category="questions">
 						<i class="fa-solid fa-question-circle"></i> Questions
 					</button>
@@ -202,6 +206,40 @@
 					</table>
 					<button class="btn btn-danger" onclick="reset_sessions();">Déconnecter toutes les sessions</button>
 				</div>
+				<div hidden id="kiosk">
+					<div class="card m-1">
+						<div class="card-body">
+							<h5 class="card-title"><i class="fa-solid fa-info-circle"></i> Kiosk</h5>
+							<p>
+								Le mode kiosk permet à un utilisateur de proposer une version de Friends42 en accès
+								libre.
+								Les paramètres sont sauvegardés sur l'appareil, la fonctionnalité thème peut être
+								utilisée pour
+								proposer du contenu personnalisé.
+							</p>
+
+							<div class="mb-3">
+								<label for="kiosk-inactivity" class="form-label">Temps d'inactivité</label>
+								<input type="number" class="form-control" id="kiosk-inactivity" min="1" value="30">
+							</div>
+							<div class="mb-3">
+								<label for="kiosk-showtime" class="form-label">Temps d'affichage</label>
+								<input type="number" class="form-control" id="kiosk-showtime" min="1" value="10">
+							</div>
+							<div class="mb-3">
+								<label for="kiosk-building" class="form-label">Bâtiment à afficher</label>
+								<select class="form-select form-control" id="kiosk-building" aria-label="Kiosk building selection">
+									{% for building in kiosk_buildings.keys() %}
+										<option value="{{ building }}">{{ building }}</option>
+									{% endfor %}
+								</select>
+							</div>
+
+							<button class="btn btn-primary" onclick="kiosk_save();">Sauvegarder</button>
+							<button class="btn btn-secondary" onclick="kiosk_open();">Accéder au mode Kiosk</button>
+						</div>
+					</div>
+				</div>
 				<div hidden id="changelog">
 					{% include 'changelog.html' %}
 				</div>
@@ -298,6 +336,37 @@
 			})
 		}
 
+		function kiosk_save() {
+			let inactivity = document.getElementById('kiosk-inactivity').value;
+			let showtime = document.getElementById('kiosk-showtime').value;
+			let building = document.getElementById('kiosk-building').value;
+
+			localStorage.setItem("kiosk", JSON.stringify({
+				inactivity: parseInt(inactivity),
+				showtime: parseInt(showtime),
+				building: building
+			}))
+			triggerToast('Vos paramètres ont bien été sauvegardés', true);
+		}
+
+		function kiosk_open() {
+			location.replace('/idle/' + document.getElementById('kiosk-building').value);
+		}
+
+		function kiosk_load() {
+			let func = (() => {
+				let kiosk = JSON.parse(localStorage.getItem("kiosk"));
+				if (kiosk) {
+					document.getElementById('kiosk-inactivity').value = kiosk.inactivity;
+					document.getElementById('kiosk-showtime').value = kiosk.showtime;
+					document.getElementById('kiosk-building').value = kiosk.building;
+					console.log(document.getElementById('kiosk-building').value)
+				}
+			});
+			func();
+			setTimeout(func, 50) // i hate chrome
+		}
+
 		let buttons = document.querySelectorAll(".settings-switcher")
 		buttons.forEach(e => {
 			e.addEventListener('click', () => {
@@ -358,5 +427,8 @@
 			biocounter.innerText = biographyArea.value.length;
 		});
 
+		document.addEventListener('DOMContentLoaded', () => {
+			kiosk_load();
+		});
 	</script>
 {% endblock %}

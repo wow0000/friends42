@@ -55,6 +55,8 @@ map = {
 		['', '', '', '', '', '', '', '', '', '', '', '', 'c4r5p1', 'c4r5p2', 'c4r5p3', 'c4r5p4', 'c4r5p5', 'c4r5p6', '', 'c4r5p7', 'c4r5p8', 'c4r5p9', 'c4r5p10'],
 	],
 	"allowed": ['c1', 'c2', 'c3', 'c4'],
+	"buildings": {'vienna': ['c1', 'c2', 'c3', 'c4']},
+	"kiosk_classes": {},
 	"piscine": [],
 	"default": 'c1'
 }

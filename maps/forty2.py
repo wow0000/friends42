@@ -48,6 +48,8 @@ map = {
 	],
 	"allowed": ['c1', 'c2', 'c3', 'c4'],
 	"piscine": [''],
+	"buildings": {},
+	"kiosk_classes": {},
 	"default": 'c1',
 	"exrypz": exrypz  
 }

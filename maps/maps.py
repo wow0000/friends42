@@ -20,15 +20,19 @@ def count_in_cluster(cluster: str, keys: dict):
 	return i
 
 
-def place_to_btn(info: dict):
-	remaining = info['places']
-	maximum = places(info['exrypz'], info['map'])
+def percent_to_btn(remaining, maximum, default="primary"):
 	percentage = (remaining / maximum) * 100
 	if percentage < 25:
 		return 'danger'
 	elif percentage < 35:
 		return 'warning'
-	return 'primary'
+	return default
+
+
+def place_to_btn(info: dict, default="primary"):
+	remaining = info['places']
+	maximum = places(info['exrypz'], info['map'])
+	return percent_to_btn(remaining, maximum, default)
 
 
 def available_seats(cluster: str, _map: list, exrypz, locations_map: dict, errors_map: dict):

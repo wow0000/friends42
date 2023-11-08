@@ -39,34 +39,39 @@ def settings(userid):
 	notif = db.has_notifications(userid['userid'])
 	theme = db.get_theme(userid['userid'])
 	cookies = db.get_user_cookies(userid['userid'])
+	campus_id = db.get_user_by_id(userid['userid'])['campus']
 	db.close()
-	return render_template('settings.html', user=user, notif=notif, theme=theme, cookies=cookies)
+	kiosk_buildings = {}
+	if campus_id in maps.available:
+		kiosk_buildings = maps.available[campus_id].map['buildings']
+	return render_template('settings.html', user=user, notif=notif, theme=theme, cookies=cookies,
+	                       kiosk_buildings=kiosk_buildings)
 
 
 @app.route('/')
 @auth_required
 def index(userid):
-	db = Db("database.db")
 	pos = standard_cluster(get_position(userid['userid']))
+	db = Db("database.db")
 	campus_id = db.get_user_by_id(userid['userid'])['campus']
 	if campus_id not in maps.available:
 		db.close()
 		return f'Your campus layout is not yet supported, send a DM to @wow000 or @neoblacks on Discord to get started (Your campus id: {campus_id})', 200
-	campus_map = maps.available[campus_id].map
-	if pos and type(campus_map['exrypz'](pos)) == bool:
-		pos = campus_map['default']
-	else:
-		pos = campus_map['default'] if not pos else campus_map['exrypz'](pos)['etage']
-	cluster_name = pos if request.args.get('cluster') is None else request.args.get('cluster')
-	if cluster_name not in campus_map['allowed']:
-		cluster_name = campus_map['default']
-	cache_tab = get_cached_locations(campus_id)
-	location_map = {}
 	friends = db.get_friends(userid['userid'])
 	issues = db.get_issues()
 	me = db.get_user_profile_id(userid['userid'])
 	theme = db.get_theme(userid['userid'])
 	db.close()
+	campus_map = maps.available[campus_id].map
+	if pos and type(campus_map['exrypz'](pos)) == bool:
+		pos = campus_map['default']
+	else:
+		pos = campus_map['default'] if not pos else campus_map['exrypz'](pos)['etage']
+	cache_tab = get_cached_locations(campus_id)
+	cluster_name = pos if request.args.get('cluster') is None else request.args.get('cluster')
+	if cluster_name not in campus_map['allowed']:
+		cluster_name = campus_map['default']
+	location_map = {}
 	issues_map = {}
 	for user in cache_tab:
 		user_id = user['user']['id']

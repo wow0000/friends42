@@ -121,6 +121,14 @@ def get_cached_locations(campus=1):
 	return cache_tab
 
 
+def get_last_update(campus=1):
+	last_update = r.get("location_last_update/" + str(campus))
+	success = r.get("location_success/" + str(campus))
+	if last_update:
+		return arrow.get(last_update.decode("utf-8")), success.decode("utf-8") == '1'
+	return None, False
+
+
 def locs(campus=1):
 	status, data = api.get_paged_locations(campus)
 	if status == 200:
@@ -128,15 +136,18 @@ def locs(campus=1):
 		create_users(db, data)
 		db.close()
 		r.set("locations/" + str(campus), json.dumps(data))
+		r.set("location_last_update/" + str(campus), arrow.now().__str__())
+		r.set("location_success/" + str(campus), '1')
 		return data, 200
 	else:
+		r.set("location_success/" + str(campus), '0')
 		return data, status
 
 
 def date_relative(date, granularity=None):
-	if granularity is None:
-		granularity = ['day']
-	return arrow.get(date).humanize(locale='fr', granularity=granularity)
+	if granularity:
+		return arrow.get(date).humanize(locale='fr', granularity=granularity)
+	return arrow.get(date).humanize(locale='fr')
 
 
 def get_projects(group=False):
@@ -146,6 +157,13 @@ def get_projects(group=False):
 		projects = db.get_group_projects_list(r)
 	else:
 		projects = db.get_project_list(r)
+	db.close()
+	return projects
+
+
+def get_cached_projects_with_xp():
+	db = Db("database.db")
+	projects = db.get_xp_projects_list(r)
 	db.close()
 	return projects
 
@@ -165,3 +183,27 @@ def does_group_project_exists(slug: str) -> bool:
 	ret = db.is_project_a_thing(slug)
 	db.close()
 	return ret
+
+
+def get_cached_user_data(user):
+	data = r.get(f"data>{user}")
+	if data == "":
+		return None
+	if data:
+		return json.loads(data)
+	status, data = api.get_unknown_user(user)
+	if status != 200:
+		r.set(f"data>user", "", ex=2)
+		return None
+	data['refreshed'] = arrow.now().__str__()
+	r.set(f"data>{user}", json.dumps(data), ex=43200)
+	return data
+
+
+def get_cursus(data, cursus_name):
+	if data is None:
+		return None
+	for cursus in data['cursus_users']:
+		if cursus['cursus']['name'] == cursus_name:
+			return cursus
+	return None

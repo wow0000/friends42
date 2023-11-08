@@ -1,7 +1,7 @@
 {% extends 'template.html' %}
 {% block css %}
-	<link href="/static/css/friends.css" rel="stylesheet">
-	<link href="/static/css/index.css" rel="stylesheet">
+	<link href="/static/css/friends.css?v={{ version }}" rel="stylesheet">
+	<link href="/static/css/index.css?v={{ version }}" rel="stylesheet">
 	<style>
 		@media (max-width: 800px) {
 			.btn-width {
@@ -115,7 +115,7 @@
 		</div>
 	</div>
 
-	<script src="/static/js/popper.min.js"></script>
+	<script src="/static/js/popper.min.js?v={{ version }}"></script>
 {% endblock %}
 
 {% block scripts %}

@@ -13,11 +13,11 @@
 					<div class="display-inline-grid ms-3">
                         <span id="openFriendModalName">
                             <h5 class="name display-5 fw-bold"></h5>
-							<span id="addCloseFriend">
+							<span id="addCloseFriend" {{ 'hidden' if kiosk else '' }}>
 	                            <i class="fa-regular fa-star text-warning"></i>
 								<i hidden class="spinner-border spinner-border-sm"></i>
 	                        </span>
-	                        <span id="removeCloseFriend">
+	                        <span id="removeCloseFriend" {{ 'hidden' if kiosk else '' }}>
 	                            <i class="fa-solid fa-star text-warning"></i>
 		                        <i hidden class="spinner-border spinner-border-sm"></i>
 	                        </span>
@@ -30,22 +30,23 @@
 				<div hidden class="rounded bg-dark-subtle m-2 p-1" id="FP-bio">
 					<div hidden class="row text-center" id="FP-socials-row">
 						<div hidden class="col no-wrap" id="FP-github">
-							<i class="fa-brands fa-github icon-length"></i> <a href=""></a>
+							<i class="fa-brands fa-github icon-length"></i>
+							<a class="{{ 'no-click' if kiosk else '' }}" href=""></a>
 						</div>
 						<div hidden class="col no-wrap" id="FP-website">
-							<i class="fa-solid fa-globe icon-length"></i> <a href=""></a>
+							<i class="fa-solid fa-globe icon-length"></i>
+							<a class="{{ 'no-click' if kiosk else '' }}" href=""></a>
 						</div>
 						<div hidden class="col no-wrap" id="FP-discord">
 							<i class="fa-brands fa-discord icon-length"></i> <a></a>
 						</div>
 					</div>
-					<div hidden class="div text-center m-1" style="text-align: justify;" id="FP-text">
-
+					<div hidden class="div text-center m-1 justify" style="text-align: justify;" id="FP-text">
 					</div>
 				</div>
 
 				<!-- Buttons -->
-				<div class="row text-center">
+				<div class="row text-center" {{ 'hidden' if kiosk else '' }}>
 					<div class="col-md mb-1">
 						<button type="button" class="btn btn-sm btn-primary" id="openFriendShowCluster">
 							<i class="fa-solid fa-magnifying-glass"></i> Afficher dans le Cluster

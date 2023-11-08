@@ -1,12 +1,13 @@
+{% set version='1' %}
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Friends42</title>
-	<link href="/static/css/bootstrap.min.css" rel="stylesheet">
-	<link href="/static/css/common.css" rel="stylesheet">
-	<link rel="manifest" href="/manifest.json">
+	<link href="/static/css/bootstrap.min.css?v={{ version }}" rel="stylesheet">
+	<link href="/static/css/common.css?v={{ version }}" rel="stylesheet">
+	<link rel="manifest" href="/manifest.json?v={{ version }}">
 	<link rel="shortcut icon" type="image/x-icon" href="/static/img/favicon.ico">
 	<link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png"/>
 	<meta name="theme-color" content="rgb(43, 48, 53)"/>
@@ -20,65 +21,97 @@
 <body>
 <nav class="navbar navbar-expand-lg bg-body-tertiary mb-2 shadow">
 	<div class="container-fluid">
-		<a class="navbar-brand position-relative" href="/">
+		<a class="navbar-brand position-relative {{ 'no-click' if kiosk else '' }}" href="/">
 			<img src="/static/img/android-chrome-192x192.png" alt="Logo" width="24" height="24" class="d-inline-block align-text-top">
-			Friends42<span class="text-muted text-beta">βeta</span></a>
-		<button class="btn btn-secondary hide-navbar" hidden id="qc-friends">
-			<i class="fa-solid fa-user-group"></i>
-		</button>
-		<button class="btn btn-secondary hide-navbar" hidden id="qc-cluster">
-			<i class="fa-solid fa-layer-group"></i>
-		</button>
+			Friends42<span class="text-muted text-beta">{{ 'kiosk!' if kiosk else'βeta' }}</span></a>
+		{% if not kiosk %}
+			<button class="btn btn-secondary hide-navbar" hidden id="qc-friends">
+				<i class="fa-solid fa-user-group"></i>
+			</button>
+			<button class="btn btn-secondary hide-navbar" hidden id="qc-cluster">
+				<i class="fa-solid fa-layer-group"></i>
+			</button>
+		{% endif %}
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-				aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<li class="nav-item">
-					<a class="nav-link active" aria-current="page" href="/">Clusters</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active" aria-current="page" href="/friends/">Amis</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active" aria-current="page" href="/mates/">Projets</a>
-				</li>
+				{% if not kiosk %}
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="/{{ 'idle' if kiosk else '' }}">Clusters</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="/friends/">Amis</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="/mates/">Projets</a>
+					</li>
+				{% endif %}
 			</ul>
 			<div class="d-flex" role="search">
-				<button type="button" class="btn btn-outline-primary me-1" onclick="newTab('https://discord.gg/E8jbpgxz2s');" aria-label="Discord">
-					<i class="fa-brands fa-discord"></i> <i hidden class="spinner-border spinner-border-sm"></i>
-				</button>
-				<button type="button" class="btn btn-outline-secondary me-1" onclick="newTab('https://github.com/wow0000/friends42');" aria-label="Github">
-					<i class="fa-brands fa-github"></i> <i hidden class="spinner-border spinner-border-sm"></i>
-				</button>
-				<input class="form-control" list="global_suggestions" id="globalSearch" type="search" placeholder="Rechercher..." aria-label="Search">
-				<datalist id="global_suggestions"></datalist>
-				<button type="button" id="globalSearchButton" aria-label="Search" class="btn btn-outline-light mx-1">
-					<i class="fa-solid fa-magnifying-glass"></i>
-				</button>
-				<button type="button" class="btn btn-outline-light" aria-label="Settings"
-						onclick="location.href = '/settings/';">
-					<i class="fa-solid fa-gear"></i>
-				</button>
+				{% if not kiosk %}
+					<button type="button" class="btn btn-outline-primary me-1" onclick="newTab('https://discord.gg/E8jbpgxz2s');" aria-label="Discord">
+						<i class="fa-brands fa-discord"></i> <i hidden class="spinner-border spinner-border-sm"></i>
+					</button>
+					<button type="button" class="btn btn-outline-secondary me-1" onclick="newTab('https://github.com/wow0000/friends42');" aria-label="Github">
+						<i class="fa-brands fa-github"></i> <i hidden class="spinner-border spinner-border-sm"></i>
+					</button>
+					<input class="form-control" list="global_suggestions" id="globalSearch" type="search" placeholder="Rechercher..." aria-label="Search">
+					<datalist id="global_suggestions"></datalist>
+					<button type="button" id="globalSearchButton" aria-label="Search" class="btn btn-outline-light mx-1">
+						<i class="fa-solid fa-magnifying-glass"></i>
+					</button>
+					<button type="button" class="btn btn-outline-light" aria-label="Settings"
+					        onclick="location.href = '/settings/';">
+						<i class="fa-solid fa-gear"></i>
+					</button>
+				{% else %}
+					<div class="text-center">
+						{% if consecutive_enable %}
+							<span class="btn-group btn-group-sm me-2" role="group">
+							<input type="radio" class="btn-check cluster-select" name="consecutive-radio" id="consecutive-0" data-number="0" checked>
+						    <label class="btn btn-primary" for="consecutive-0">X</label>
+								{% for i in range(2, 6) %}
+									<input type="radio" class="btn-check cluster-select" name="consecutive-radio" id="consecutive-{{ i }}" data-number="{{ i }}">
+									<label class="btn btn-secondary" for="consecutive-{{ i }}">{{ i }}</label>
+								{% endfor %}
+						</span>
+						{% endif %}
+
+						{% if last_update %}
+							<span class="btn btn-sm btn-secondary" disabled>mis à jour {{ last_update[0] }}
+								{% if last_update[1] %}
+									<span class="spinner-grow text-success spinner-grow-sm" role="status"></span>
+								{% else %}
+									<i class="fa-solid fa-exclamation text-danger"></i>
+								{% endif %}
+							</span>
+						{% endif %}
+						{% if places %}
+							<span class="btn btn-sm btn-secondary" disabled>{{ places[0] }}/{{ places[1] }} <i class="fa-solid fa-user-graduate"></i></span>
+						{% endif %}
+					</div>
+				{% endif %}
 			</div>
 		</div>
 	</div>
 </nav>
 <div class="toast-container position-fixed top-0 end-0 p-3">
 	<div id="liveToast" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive"
-		 aria-atomic="true">
+	     aria-atomic="true">
 		<div class="d-flex">
 			<div class="toast-body" id="toast_body">
 			</div>
 			<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-					aria-label="Close"></button>
+			        aria-label="Close"></button>
 		</div>
 	</div>
 </div>
 {% block content %}{% endblock %}
-<script src="/static/js/bootstrap.min.js"></script>
-<script src="/static/js/common.js"></script>
+<script src="/static/js/bootstrap.min.js?v={{ version }}"></script>
+<script src="/static/js/common.js?v={{ version }}"></script>
 {% block scripts %}{% endblock %}
 {% if theme and theme.enabled %}
 	<script>
@@ -86,9 +119,9 @@
 	</script>
 {% endif %}
 
-<link href="/static/fontawesome/css/fontawesome.min.css" rel="stylesheet">
-<link href="/static/fontawesome/css/solid.min.css" rel="stylesheet">
-<link href="/static/fontawesome/css/regular.min.css" rel="stylesheet">
-<link href="/static/fontawesome/css/brands.min.css" rel="stylesheet">
+<link href="/static/fontawesome/css/fontawesome.min.css?v={{ version }}" rel="stylesheet">
+<link href="/static/fontawesome/css/solid.min.css?v={{ version }}" rel="stylesheet">
+<link href="/static/fontawesome/css/regular.min.css?v={{ version }}" rel="stylesheet">
+<link href="/static/fontawesome/css/brands.min.css?v={{ version }}" rel="stylesheet">
 </body>
 </html>
