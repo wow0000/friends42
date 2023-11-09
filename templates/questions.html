@@ -13,15 +13,17 @@
 
 	<div class="card m-1">
 		<div class="card-body">
-			<h5 class="card-title"><i class="fa-solid fa-lock"></i> Quelles données sont sauvegardés ?
+			<h5 class="card-title"><i class="fa-solid fa-lock"></i>
+				Quelles données sont sauvegardés ? (09/11/2023)
 			</h5>
 			Pour les utilisateurs du site
 			<ul>
 				<li>Votre user-agent associé à chaque nouvelle session</li>
-				<li>Vos amis, profils et signalements</li>
-				<li>Les journaux d'accès au site</li>
+				<li>Les données que vous décidez d'enregistrer (amis, profils, signalements, etc)</li>
+				<li>Les journaux d'accès au site (IP, utilisateur, url, date, user-agent)</li>
+				<li>Dans le cas d'une erreur serverside, la requête HTTP sera sauvegardé et enregistré par Sentry (États-Unis, GCP)</li>
 			</ul>
-			Depuis l'API de 42 pour les étudiants connecté en Cluster ou bien ajouté en ami
+			Depuis l'API de 42 pour les étudiants connecté en Cluster, ajouté en ami ou bien recherché
 			<ul>
 				<li>Le login et son id</li>
 				<li>Le lien vers son image de profil cdn.intra.42.fr</li>
@@ -37,7 +39,8 @@
 			Où sont sauvegardés les données ?
 			<ul>
 				Les données sont sauvegardés aux Pays-Bas sur un serveur appartenant à l'hébergeur
-				Hostkey. Les données transitent par le CDN CloudFlare.
+				Hostkey. Les données transitent par le CDN CloudFlare. Les erreurs serverside sont transmises à Sentry
+				aux États-Unis hébergés par Google Cloud Platform.
 			</ul>
 			Quels sont les cookies utilisés sur le site ?
 			<ul>

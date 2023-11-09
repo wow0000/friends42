@@ -1,9 +1,18 @@
 from flask import Flask
 from maps.maps import place_to_btn, percent_to_btn
 from db import Db
+import sentry_sdk
+import config
 import routes.finder
 import importlib
 import routes.helpers
+
+if config.sentry and config.sentry != '':
+	sentry_sdk.init(
+		dsn=config.sentry,
+		traces_sample_rate=config.sentry_traces_sample_rate,
+		profiles_sample_rate=config.sentry_profiles_sample_rate,
+	)
 
 db = Db("database.db")
 db.initialize()
