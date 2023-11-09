@@ -129,9 +129,32 @@ def get_last_update(campus=1):
 	return None, False
 
 
+def optimize_locations(data):
+	if len(data) == 0:
+		return data
+	compressed = []
+	for user in data:
+		tmp = user['user']
+		compressed.append({
+			"id": user['id'],
+			"host": user['host'],
+			"campus_id": user['campus_id'],
+			"user": {
+				"id": tmp['id'],
+				"login": tmp['login'],
+				"pool_month": tmp['pool_month'],
+				"pool_year": tmp['pool_year'],
+				"image": tmp['image'],
+				"location": tmp['location']
+			}
+		})
+	return compressed
+
+
 def locs(campus=1):
 	status, data = api.get_paged_locations(campus)
 	if status == 200:
+		data = optimize_locations(data)
 		db = Db("database.db")
 		create_users(db, data)
 		db.close()
