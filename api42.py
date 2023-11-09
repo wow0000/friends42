@@ -92,10 +92,14 @@ class Api:
 		if "v2/" != url[:3]:
 			req_url += '/v2'
 		req_url += f"{url}?{'&'.join([item for item in params])}"
-		r = requests.get(req_url, headers={
-			"Authorization": f"Bearer {self.token}"
-		})
-		if r.status_code == 200:
+		r = None
+		try:
+			r = requests.get(req_url, headers={
+				"Authorization": f"Bearer {self.token}"
+			})
+		except requests.exceptions.RequestException as e:  # This is the correct syntax
+			return {"error": e.__str__()}, 0, {}
+		if r and r.status_code == 200:
 			return r.json(), r.status_code, dict(r.headers)
 		else:
 			return {"error": r.text}, r.status_code, dict(r.headers)
