@@ -34,6 +34,7 @@ div.scroll {
 	object-fit: cover;
 	height: min(7vh, 3.8vh);
 	width: min(7vh, 3.8vh);
+	border-radius: var(--bs-border-radius-pill);
 }
 
 .br {

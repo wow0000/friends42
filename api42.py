@@ -97,7 +97,7 @@ class Api:
 			r = requests.get(req_url, headers={
 				"Authorization": f"Bearer {self.token}"
 			})
-		except requests.exceptions.RequestException as e:  # This is the correct syntax
+		except Exception as e:
 			return {"error": e.__str__()}, 0, {}
 		if r and r.status_code == 200:
 			return r.json(), r.status_code, dict(r.headers)

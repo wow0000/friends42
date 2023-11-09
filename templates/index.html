@@ -75,7 +75,7 @@
 						{%- elif exrypz(y) == False -%}
 							<td class="small-colors"></td>
 						{%- else -%}
-							{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<img class="rounded-pill profile-pic2" alt="" src="' + proxy_images(locations[y]['user']['image']['versions']['small']) + '">' -%}
+							{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<img loading="lazy" class="profile-pic2" alt="" src="' + proxy_images(locations[y]['user']['image']['versions']['small']) + '">' -%}
 							{%- set relation = '' -%}
 							{%- if y in locations and locations[y]['me'] -%}
 								{%- set relation = 'me' -%}
@@ -110,12 +110,12 @@
 			</tbody>
 		</table>
 		<div id="tooltip" hidden class="rounded bg-white zindex9999">
-			<img class="profile-pic rounded no-shadow" src="#">
+			<img class="profile-pic rounded no-shadow">
 			<div class="fluid-container text-center text-black name">name</div>
 		</div>
 	</div>
 
-	<script src="/static/js/popper.min.js?v={{ version }}"></script>
+	<script src="/static/js/popper.min.js?v={{ version }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
@@ -155,6 +155,7 @@
 				return;
 			e.addEventListener('mouseover', () => {
 				if (window.isTouchDevice && isTouchDevice()) return;
+				if (!window.Popper) return;
 				tooltip.hidden = false;
 				tooltip.querySelector('img').src = e.querySelector('img').src
 				tooltip.querySelector('.name').innerText = e.dataset.login
