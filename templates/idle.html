@@ -139,17 +139,19 @@
 		}
 
 		// user modal
-		(() => {
-			let cases = document.querySelectorAll('.case');
-			cases.forEach(e => {
-				e.addEventListener('click', () => {
-					let login = e.dataset.login
-					if (login.length === 0)
-						return;
-					openFriend(login, true)
-				})
-			});
-		})();
+		{% if not kiosk %}
+			(() => {
+				let cases = document.querySelectorAll('.case');
+				cases.forEach(e => {
+					e.addEventListener('click', () => {
+						let login = e.dataset.login
+						if (login.length === 0)
+							return;
+						openFriend(login, true)
+					})
+				});
+			})();
+		{% endif %}
 
 		// scrolling
 		{% if kiosk %}
