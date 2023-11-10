@@ -94,7 +94,7 @@
 							{%- elif exrypz(y) == False -%}
 								<td class="small-colors block"></td>
 							{%- else -%}
-								{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<img class="rounded-pill profile-pic2" alt="" src="' + proxy_images(locations[y]['user']['image']['versions']['small']) + '">' -%}
+								{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<img class="rounded-pill profile-pic2" alt="" src="' + proxy_images(locations[y]['user']['image']['versions']['small'], True) + '">' -%}
 								<td data-pos="{{ y }}"
 								    data-login="{{ locations[y]['user']['login'] if y in locations else '' }}"
 								    class="sm-t block case {{ locations[y]['classes'] if y in locations else '' }} {{ "dead" if y in issues_map and issues_map[y]['count'] >= 1 and issues_map[y]['issue'] == 1 else '' }}">
