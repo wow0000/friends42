@@ -16,13 +16,17 @@
 		.consecutive_seats {
 			background-color: #5a228b !important;
 		}
+
+		.display-inline-block {
+			display: inline-block;
+		}
 	</style>
 {% endblock %}
 {% block content %}
 	{% include 'open_modal.html' %}
 	<div class="list-group list-group-horizontal mx-5 m-2">
 		{% for build in buildings %}
-			<a href="/{{'idle' if kiosk else 'new'}}/{{ build.name }}" class="list-group-item list-group-item-action list-group-item-{{ percent_to_btn(build['free'], build['all_place'], '') }} {{ 'active' if build.name == building else '' }}">
+			<a href="/{{ 'idle' if kiosk else 'new' }}/{{ build.name }}" class="list-group-item list-group-item-action list-group-item-{{ percent_to_btn(build['free'], build['all_place'], '') }} {{ 'active' if build.name == building else '' }}">
 				<div class="d-flex w-100 justify-content-between">
 				<span class="mb-1 fw-bold">
 					<i class="fa-solid fa-building"></i> {{ build.name }}
@@ -94,7 +98,11 @@
 							{%- elif exrypz(y) == False -%}
 								<td class="small-colors block"></td>
 							{%- else -%}
-								{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<img class="rounded-pill profile-pic2" alt="" src="' + proxy_images(locations[y]['user']['image']['versions']['small'], True) + '">' -%}
+								{% if not kiosk %}
+									{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<img class="rounded-pill profile-pic2" alt="" src="' + proxy_images(locations[y]['user']['image']['versions']['small'], True) + '">' -%}
+								{% else %}
+									{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<div class="bg-danger display-inline-block rounded-pill profile-pic2"></div>' -%}
+								{% endif %}
 								<td data-pos="{{ y }}"
 								    data-login="{{ locations[y]['user']['login'] if y in locations else '' }}"
 								    class="sm-t block case {{ locations[y]['classes'] if y in locations else '' }} {{ "dead" if y in issues_map and issues_map[y]['count'] >= 1 and issues_map[y]['issue'] == 1 else '' }}">
