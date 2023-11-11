@@ -58,6 +58,7 @@ def auth():
 			return '', 500
 	cookie = db.create_cookie(user_id, request.headers.get('User-Agent'))
 	db.close()
-	resp = make_response(redirect('/', 307))
+	previous = request.cookies.get("previous") or "/"
+	resp = make_response(redirect(previous, 307))
 	resp.set_cookie('token', cookie, expires=time.time() + 30 * 86400, httponly=True)  # 30 days
 	return resp

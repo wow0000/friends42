@@ -2,7 +2,7 @@ from globals import *
 from functools import wraps
 from db import Db
 import config
-from flask import request, redirect
+from flask import request, redirect, make_response
 import json
 import requests
 import urllib.parse
@@ -31,7 +31,9 @@ def auth_required(function):
 		userid = db.get_user_by_bookie(token)
 		if userid == 0:
 			db.close()
-			return redirect("/redirect_42", 307)
+			resp = make_response(redirect("/redirect_42", 307))
+			resp.set_cookie("previous", str(request.url_rule), secure=True, max_age=None, httponly=True)
+			return resp
 		details = db.get_user_by_id(userid['userid'])
 		db.close()
 		userid['campus'] = details['campus']

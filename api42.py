@@ -40,15 +40,18 @@ class Api:
 
 	def get_access_token(self, token: str, state: str, domain: str) -> str:
 		self.add_rate()
-		print('->', domain)
-		r = requests.post(f"{self.intra}/oauth/token", data={
-			"grant_type": "authorization_code",
-			"client_id": self.key,
-			"client_secret": self.secret,
-			"code": token,
-			"state": state,
-			"redirect_uri": config.redirect_url.replace('{current_domain}', domain)
-		})
+		r = None
+		try:
+			r = requests.post(f"{self.intra}/oauth/token", data={
+				"grant_type": "authorization_code",
+				"client_id": self.key,
+				"client_secret": self.secret,
+				"code": token,
+				"state": state,
+				"redirect_uri": config.redirect_url.replace('{current_domain}', domain)
+			})
+		except Exception as e:
+			return ""
 		if r.status_code != 200:
 			return ""
 		print('token', "Authorization: Bearer " + r.json()["access_token"])
