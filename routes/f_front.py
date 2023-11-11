@@ -1,6 +1,6 @@
 from globals import *
 from routes.helpers import *
-from flask import Blueprint, render_template, send_from_directory
+from flask import Blueprint, render_template, send_from_directory, make_response, redirect
 import maps.maps as maps
 import arrow
 
@@ -98,7 +98,8 @@ def index(userid):
 		for cluster in campus_map['allowed']]
 	return render_template('index.html', map=campus_map[cluster_name], locations=location_map,
 	                       clusters=clusters_list, actual_cluster=cluster_name, issues_map=issues_map,
-	                       exrypz=campus_map['exrypz'], piscine=campus_map['piscine'], theme=theme)
+	                       exrypz=campus_map['exrypz'], piscine=campus_map['piscine'], theme=theme,
+	                       focus=request.args.get('p'))
 
 
 @app.route('/friends/')
@@ -141,6 +142,20 @@ def search_route(keyword, friends_only, userid):
 	if friends_only == 0:
 		resp += [{"type": "project", "v": e['name'], "s": e['slug']} for e in projects]
 	return resp, 200
+
+
+@app.route('/goto/<pos>')
+@auth_required
+def goto_route(pos, userid):
+	db = Db("database.db")
+	campus_id = db.get_user_by_id(userid['userid'])['campus']
+	db.close()
+	if campus_id not in maps.available:
+		return f'Your campus layout is not yet supported, send a DM to @wow000 or @neoblacks on Discord to get started (Your campus id: {campus_id})', 200
+	data = maps.available[campus_id].exrypz(pos)
+	if not data or 'etage' not in data or data['etage'] not in maps.available[campus_id].map['allowed']:
+		return f"{pos} not found !!!", 404
+	return make_response(redirect(f"/?cluster={data['etage']}&p={pos}", 307))
 
 
 # Manual things that need to be routed on /

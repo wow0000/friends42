@@ -178,12 +178,16 @@ function openFriend(name, auto_reload = false) {
 				openFriendShowCluster.onclick = () => {
 					if (!data.position[0])
 						return;
-					if (data.position[0] === 'e' || data.position.includes('bess') || data.position.includes('paul')) {
+					// i hate it
+					if (data.position[0] === 'e' || data.position[0] === 'c' || data.position.includes('bess') || data.position.includes('paul')
+						|| data.position.includes('made')) {
 						let cluster = data.position.split('r')[0]
-						let lastChar = cluster[cluster.length - 1];
-						if (lastChar === 'A' || lastChar === 'B')
-							cluster = cluster.slice(0, -1);
-						location.href = `/?cluster=${cluster}`
+						if (data.position.includes('bess') || data.position.includes('paul')) {
+							let lastChar = cluster[cluster.length - 1];
+							if (lastChar === 'A' || lastChar === 'B')
+								cluster = cluster.slice(0, -1);
+						}
+						location.href = `/?cluster=${cluster}&p=${data.position}`
 					}
 				}
 				openFriendLabelAddFriend.onclick = () => {
@@ -319,7 +323,8 @@ function isTouchDevice() {
 							}
 						})
 						if (found === 0)
-							triggerToast(`Aucun résultat pour ${val}`)
+							triggerToast(`Aucun résultat pour ${val}`
+							)
 					});
 				}
 			}

@@ -51,6 +51,11 @@ div.scroll {
 	filter: drop-shadow(0 0 0.75rem #8e44ad) !important;
 }
 
+.focus {
+	background-color: #e33d94 !important;
+	filter: drop-shadow(0 0 0.75rem #e33d94) !important;
+}
+
 .me {
 	background-color: #2980b9 !important;
 	filter: drop-shadow(0 0 0.75rem #2980b9) !important;

@@ -77,7 +77,9 @@
 						{%- else -%}
 							{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<img loading="lazy" class="profile-pic2" alt="" src="' + proxy_images(locations[y]['user']['image']['versions']['small']) + '">' -%}
 							{%- set relation = '' -%}
-							{%- if y in locations and locations[y]['me'] -%}
+							{%- if focus and focus == y %}
+								{%- set relation = 'focus' -%}
+							{%- elif y in locations and locations[y]['me'] -%}
 								{%- set relation = 'me' -%}
 							{%- elif y in locations and locations[y]['close_friend'] -%}
 								{%- set relation = 'close_friend' -%}
