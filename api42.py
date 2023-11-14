@@ -60,9 +60,12 @@ class Api:
 
 	def get_token_info(self, token: str):
 		self.add_rate()
-		user_info = requests.get(f"{self.intra}/oauth/token/info", headers={
-			"Authorization": "Bearer " + token
-		})
+		try:
+			user_info = requests.get(f"{self.intra}/oauth/token/info", headers={
+				"Authorization": "Bearer " + token
+			})
+		except Exception as e:
+			return None
 		if user_info.status_code != 200:
 			return None
 		return user_info.json()

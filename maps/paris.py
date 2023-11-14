@@ -11,7 +11,7 @@ def exrypz(computer):
 		       "place": seat}
 		return res
 	# old format
-	if len(computer) >= 6:
+	if len(computer) >= 6 and 'r' in computer and 'p' in computer:
 		res = {"building": "main", "p_sep": "p", "etage": computer.split('r')[0],
 		       "range": computer.split('r')[1].split('p')[0],
 		       "place": computer.split('p')[1]}
