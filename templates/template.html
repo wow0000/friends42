@@ -120,10 +120,10 @@
 	</div>
 </div>
 {% block content %}{% endblock %}
-<script src="/static/js/bootstrap.min.js?v={{ version }}"></script>
+<script async src="/static/js/bootstrap.min.js?v={{ version }}"></script>
 <script src="/static/js/common.js?v={{ version }}"></script>
 {% block scripts %}{% endblock %}
-{% if theme and theme.enabled %}
+{% if theme and theme.enabled and len(theme.javascript) > 0 %}
 	<script>
 		{{ theme.javascript|safe }}
 	</script>

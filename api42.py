@@ -25,14 +25,16 @@ class Api:
 
 	def get_token(self) -> bool:
 		self.add_rate()
-		r = requests.post(f"{self.intra}/oauth/token", data={
-			"grant_type": "client_credentials",
-			"client_id": self.key,
-			"client_secret": self.secret
-		})
+		try:
+			r = requests.post(f"{self.intra}/oauth/token", data={
+				"grant_type": "client_credentials",
+				"client_id": self.key,
+				"client_secret": self.secret
+			})
+		except Exception as e:
+			return False
 		if r.status_code == 200:
 			self.token = r.json()["access_token"]
-			print(self.token)
 			self.expire_at = r.json()["expires_in"] + r.json()["created_at"]
 			return True
 		else:
@@ -54,7 +56,6 @@ class Api:
 			return ""
 		if r.status_code != 200:
 			return ""
-		print('token', "Authorization: Bearer " + r.json()["access_token"])
 		return r.json()["access_token"]
 
 	def get_token_info(self, token: str):

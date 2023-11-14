@@ -99,15 +99,15 @@ CREATE TABLE IF NOT EXISTS MATES
 
 CREATE TABLE IF NOT EXISTS PROJECTS
 (
-	id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    slug TEXT NOT NULL,
-    solo INTEGER DEFAULT 1,
-    subject TEXT DEFAULT NULL,
-    description TEXT DEFAULT NULL,
-    experience INTEGER DEFAULT 0,
-    attachements TEXT DEFAULT '[]'
-)
+	id           INTEGER PRIMARY KEY,
+	name         TEXT NOT NULL,
+	slug         TEXT NOT NULL,
+	solo         INTEGER DEFAULT 1,
+	subject      TEXT    DEFAULT NULL,
+	description  TEXT    DEFAULT NULL,
+	experience   INTEGER DEFAULT 0,
+	attachements TEXT    DEFAULT '[]'
+);
 
 /*
 CREATE TABLE IF NOT EXISTS PREFERENCES
