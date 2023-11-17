@@ -17,11 +17,15 @@ def profile(login, userid):
 	is_friend = db.is_friend(userid['userid'], user['id']) is not False
 	is_banned = db.is_banned(user['id'])
 	theme = db.get_theme(userid['userid'])
+	hide = is_shadow_banned(user['id'], userid['userid'], db)
 	db.close()
 	if user is None:
 		return "", 404
-	user["position"] = get_position(user['name'])
-	if user['active'] and user['position'] is None:
+	if hide:
+		user['position'] = None
+	else:
+		user["position"] = get_position(user['name'])
+	if user['active'] and user['position'] is None and hide == False:
 		user["last_active"] = "depuis " + (
 			arrow.get(user['active'], "YYYY-MM-DD HH:mm:ss", tzinfo='UTC')).humanize(locale='FR', only_distance=True)
 	else:
@@ -61,6 +65,7 @@ def index(userid):
 	issues = db.get_issues()
 	me = db.get_user_profile_id(userid['userid'])
 	theme = db.get_theme(userid['userid'])
+	shadow_bans = db.get_shadow_bans(userid['userid'])
 	db.close()
 	campus_map = maps.available[campus_id].map
 	if pos and type(campus_map['exrypz'](pos)) == bool:
@@ -75,6 +80,9 @@ def index(userid):
 	issues_map = {}
 	for user in cache_tab:
 		user_id = user['user']['id']
+		print(shadow_bans)
+		if user_id in shadow_bans:
+			continue
 		location_map[user['host']] = user
 		location_map[user['host']]['me'] = user_id == userid['userid']
 		location_map[user['host']]['friend'] = user_id in [e['has'] for e in friends]
@@ -108,14 +116,19 @@ def friends_route(userid):
 	db = Db("database.db")
 	theme = db.get_theme(userid['userid'])
 	friend_list = db.get_friends(userid['userid'])
+	shadow_bans = db.get_shadow_bans(userid['userid'])
 	db.close()
 	for friend in friend_list:
-		friend["position"] = get_position(friend["name"])
-		if friend['active'] and friend['position'] is None:
-			date = arrow.get(friend['active'], "YYYY-MM-DD HH:mm:ss", tzinfo='UTC')
-			friend["last_active"] = "depuis " + date.humanize(locale='FR', only_distance=True)
-		else:
+		if friend['has'] in shadow_bans:
+			friend['position'] = None
 			friend["last_active"] = ""
+		else:
+			friend["position"] = get_position(friend["name"])
+			if friend['active'] and friend['position'] is None:
+				date = arrow.get(friend['active'], "YYYY-MM-DD HH:mm:ss", tzinfo='UTC')
+				friend["last_active"] = "depuis " + date.humanize(locale='FR', only_distance=True)
+			else:
+				friend["last_active"] = ""
 	friend_list = sorted(friend_list, key=lambda d: d['name'])
 	friend_list = sorted(friend_list, key=lambda d: 0 if d['relation'] == 1 else 1)
 	friend_list = sorted(friend_list, key=lambda d: 0 if d['position'] else 1)

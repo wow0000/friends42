@@ -11,6 +11,7 @@ import hmac
 import collections
 from time import time
 import arrow
+import zlib
 
 
 def proxy_images(url: str, light=False):
@@ -121,7 +122,11 @@ def create_users(db, profiles):
 
 def get_cached_locations(campus=1):
 	locations = r.get("locations/" + str(campus)) or '[]'
-	cache_tab = json.loads(locations)
+	# locations[0] == '[':
+	if locations[0] == 91:
+		cache_tab = json.loads(locations)
+	else:
+		cache_tab = json.loads(zlib.decompress(locations).decode('utf-8'))
 	return cache_tab
 
 
@@ -133,7 +138,7 @@ def get_last_update(campus=1):
 	return None, False
 
 
-def optimize_locations(data):
+def optimize_locations(data: list[dict]) -> list[dict]:
 	if len(data) == 0:
 		return data
 	compressed = []
@@ -148,11 +153,27 @@ def optimize_locations(data):
 				"login": tmp['login'],
 				"pool_month": tmp['pool_month'],
 				"pool_year": tmp['pool_year'],
-				"image": tmp['image'],
-				"location": tmp['location']
+				"location": tmp['location'],
+				"image": {
+					"link": tmp['image']['link'],
+					"versions": {
+						"medium": tmp['image']["versions"]["medium"],
+						"small": tmp['image']["versions"]["small"]
+					}
+				},
 			}
 		})
 	return compressed
+
+
+def is_shadow_banned(user: int, offender: int, c_db=None):
+	db = c_db
+	if c_db is None:
+		db = Db("database.db")
+	ret = db.is_shadow_banned(user, offender)
+	if c_db is None:
+		db.close()
+	return ret
 
 
 def locs(campus=1):
@@ -162,7 +183,7 @@ def locs(campus=1):
 		db = Db("database.db")
 		create_users(db, data)
 		db.close()
-		r.set("locations/" + str(campus), json.dumps(data))
+		r.set("locations/" + str(campus), zlib.compress(json.dumps(data).encode('utf-8')))
 		r.set("location_last_update/" + str(campus), arrow.now().__str__())
 		r.set("location_success/" + str(campus), '1')
 		return data, 200

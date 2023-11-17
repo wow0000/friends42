@@ -375,6 +375,15 @@ class Db:
 		redis.set('db_project_list_group', json.dumps(data), ex=3600)
 		return data
 
+	def get_xp_projects_list(self, redis):
+		rds_ret = redis.get('db_project_list_xp')
+		if rds_ret:
+			return json.loads(rds_ret)
+		req = self.cur.execute("SELECT * FROM PROJECTS WHERE experience != 0")
+		data = req.fetchall()
+		redis.set('db_project_list_xp', json.dumps(data), ex=3600)
+		return data
+
 	def get_project(self, project_slug, redis):
 		rds_ret = redis.get('db_project_name_' + project_slug)
 		if rds_ret:
@@ -390,7 +399,8 @@ class Db:
 
 	def search_project_solo(self, keyword: str, solo: False) -> list:
 		keyword = f"%{keyword}%"
-		req = self.cur.execute("SELECT * FROM PROJECTS WHERE (name LIKE ? OR slug LIKE ?) AND solo = ?", [keyword, keyword, solo])
+		req = self.cur.execute("SELECT * FROM PROJECTS WHERE (name LIKE ? OR slug LIKE ?) AND solo = ?",
+		                       [keyword, keyword, solo])
 		return req.fetchall()
 
 	def search_project(self, keyword: str) -> list:
@@ -402,3 +412,15 @@ class Db:
 	# Update process
 	def raw_query(self, query, args):
 		return self.cur.execute(query, args)
+
+	# Shadow ban
+	def is_shadow_banned(self, user: int, offender: int) -> bool:
+		req = self.cur.execute("SELECT 1 FROM SHADOW_BAN WHERE user = ? AND offender = ?", [user, offender])
+		return req.fetchone() is not None
+
+	def get_shadow_bans(self, offender: int) -> list:
+		req = self.cur.execute("SELECT user FROM SHADOW_BAN WHERE offender = ?", [offender])
+		parsed = []
+		for user in req.fetchall():
+			parsed.append(user['user'])
+		return parsed
