@@ -80,7 +80,6 @@ def index(userid):
 	issues_map = {}
 	for user in cache_tab:
 		user_id = user['user']['id']
-		print(shadow_bans)
 		if user_id in shadow_bans:
 			continue
 		location_map[user['host']] = user
