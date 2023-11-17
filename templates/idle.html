@@ -75,6 +75,17 @@
 						{{ cluster_info['name'] }}
 					</div>
 					<div class="col text-end">
+						{%- if consecutive_enable %}
+							<span class="btn-group btn-group me-2" role="group">
+							<input type="radio" class="btn-check cluster-select" name="consecutive-radio-{{ cluster_info.name }}" id="consecutive-0-{{ cluster_info.name }}" data-number="0" checked>
+						    <label class="btn btn-primary" for="consecutive-0-{{ cluster_info.name }}">X</label>
+								{%- for i in range(2, 6) %}
+									<input type="radio" class="btn-check cluster-select" name="consecutive-radio-{{ cluster_info.name }}" id="consecutive-{{ i }}-{{ cluster_info.name }}" data-number="{{ i }}">
+									<label class="btn btn-secondary" for="consecutive-{{ i }}-{{ cluster_info.name }}">{{ i }} <i class="fa-solid fa-user"></i></label>
+								{%- endfor %}
+						</span>
+						{%- endif %}
+
 						{{ cluster_info.users }}/{{ cluster_info.maximum_places - cluster_info.dead_pc }}
 						{% if cluster_info.name in piscine %}
 							<i class="fa-solid fa-person-swimming text-info"></i>
@@ -101,7 +112,7 @@
 								{% if not kiosk %}
 									{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<img class="rounded-pill profile-pic2" alt="" src="' + proxy_images(locations[y]['user']['image']['versions']['small'], True) + '">' -%}
 								{% else %}
-									{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<div class="bg-danger display-inline-block rounded-pill profile-pic2"></div>' -%}
+									{%- set img = '<div class="bg-primary display-inline-block rounded-pill profile-pic2"></div>' if y not in locations else '<div class="bg-danger display-inline-block rounded-pill profile-pic2"></div>' -%}
 								{% endif %}
 								<td data-pos="{{ y }}"
 								    data-login="{{ locations[y]['user']['login'] if y in locations else '' }}"
@@ -183,10 +194,10 @@
 				document.addEventListener('touchmove', update_activity);
 			})();
 		{% endif %}
+
 		// place finder
 		(() => {
 			// We suppose that the desktops are reversed 1/2
-
 			function gen_map_from_table(table_elem) {
 				let res = []
 				let y_es = table_elem.querySelectorAll("tr");
@@ -225,6 +236,8 @@
 				while (1) {
 					if (y < 0 || y >= map.length || x < 0 || x >= map[y].length)
 						break;
+					if (map[y][x].includes("Fbess-f1"))
+						console.log(map[y][x], number_of_seats)
 					if (map[y][x][0] === 'F') {
 						seats.push(map[y][x])
 						number_of_seats++;
@@ -246,24 +259,23 @@
 					for (let x = 0; x < map[y].length; x++) {
 						if (map[y][x][0] === 'F') {
 							let ret = calc_consecutive(map, x, y);
-							if (ret[0] >= consecutive) {
-								x += consecutive;
+							if (ret[0] >= consecutive)
 								colorize_seats(ret[1]);
-							}
 						}
 					}
 				}
 			}
 
-			document.querySelectorAll('input[name="consecutive-radio"]').forEach(input => {
+			document.querySelectorAll('input.cluster-select').forEach(input => {
 				input.addEventListener('click', () => {
-					let number = parseInt(document.querySelector('input[name="consecutive-radio"]:checked').dataset.number);
-					console.log("??", number)
+					document.querySelectorAll('input.cluster-select').forEach(input2 => {
+						input2.checked = input.dataset.number === input2.dataset.number;
+					});
+					let number = parseInt(input.dataset.number);
 					reset_seats();
 					if (number <= 1)
 						return;
 					document.querySelectorAll("table.grid").forEach(async table => {
-						console.log(table)
 						get_free_pos_map(table, number);
 					})
 				})
