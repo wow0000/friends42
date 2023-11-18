@@ -209,7 +209,9 @@
 					res.push([])
 					let x_es = y_es[y].querySelectorAll(".block");
 					for (let x = 0; x < x_es.length; x++) {
-						if ('login' in x_es[x].dataset)
+						if (x_es[x].classList.contains('dead'))
+							res[y].push('O')
+						else if ('login' in x_es[x].dataset)
 							res[y].push(x_es[x].dataset['login'] === '' ? `F${x_es[x].dataset['pos']}` : 'O')
 						else
 							res[y].push('O')
