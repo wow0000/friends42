@@ -20,6 +20,15 @@
 		.display-inline-block {
 			display: inline-block;
 		}
+
+		.text-right {
+			text-align: right;
+		}
+
+		.indicator-sm {
+			height: 1rem;
+			width: 1rem;
+		}
 	</style>
 {% endblock %}
 {% block content %}
@@ -135,6 +144,14 @@
 				{%- endfor -%}
 				</tbody>
 			</table>
+			<div class="text-right small mt-2">
+				<div class="bg-primary display-inline-block rounded-pill indicator-sm"></div>
+				<span class="align-text-bottom"> {{ cluster_info.maximum_places - cluster_info.dead_pc - cluster_info.users }} places libres </span>
+				<div class="bg-danger display-inline-block rounded-pill indicator-sm"></div>
+				<span class="align-text-bottom">{{ cluster_info.users + cluster_info.dead_pc }} places occupés </span>
+				<div class="bg-warning display-inline-block rounded-pill indicator-sm"></div>
+				<span class="align-text-bottom">{{ cluster_info.dead_pc }} places inutilisable </span>
+			</div>
 		</div>
 	{% endfor %}
 
@@ -201,7 +218,7 @@
 
 		// place finder
 		(() => {
-			// We suppose that the desktops are reversed 1/2
+			// We suppose that the desktops are reversed 1/2, that's not always the case tho :(
 			function gen_map_from_table(table_elem) {
 				let res = []
 				let y_es = table_elem.querySelectorAll("tr");
