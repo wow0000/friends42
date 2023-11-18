@@ -192,6 +192,10 @@ def locs(campus=1):
 		return data, status
 
 
+def date_fmt_locale(date: str):
+	return arrow.get(date).to('local').format('DD/MM/YYYY HH:mm:ss', locale='fr')
+
+
 def date_relative(date, granularity=None):
 	if granularity:
 		return arrow.get(date).humanize(locale='fr', granularity=granularity)

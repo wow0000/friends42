@@ -1,0 +1,265 @@
+{% extends 'template.html' %}
+{% block css %}
+	<style>
+		.banner {
+			height: 12vh;
+			min-height: 75px;
+			width: 100%;
+			background-size: cover;
+			background-position: center;
+			margin-bottom: 1em;
+		}
+
+		.banner > h1 {
+			height: 100%;
+			line-height: 3em;
+		}
+
+		.boxy {
+			backdrop-filter: brightness(80%) saturate(2);
+		}
+
+		html, body {
+			min-height: 100%;
+		}
+
+		.navbar {
+			margin-bottom: 0 !important;
+			position: relative;
+		}
+
+		.icon-size {
+			font-size: 4em;
+		}
+
+		.font-lg {
+			font-size: 1.5em;
+		}
+	</style>
+{% endblock %}
+
+{% block content %}
+	<div class="banner">
+		<h1 class="text-center">Calculateur 42cursus</h1>
+	</div>
+
+	<div class="container">
+		<div class="row row-cols-2">
+			<div class="col">
+				<div class="border rounded p-3 shadow boxy mb-2">
+					<fieldset>
+						<div class="mb-3">
+							<label for="lvl-input" class="form-label">
+								Votre niveau
+							</label>
+							<div class="input-group">
+								<input type="number" step=".01" id="lvl-input" class="form-control update-calc" min="0" max="30" placeholder="{{ data.level or 1 }}" data-og="{{ data.level or 1 }}" value="{{ data.level or 1 }}">
+								<span class="input-group-text"><button class="btn btn-sm btn-primary" onclick="restore_xp();"><i class="fa-solid fa-arrows-rotate"></i></button></span>
+							</div>
+							{% if refreshed and refreshed != '' %}
+								<div class="form-text" id="basic-addon4">Dernière mise à jour {{ refreshed }}</div>
+							{% endif %}
+						</div>
+						<div class="mb-3">
+							<label for="grade-input" class="form-label">
+								Votre note
+							</label>
+							<input type="number" id="grade-input" class="form-control update-calc" value="100" min="1" max="125">
+						</div>
+						<div class="mb-3">
+							<label for="project-input" class="form-label">Projet</label>
+							<input type="text" id="project-input" list="projectList" class="form-control update-calc" placeholder="">
+							<datalist id="projectList">
+								{%- for proj in projectsList %}
+									{%- if proj.name in whitelist %}
+										<option value="{{ proj.slug }}" data-xp="{{ proj.experience }}">
+											{{ proj.name }} ({{ proj.experience }}xp)
+										</option>
+									{%- endif %}
+								{%- endfor %}
+							</datalist>
+						</div>
+						<div class="mb-3">
+							<input class="form-check-input update-calc" type="checkbox" value="" id="bonus-check">
+							<label class="form-check-label" for="bonus-check">
+								Bonus coalition (+4.2% XP)
+							</label>
+						</div>
+					</fieldset>
+				</div>
+
+				<!-- data frame -->
+				{% if data %}
+					<div class="border rounded p-3 shadow boxy mb-2">
+						<legend class="text-left">Vos informations</legend>
+						<ul>
+							<li>Level: {{ data.level }}</li>
+							<li>Wallets: {{ data.user.wallet }} ₳</li>
+							{% if data.blackholed_at %}
+								<li>Blackhole: {{ date_fmt_locale(data.blackholed_at) }}</li>
+							{% endif %}
+						</ul>
+					</div>
+				{% endif %}
+			</div>
+			<div class="col">
+				<!-- ret frame -->
+				<div class="border rounded p-3 shadow text-center boxy mb-2">
+					<div class="p-3">
+						<i class="fa-regular fa-calendar-check icon-size"></i>
+					</div>
+					<div class="text-center">
+						<div id="new-bh" {{ "" if data and data.blackholed_at else "hidden" }}>??/??/????</div>
+						<div class="text-success font-lg">+<span id="new-days">??</span> jours</div>
+						<div>Lvl <span id="new-lvl">?.? (+?.?)</span></div>
+						<button class="m-2 btn btn-primary" onclick="set_new_xp();">
+							Calculer un projet supplémentaire
+						</button>
+					</div>
+				</div>
+				<!-- data frame -->
+				<div class="border rounded p-3 shadow boxy mb-2">
+					<legend class="text-left">Détail du calcul</legend>
+					Calcul de l'XP gagné
+					<div id="math-new-xp"></div>
+					Calcul des jours gagnés
+					<div id="math-new-days"></div>
+					<small><i class="fa-solid text-warning fa-triangle-exclamation"></i> Il est possible que le calcul
+						contienne des erreurs, n'hésitez pas à le signaler sur Discord si c'est le cas</small>
+				</div>
+			</div>
+
+		</div>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script async src="/static/js/mathjax3-tex-mml-chtml.min.js"></script>
+	<script>
+		MathJax = {
+			tex: {
+				inlineMath: [['$', '$'], ['\\(', '\\)']],
+				processEscapes: true,
+
+			},
+			svg: {
+				fontCache: 'global'
+			}
+		};
+	</script>
+
+	<script>
+		// thx -> https://medium.com/@benjaminmerchin/42-black-hole-deep-dive-cbc4b343c6b2
+
+		const levels = [0, 462, 2688, 5885, 11777, 29217, 46255, 63559, 74340, 85483, 95000, 105630, 124446, 145782,
+			169932, 197316, 228354, 263508, 303366, 348516, 399672, 457632, 523320, 597786, 682164, 777756, 886074,
+			1008798, 1147902, 1305486, 1484070
+		];
+
+		const current_bh = new Date("{{ data.blackholed_at }}");
+
+		function update_math(id, formula, align = true) {
+			if (align)
+				formula = "\\begin{align}" + formula + "\\end{align}";
+			document.getElementById(id).innerHTML = '\\[' + formula + '\\]';
+			if (MathJax && MathJax.typeset)
+				MathJax.typeset();
+		}
+
+		function get_xp_from_lvl(level) {
+			let lvl = levels[Math.floor(level)];
+			let diff = levels[Math.floor(level) + 1] - lvl;
+			let add_to_lvl = diff * (level - Math.floor(level));
+			lvl += add_to_lvl;
+			return lvl;
+		}
+
+		function get_lvl_from_xp(xp) {
+			let lvl = 0;
+			while (levels[lvl + 1] < xp)
+				lvl++;
+			let diff = (xp - levels[lvl]) / (levels[lvl + 1] - levels[lvl])
+			return lvl + diff;
+		}
+
+		// (((x + proj_xp) / 78909) ** 0.45 - (x / 78909) ** 0.45) * 593
+		function big_formula(level, proj_xp, grade, bonus) {
+			let current = get_xp_from_lvl(level);
+			let formula_xp = `p = \\frac{${grade}\\cdot ${proj_xp}}{100} `;
+			proj_xp = ((grade * proj_xp) / 100);
+			formula_xp += `= ${proj_xp.toFixed(2)} \\\\`;
+			if (bonus) {
+				proj_xp += proj_xp * (bonus ? 0.042 : 0);
+				formula_xp += `p = p + \\frac{4,2}{100} = ${proj_xp} \\\\`;
+			}
+			formula_xp += `c = \\text{get_xp_from_lvl}(${level}) = ${current.toFixed(2)} \\\\`
+			let new_xp = current + proj_xp;
+			formula_xp += `c + p = ${current.toFixed(2)} + ${proj_xp.toFixed(2)} = ${(new_xp).toFixed(2)} \\\\`
+			formula_xp += `\\text{xp = } ${(new_xp).toFixed(2)}`
+			let days = ((((new_xp) / 78909) ** 0.45) - ((current / 78909) ** 0.45)) * 593;
+			let formula_days = `= \\left(\\left(\\frac{${new_xp.toFixed(2)}}{78909}\\right)^{0.45}-\\left(\\frac{${current.toFixed(2)}}{78909}\\right)^{0.45}\\right)593 \\\\`
+			formula_days += `\\text{jours = } ${days.toFixed(2)}`;
+			update_math("math-new-xp", formula_xp)
+			update_math("math-new-days", formula_days)
+
+			return {days: days, new_lvl: get_lvl_from_xp(new_xp), final_xp: new_xp};
+		}
+
+		function calc() {
+			let level = parseFloat(document.getElementById("lvl-input").value);
+			let grade = parseInt(document.getElementById("grade-input").value);
+			let proj = document.getElementById("project-input").value;
+			let xp_elem = document.querySelector(`#projectList option[value='${proj}']`);
+			if (!level || !grade || !proj || !xp_elem || !('xp' in xp_elem.dataset))
+				return false;
+			if (level > 30) {
+				triggerToast("Le niveau maximum est 30", false);
+				return false;
+			}
+			let xp = parseInt(document.querySelector(`#projectList option[value='${proj}']`).dataset.xp);
+			let bonus = document.getElementById('bonus-check').checked;
+
+			let ret = big_formula(level, xp, grade, bonus);
+			let new_date = new Date(current_bh.getTime() + (ret.days * 24 * 60 * 60 * 1000));
+			document.getElementById("new-days").innerText = Math.ceil(ret.days).toString();
+			document.getElementById("new-lvl").innerText = ret.new_lvl.toFixed(2) + " (+" + (ret.new_lvl - level).toFixed(2) + ")";
+			document.getElementById("new-bh").innerText = new_date.toLocaleDateString("fr-FR");
+			return ret;
+		}
+
+		function restore_xp() {
+			let input = document.getElementById("lvl-input");
+			input.value = input.dataset.og;
+			calc();
+		}
+
+		function set_new_xp() {
+			let input = document.getElementById("lvl-input");
+			let ret = calc();
+			if (!ret)
+				return;
+			input.value = ret.new_lvl.toFixed(2);
+			calc();
+		}
+
+		function default_project() {
+			let avg_xp = get_xp_from_lvl(document.getElementById('lvl-input').value) / 3;
+			let pl = document.getElementById('projectList').options;
+			for (let i = 0; i < pl.length; i++) {
+				if (pl[i].dataset.xp > avg_xp) {
+					document.getElementById('project-input').value = pl[i].value;
+					break;
+				}
+			}
+		}
+
+		document.querySelectorAll(".update-calc").forEach((e) => {
+			e.addEventListener("change", calc);
+			e.addEventListener("keyup", calc);
+		});
+
+		default_project();
+		calc();
+
+	</script>
+{% endblock %}
