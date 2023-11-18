@@ -54,11 +54,20 @@
 							</label>
 							<div class="input-group">
 								<input type="number" step=".01" id="lvl-input" class="form-control update-calc" min="0" max="30" placeholder="{{ data.level or 1 }}" data-og="{{ data.level or 1 }}" value="{{ data.level or 1 }}">
-								<span class="input-group-text"><button class="btn btn-sm btn-primary" onclick="restore_xp();"><i class="fa-solid fa-arrows-rotate"></i></button></span>
+								<span class="input-group-text"><button class="btn btn-sm btn-primary" onclick="restore('lvl-input');"><i class="fa-solid fa-arrows-rotate"></i></button></span>
 							</div>
 							{% if refreshed and refreshed != '' %}
 								<div class="form-text" id="basic-addon4">Dernière mise à jour {{ refreshed }}</div>
 							{% endif %}
+						</div>
+						<div class="mb-3">
+							<label for="bh-input" class="form-label">
+								Votre blackhole
+							</label>
+							<div class="input-group">
+								<input type="date" id="bh-input" class="form-control update-calc" placeholder="{{ date_fmt_locale(data.blackholed_at, "DD/MM/YYYY") }}" data-og="{{ date_fmt_locale(data.blackholed_at, "YYYY-MM-DD") }}" value="{{ date_fmt_locale(data.blackholed_at, "YYYY-MM-DD") }}">
+								<span class="input-group-text"><button class="btn btn-sm btn-primary" onclick="restore('bh-input');"><i class="fa-solid fa-arrows-rotate"></i></button></span>
+							</div>
 						</div>
 						<div class="mb-3">
 							<label for="grade-input" class="form-label">
@@ -109,7 +118,7 @@
 						<i class="fa-regular fa-calendar-check icon-size"></i>
 					</div>
 					<div class="text-center">
-						<div id="new-bh" {{ "" if data and data.blackholed_at else "hidden" }}>??/??/????</div>
+						<div id="new-bh">??/??/????</div>
 						<div class="text-success font-lg">+<span id="new-days">??</span> jours</div>
 						<div>Lvl <span id="new-lvl">?.? (+?.?)</span></div>
 						<button class="m-2 btn btn-primary" onclick="set_new_xp();">
@@ -155,8 +164,6 @@
 			169932, 197316, 228354, 263508, 303366, 348516, 399672, 457632, 523320, 597786, 682164, 777756, 886074,
 			1008798, 1147902, 1305486, 1484070
 		];
-
-		const current_bh = new Date("{{ data.blackholed_at }}");
 
 		function update_math(id, formula, align = true) {
 			if (align)
@@ -220,25 +227,30 @@
 			let bonus = document.getElementById('bonus-check').checked;
 
 			let ret = big_formula(level, xp, grade, bonus);
+			let current_bh = new Date(document.getElementById("bh-input").value);
 			let new_date = new Date(current_bh.getTime() + (ret.days * 24 * 60 * 60 * 1000));
 			document.getElementById("new-days").innerText = Math.ceil(ret.days).toString();
 			document.getElementById("new-lvl").innerText = ret.new_lvl.toFixed(2) + " (+" + (ret.new_lvl - level).toFixed(2) + ")";
 			document.getElementById("new-bh").innerText = new_date.toLocaleDateString("fr-FR");
+			ret['new_bh'] = new_date;
 			return ret;
 		}
 
-		function restore_xp() {
-			let input = document.getElementById("lvl-input");
+		function restore(id) {
+			let input = document.getElementById(id);
 			input.value = input.dataset.og;
 			calc();
 		}
 
 		function set_new_xp() {
-			let input = document.getElementById("lvl-input");
+			let lvl = document.getElementById("lvl-input");
+			let date = document.getElementById("bh-input");
 			let ret = calc();
 			if (!ret)
 				return;
-			input.value = ret.new_lvl.toFixed(2);
+			lvl.value = ret.new_lvl.toFixed(2);
+			if (!isNaN(ret.new_bh))
+				date.value = ret.new_bh.toISOString().split('T')[0];
 			calc();
 		}
 
