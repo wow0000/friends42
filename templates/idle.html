@@ -112,7 +112,11 @@
 								{% if not kiosk %}
 									{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<img class="rounded-pill profile-pic2" alt="" src="' + proxy_images(locations[y]['user']['image']['versions']['small'], True) + '">' -%}
 								{% else %}
-									{%- set img = '<div class="bg-primary display-inline-block rounded-pill profile-pic2"></div>' if y not in locations else '<div class="bg-danger display-inline-block rounded-pill profile-pic2"></div>' -%}
+									{% if y in issues_map and issues_map[y]['count'] >= 1 and issues_map[y]['issue'] == 1 %}
+										{%- set img = '<div class="bg-warning display-inline-block rounded-pill profile-pic2"></div>' -%}
+									{% else %}
+										{%- set img = '<div class="bg-primary display-inline-block rounded-pill profile-pic2"></div>' if y not in locations else '<div class="bg-danger display-inline-block rounded-pill profile-pic2"></div>' -%}
+									{% endif %}
 								{% endif %}
 								<td data-pos="{{ y }}"
 								    data-login="{{ locations[y]['user']['login'] if y in locations else '' }}"
