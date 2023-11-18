@@ -210,7 +210,7 @@
 			let grade = parseInt(document.getElementById("grade-input").value);
 			let proj = document.getElementById("project-input").value;
 			let xp_elem = document.querySelector(`#projectList option[value='${proj}']`);
-			if (!level || !grade || !proj || !xp_elem || !('xp' in xp_elem.dataset))
+			if (level < 0 || !grade || !proj || !xp_elem || !('xp' in xp_elem.dataset))
 				return false;
 			if (level > 30) {
 				triggerToast("Le niveau maximum est 30", false);
