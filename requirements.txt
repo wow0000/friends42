@@ -2,3 +2,4 @@ redis
 Flask
 requests
 arrow
+sentry_sdk

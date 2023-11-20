@@ -1,7 +1,9 @@
 # This is a template, copy it for your own campus
 
 def exrypz(computer):
-	if len(computer) >= 6:
+	if '-' in computer:
+		return False
+	if len(computer) >= 6 and 'r' in computer and 'p' in computer:
 		res = {"building": "main", "p_sep": "p", "etage": computer.split('r')[0],
 		       "range": computer.split('r')[1].split('p')[0],
 		       "place": computer.split('p')[1]}

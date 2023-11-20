@@ -123,7 +123,8 @@ def create_users(db, profiles):
 def get_cached_locations(campus=1):
 	locations = r.get("locations/" + str(campus)) or '[]'
 	# locations[0] == '[':
-	if locations[0] == 91:
+	print(locations, locations[0])
+	if locations[0] == 91 or locations[0] == '[':
 		cache_tab = json.loads(locations)
 	else:
 		cache_tab = json.loads(zlib.decompress(locations).decode('utf-8'))
