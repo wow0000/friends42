@@ -35,6 +35,19 @@
 		.font-lg {
 			font-size: 1.5em;
 		}
+
+		.legend {
+			float: left;
+			width: 100%;
+			padding: 0;
+			margin-bottom: 0.5rem;
+			font-size: calc(1.275rem + .3vw);
+			line-height: inherit;
+		}
+
+		.display-block {
+			display: block;
+		}
 	</style>
 {% endblock %}
 
@@ -100,7 +113,7 @@
 				<!-- data frame -->
 				{% if data %}
 					<div class="border rounded p-3 shadow boxy mb-2">
-						<legend class="text-left">Vos informations</legend>
+						<div class="legend text-left">Vos informations</div>
 						<ul>
 							<li>Level: {{ data.level }}</li>
 							<li>Wallets: {{ data.user.wallet }} ₳</li>
@@ -118,23 +131,30 @@
 						<i class="fa-regular fa-calendar-check icon-size"></i>
 					</div>
 					<div class="text-center">
+						<div class="legend">Résultats</div>
 						<div id="new-bh">??/??/????</div>
-						<div class="text-success font-lg">+<span id="new-days">??</span> jours</div>
-						<div>Lvl <span id="new-lvl">?.? (+?.?)</span></div>
+						<div class="text-success font-lg">
+							+<span id="new-days">??</span> jours <span id="new-new-days"></span>
+						</div>
+
+						<div>Lvl <span id="new-lvl">?.? (+?.?)</span> <span hidden id="new-new-lvl"></span></div>
 						<button class="m-2 btn btn-primary" onclick="set_new_xp();">
 							Calculer un projet supplémentaire
+						</button>
+						<button class="m-2 btn btn-danger" hidden onclick="restore('bh-input');restore('lvl-input');">
+							Remettre à zéro
 						</button>
 					</div>
 				</div>
 				<!-- data frame -->
 				<div class="border rounded p-3 shadow boxy mb-2">
-					<legend class="text-left">Détail du calcul</legend>
+					<div class="legend text-left">Détail du calcul</div>
 					Calcul de l'XP gagné
 					<div id="math-new-xp" class="overflow-x-scroll"></div>
 					Calcul des jours gagnés
 					<div id="math-new-days" class="overflow-x-scroll"></div>
 					<small><i class="fa-solid text-warning fa-triangle-exclamation"></i> Il est possible que le calcul
-						contienne des erreurs, n'hésitez pas à le signaler sur Discord si c'est le cas</small>
+						contient des erreurs, n'hésitez pas à le signaler sur Discord si c'est le cas!</small>
 				</div>
 			</div>
 
@@ -164,6 +184,8 @@
 			169932, 197316, 228354, 263508, 303366, 348516, 399672, 457632, 523320, 597786, 682164, 777756, 886074,
 			1008798, 1147902, 1305486, 1484070
 		];
+
+		let accumulated = {xp: 0, days: 0};
 
 		function update_math(id, formula, align = true) {
 			if (align)
@@ -212,6 +234,13 @@
 			return {days: days, new_lvl: get_lvl_from_xp(new_xp), final_xp: new_xp};
 		}
 
+		function reset_button_logic() {
+			let lvl = document.getElementById("lvl-input");
+			let date = document.getElementById("bh-input");
+
+			document.querySelector(".btn-danger").hidden = lvl.value === lvl.dataset.og && date.value === date.dataset.og;
+		}
+
 		function calc() {
 			let level = parseFloat(document.getElementById("lvl-input").value);
 			let grade = parseInt(document.getElementById("grade-input").value);
@@ -232,22 +261,33 @@
 			document.getElementById("new-days").innerText = Math.ceil(ret.days).toString();
 			document.getElementById("new-lvl").innerText = ret.new_lvl.toFixed(2) + " (+" + (ret.new_lvl - level).toFixed(2) + ")";
 			document.getElementById("new-bh").innerText = new_date.toLocaleDateString("fr-FR");
+			document.getElementById("new-new-days").hidden = !(accumulated.days > 0);
+			document.getElementById("new-new-lvl").hidden = !(accumulated.xp > 0);
+			document.getElementById("new-new-days").innerText = "(total: " + Math.ceil(accumulated.days) + ")";
+			document.getElementById("new-new-lvl").innerText = "(total: " + accumulated.xp.toFixed(2) + ")";
 			ret['new_bh'] = new_date;
+			reset_button_logic();
 			return ret;
 		}
 
 		function restore(id) {
 			let input = document.getElementById(id);
 			input.value = input.dataset.og;
+			accumulated.xp = 0;
+			accumulated.days = 0;
 			calc();
 		}
 
 		function set_new_xp() {
 			let lvl = document.getElementById("lvl-input");
 			let date = document.getElementById("bh-input");
+			let level = parseFloat(document.getElementById("lvl-input").value);
 			let ret = calc();
 			if (!ret)
 				return;
+			accumulated.days += ret.days;
+			accumulated.xp += ret.new_lvl - level;
+			console.log(ret.new_lvl, level)
 			lvl.value = ret.new_lvl.toFixed(2);
 			if (!isNaN(ret.new_bh))
 				date.value = ret.new_bh.toISOString().split('T')[0];
