@@ -20,6 +20,9 @@
 						<span class="text-left">
 							<i class="fa-solid {{ "fa-2=xs fa-circle online" if user.position else "fa-xs fa-person-walking offline" }}"></i>
 							{{ user.position if user.position else 'Absent' }} {{ user.last_active }}
+							{% if user.position %}
+								<a class="fa-solid fa-users-viewfinder" href="/goto/{{ user.position }}"></a>
+							{% endif %}
 						</span>
 						<span class="text-left">
 							{% if userid.userid != user.id %}
@@ -92,16 +95,18 @@
 		let addLocalFriend = document.getElementById('addLocalFriend');
 		let removeLocalFriend = document.getElementById('removeLocalFriend');
 
-		addLocalFriend.addEventListener('click', async () => {
-			await addFriend('{{ user.name }}', '#addLocalFriend');
-			addLocalFriend.hidden = true;
-			removeLocalFriend.hidden = false;
-		})
+		if (addLocalFriend)
+			addLocalFriend.addEventListener('click', async () => {
+				await addFriend('{{ user.name }}', '#addLocalFriend');
+				addLocalFriend.hidden = true;
+				removeLocalFriend.hidden = false;
+			})
 
-		removeLocalFriend.addEventListener('click', async () => {
-			await deleteFriend('{{ user.name }}', '#removeLocalFriend');
-			addLocalFriend.hidden = false;
-			removeLocalFriend.hidden = true;
-		})
+		if (removeLocalFriend)
+			removeLocalFriend.addEventListener('click', async () => {
+				await deleteFriend('{{ user.name }}', '#removeLocalFriend');
+				addLocalFriend.hidden = false;
+				removeLocalFriend.hidden = true;
+			})
 	</script>
 {% endblock %}

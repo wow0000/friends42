@@ -42,7 +42,11 @@
 						<h5 class="card-title">
 							<i class="fa-solid {{ "fa-2xs fa-circle online" if friend.position else "fa-xs fa-person-walking offline" }}"></i> {{ friend.name }}
 						</h5>
-						<p class="card-text">{{ friend.position if friend.position else 'Absent' }} {{ friend.last_active }}</p>
+						<p class="card-text">{{ friend.position if friend.position else 'Absent' }} {{ friend.last_active }}
+							{% if friend.position %}
+								<a class="fa-solid fa-users-viewfinder" href="/goto/{{ friend.position }}"></a>
+							{% endif %}
+						</p>
 					</div>
 				</div>
 			{% endfor %}
