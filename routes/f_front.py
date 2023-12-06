@@ -156,20 +156,6 @@ def search_route(keyword, friends_only, userid):
 	return resp, 200
 
 
-@app.route('/goto/<pos>')
-@auth_required
-def goto_route(pos, userid):
-	db = Db("database.db")
-	campus_id = db.get_user_by_id(userid['userid'])['campus']
-	db.close()
-	if campus_id not in maps.available:
-		return f'Your campus layout is not yet supported, send a DM to @wow000 or @neoblacks on Discord to get started (Your campus id: {campus_id})', 200
-	data = maps.available[campus_id].exrypz(pos)
-	if not data or 'etage' not in data or data['etage'] not in maps.available[campus_id].map['allowed']:
-		return f"{pos} not found !!!", 404
-	return make_response(redirect(f"/?cluster={data['etage']}&p={pos}", 307))
-
-
 # Manual things that need to be routed on /
 
 @app.route('/static/<path:path>')
