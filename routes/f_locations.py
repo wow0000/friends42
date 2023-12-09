@@ -31,7 +31,7 @@ def goto_route(pos, userid):
 	if campus_id not in maps.available:
 		return f'Your campus layout is not yet supported, send a DM to @wow000 or @neoblacks on Discord to get started (Your campus id: {campus_id})', 200
 	data = maps.available[campus_id].exrypz(pos)
-	if 'made' not in data['etage'].lower():
+	if data and 'etage' in data and 'made' not in data['etage'].lower():
 		data['etage'] = data['etage'].rstrip('A')
 		data['etage'] = data['etage'].rstrip('B')
 	if not data or 'etage' not in data or data['etage'] not in maps.available[campus_id].map['allowed']:
