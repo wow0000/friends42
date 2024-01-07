@@ -82,7 +82,7 @@
 					{% if project_info['attachements'] and len(project_info['attachements']) > 1 %}
 						{% for attachment in project_info['attachements'] %}
 							{% if 'subject' not in attachment['name'] %}
-								<a class="no_under me-2" href="{{ attachment['url'] }}">
+								<a class="no_under me-2" href="{{ attachment['link'] }}">
 									<i class="fa-solid fa-link"></i>{{ attachment['name'] }}
 								</a>
 							{% endif %}
