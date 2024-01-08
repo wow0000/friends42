@@ -93,7 +93,7 @@ map = {
 	],
 	"made-f0A": [
 		['R13', 'R12', 'R11', 'R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
-		['made-f0Ar13s1', 'made-f0Ar13s2', 'made-f0Ar13s3', 'made-f0Ar13s4', 'made-f0Ar13s5', 'made-f0Ar13s6', '', '', '', '', '', '', ''],
+		['made-f0Ar13s1', '', 'made-f0Ar13s2', '', 'made-f0Ar13s3', '', '', '', '', '', '', '', ''],
 		['made-f0Ar12s1', 'made-f0Ar12s2', 'made-f0Ar12s3', 'made-f0Ar12s4', 'made-f0Ar12s5', 'made-f0Ar12s6', '', 'made-f0Ar12s7', 'made-f0Ar12s8', 'made-f0Ar12s9', 'made-f0Ar12s10', 'made-f0Ar12s11', 'made-f0Ar12s12'],
 		['made-f0Ar11s1', 'made-f0Ar11s2', 'made-f0Ar11s3', 'made-f0Ar11s4', 'made-f0Ar11s5', 'made-f0Ar11s6', '', 'made-f0Ar11s7', 'made-f0Ar11s8', 'made-f0Ar11s9', 'made-f0Ar11s10', 'made-f0Ar11s11', 'made-f0Ar11s12'],
 		['made-f0Ar10s1', 'made-f0Ar10s2', 'made-f0Ar10s3', 'made-f0Ar10s4', 'made-f0Ar10s5', 'made-f0Ar10s6', '', 'made-f0Ar10s7', 'made-f0Ar10s8', 'made-f0Ar10s9', 'made-f0Ar10s10', 'made-f0Ar10s11', 'made-f0Ar10s12'],
