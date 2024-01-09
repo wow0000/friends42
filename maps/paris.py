@@ -22,40 +22,40 @@ def exrypz(computer):
 # @formatter:off
 map = {
 	"bess-f1": [
-		['R1', 'R2', 'R3', 'R4', 'R5', 'R6'],
-		['bess-f1r1s1', 'bess-f1r1s2', 'bess-f1r1s3', 'bess-f1r1s4', 'bess-f1r1s5', 'bess-f1r1s6', 'bess-f1r1s7', 'bess-f1r1s8', '', 'bess-f1r1s9', 'bess-f1r1s10', 'bess-f1r1s11', 'bess-f1r1s12', 'bess-f1r1s13', 'bess-f1r1s14', ''],
-		['', 'bess-f1r2s1', 'bess-f1r2s2', 'bess-f1r2s3', 'bess-f1r2s4', 'bess-f1r2s5', 'bess-f1r2s6', '', '', 'bess-f1r2s7', 'bess-f1r2s8', 'bess-f1r2s9', 'bess-f1r2s10', 'bess-f1r2s11', 'bess-f1r2s12', ''],
-		['bess-f1r3s1', 'bess-f1r3s2', 'bess-f1r3s3', 'bess-f1r3s4', 'bess-f1r3s5', 'bess-f1r3s6', 'bess-f1r3s7', 'bess-f1r3s8', '', 'bess-f1r3s9', 'bess-f1r3s10', 'bess-f1r3s11', 'bess-f1r3s12', 'bess-f1r3s13', 'bess-f1r3s14', ''],
-		['bess-f1r4s1', 'bess-f1r4s2', 'bess-f1r4s3', 'bess-f1r4s4', 'bess-f1r4s5', 'bess-f1r4s6', 'bess-f1r4s7', '', '', 'bess-f1r4s8', 'bess-f1r4s9', 'bess-f1r4s10', 'bess-f1r4s11', 'bess-f1r4s12', 'bess-f1r4s13', 'bess-f1r4s14'],
-		['', 'bess-f1r5s1', 'bess-f1r5s2', 'bess-f1r5s3', 'bess-f1r5s4', 'bess-f1r5s5', 'bess-f1r5s6', 'bess-f1r5s7', '', 'bess-f1r5s8', 'bess-f1r5s9', 'bess-f1r5s10', 'bess-f1r5s11', 'bess-f1r5s12', 'bess-f1r5s13', ''],
-		['', '', '', '', '', '', '', '', '', 'bess-f1r6s1', 'bess-f1r6s2', 'bess-f1r6s3', 'bess-f1r6s4', 'bess-f1r6s5', 'bess-f1r6s6', '']
+		['R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
+		['', 'bess-f1r6s6', 'bess-f1r6s5', 'bess-f1r6s4', 'bess-f1r6s3', 'bess-f1r6s2', 'bess-f1r6s1', '', '', '', '', '', '', '', '', ''],
+		['', 'bess-f1r5s13', 'bess-f1r5s12', 'bess-f1r5s11', 'bess-f1r5s10', 'bess-f1r5s9', 'bess-f1r5s8', '', 'bess-f1r5s7', 'bess-f1r5s6', 'bess-f1r5s5', 'bess-f1r5s4', 'bess-f1r5s3', 'bess-f1r5s2', 'bess-f1r5s1', ''],
+		['bess-f1r4s14', 'bess-f1r4s13', 'bess-f1r4s12', 'bess-f1r4s11', 'bess-f1r4s10', 'bess-f1r4s9', 'bess-f1r4s8', '', '', 'bess-f1r4s7', 'bess-f1r4s6', 'bess-f1r4s5', 'bess-f1r4s4', 'bess-f1r4s3', 'bess-f1r4s2', 'bess-f1r4s1'],
+		['', 'bess-f1r3s14', 'bess-f1r3s13', 'bess-f1r3s12', 'bess-f1r3s11', 'bess-f1r3s10', 'bess-f1r3s9', '', 'bess-f1r3s8', 'bess-f1r3s7', 'bess-f1r3s6', 'bess-f1r3s5', 'bess-f1r3s4', 'bess-f1r3s3', 'bess-f1r3s2', 'bess-f1r3s1'],
+		['', 'bess-f1r2s12', 'bess-f1r2s11', 'bess-f1r2s10', 'bess-f1r2s9', 'bess-f1r2s8', 'bess-f1r2s7', '', '', 'bess-f1r2s6', 'bess-f1r2s5', 'bess-f1r2s4', 'bess-f1r2s3', 'bess-f1r2s2', 'bess-f1r2s1', ''],
+		['', 'bess-f1r1s14', 'bess-f1r1s13', 'bess-f1r1s12', 'bess-f1r1s11', 'bess-f1r1s10', 'bess-f1r1s9', '', 'bess-f1r1s8', 'bess-f1r1s7', 'bess-f1r1s6', 'bess-f1r1s5', 'bess-f1r1s4', 'bess-f1r1s3', 'bess-f1r1s2', 'bess-f1r1s1']
 	],
 	"bess-f2": [
-		['R1', 'R2', 'R3', 'R4', 'R5', 'R6'],
-		['bess-f2r1s1', 'bess-f2r1s2', 'bess-f2r1s3', 'bess-f2r1s4', 'bess-f2r1s5', 'bess-f2r1s6', '', 'bess-f2r1s7', 'bess-f2r1s8', 'bess-f2r1s9', 'bess-f2r1s10', 'bess-f2r1s11', 'bess-f2r1s12', 'bess-f2r1s13', 'bess-f2r1s14', '', 'bess-f2r1s15', 'bess-f2r1s16', 'bess-f2r1s17', 'bess-f2r1s18', 'bess-f2r1s19', 'bess-f2r1s20', 'bess-f2r1s21'],
-		['bess-f2r2s1', 'bess-f2r2s2', 'bess-f2r2s3', 'bess-f2r2s4', 'bess-f2r2s5', 'bess-f2r2s6', '', '', 'bess-f2r2s7', 'bess-f2r2s8', 'bess-f2r2s9', 'bess-f2r2s10', 'bess-f2r2s11', 'bess-f2r2s12', '', '', 'bess-f2r2s13', 'bess-f2r2s14', 'bess-f2r2s15', 'bess-f2r2s16', 'bess-f2r2s17', 'bess-f2r2s18', ''],
-		['bess-f2r3s1', 'bess-f2r3s2', 'bess-f2r3s3', 'bess-f2r3s4', 'bess-f2r3s5', 'bess-f2r3s6', '', 'bess-f2r3s7', 'bess-f2r3s8', 'bess-f2r3s9', 'bess-f2r3s10', 'bess-f2r3s11', 'bess-f2r3s12', 'bess-f2r3s13', 'bess-f2r3s14', '', 'bess-f2r3s15', 'bess-f2r3s16', 'bess-f2r3s17', 'bess-f2r3s18', 'bess-f2r3s19', 'bess-f2r3s20', ''],
-		['bess-f2r4s1', 'bess-f2r4s2', 'bess-f2r4s3', 'bess-f2r4s4', 'bess-f2r4s5', 'bess-f2r4s6', '', 'bess-f2r4s7', 'bess-f2r4s8', 'bess-f2r4s9', 'bess-f2r4s10', 'bess-f2r4s11', 'bess-f2r4s12', 'bess-f2r4s13', '', '', 'bess-f2r4s14', 'bess-f2r4s15', 'bess-f2r4s16', 'bess-f2r4s17', 'bess-f2r4s18', 'bess-f2r4s19', ''],
-		['', '', '', 'bess-f2r5s1', 'bess-f2r5s2', 'bess-f2r5s3', '', '', 'bess-f2r5s4', 'bess-f2r5s5', 'bess-f2r5s6', 'bess-f2r5s7', 'bess-f2r5s8', 'bess-f2r5s9', 'bess-f2r5s10', '', 'bess-f2r5s11', 'bess-f2r5s12', 'bess-f2r5s13', 'bess-f2r5s14', 'bess-f2r5s15', 'bess-f2r5s16', ''],
-		['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', 'bess-f2r6s1', 'bess-f2r6s2', 'bess-f2r6s3', 'bess-f2r6s4', 'bess-f2r6s5', 'bess-f2r6s6', '']
+		['R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
+		['', 'bess-f2r6s6', 'bess-f2r6s5', 'bess-f2r6s4', 'bess-f2r6s3', 'bess-f2r6s2', 'bess-f2r6s1', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+		['', 'bess-f2r5s16', 'bess-f2r5s15', 'bess-f2r5s14', 'bess-f2r5s13', 'bess-f2r5s12', 'bess-f2r5s11', '', 'bess-f2r5s10', 'bess-f2r5s9', 'bess-f2r5s8', 'bess-f2r5s7', 'bess-f2r5s6', 'bess-f2r5s5', 'bess-f2r5s4', '', '', 'bess-f2r5s3', 'bess-f2r5s2', 'bess-f2r5s1', '', '', ''],
+		['', 'bess-f2r4s19', 'bess-f2r4s18', 'bess-f2r4s17', 'bess-f2r4s16', 'bess-f2r4s15', 'bess-f2r4s14', '', '', 'bess-f2r4s13', 'bess-f2r4s12', 'bess-f2r4s11', 'bess-f2r4s10', 'bess-f2r4s9', 'bess-f2r4s8', 'bess-f2r4s7', '', 'bess-f2r4s6', 'bess-f2r4s5', 'bess-f2r4s4', 'bess-f2r4s3', 'bess-f2r4s2', 'bess-f2r4s1'],
+		['', 'bess-f2r3s20', 'bess-f2r3s19', 'bess-f2r3s18', 'bess-f2r3s17', 'bess-f2r3s16', 'bess-f2r3s15', '', 'bess-f2r3s14', 'bess-f2r3s13', 'bess-f2r3s12', 'bess-f2r3s11', 'bess-f2r3s10', 'bess-f2r3s9', 'bess-f2r3s8', 'bess-f2r3s7', '', 'bess-f2r3s6', 'bess-f2r3s5', 'bess-f2r3s4', 'bess-f2r3s3', 'bess-f2r3s2', 'bess-f2r3s1'],
+		['', 'bess-f2r2s18', 'bess-f2r2s17', 'bess-f2r2s16', 'bess-f2r2s15', 'bess-f2r2s14', 'bess-f2r2s13', '', '', 'bess-f2r2s12', 'bess-f2r2s11', 'bess-f2r2s10', 'bess-f2r2s9', 'bess-f2r2s8', 'bess-f2r2s7', '', '', 'bess-f2r2s6', 'bess-f2r2s5', 'bess-f2r2s4', 'bess-f2r2s3', 'bess-f2r2s2', 'bess-f2r2s1'],
+		['bess-f2r1s21', 'bess-f2r1s20', 'bess-f2r1s19', 'bess-f2r1s18', 'bess-f2r1s17', 'bess-f2r1s16', 'bess-f2r1s15', '', 'bess-f2r1s14', 'bess-f2r1s13', 'bess-f2r1s12', 'bess-f2r1s11', 'bess-f2r1s10', 'bess-f2r1s9', 'bess-f2r1s8', 'bess-f2r1s7', '', 'bess-f2r1s6', 'bess-f2r1s5', 'bess-f2r1s4', 'bess-f2r1s3', 'bess-f2r1s2', 'bess-f2r1s1'],
 	],
 	"bess-f3": [
-		['R1', 'R2', 'R3', 'R4', 'R5', 'R6'],
-		['bess-f3r1s1', 'bess-f3r1s2', 'bess-f3r1s3', 'bess-f3r1s4', 'bess-f3r1s5', 'bess-f3r1s6', 'bess-f3r1s7', 'bess-f3r1s8', '', 'bess-f3r1s9', 'bess-f3r1s10', 'bess-f3r1s11', 'bess-f3r1s12', 'bess-f3r1s13', 'bess-f3r1s14', 'bess-f3r1s15'],
-		['', 'bess-f3r2s1', 'bess-f3r2s2', 'bess-f3r2s3', 'bess-f3r2s4', 'bess-f3r2s5', 'bess-f3r2s6', '', '', 'bess-f3r2s7', 'bess-f3r2s8', 'bess-f3r2s9', 'bess-f3r2s10', 'bess-f3r2s11', 'bess-f3r2s12', ''],
-		['bess-f3r3s1', 'bess-f3r3s2', 'bess-f3r3s3', 'bess-f3r3s4', 'bess-f3r3s5', 'bess-f3r3s6', 'bess-f3r3s7', 'bess-f3r3s8', '', 'bess-f3r3s9', 'bess-f3r3s10', 'bess-f3r3s11', 'bess-f3r3s12', 'bess-f3r3s13', 'bess-f3r3s14', ''],
-		['bess-f3r4s1', 'bess-f3r4s2', 'bess-f3r4s3', 'bess-f3r4s4', 'bess-f3r4s5', 'bess-f3r4s6', 'bess-f3r4s7', '', '', 'bess-f3r4s8', 'bess-f3r4s9', 'bess-f3r4s10', 'bess-f3r4s11', 'bess-f3r4s12', 'bess-f3r4s13', ''],
-		['', 'bess-f3r5s1', 'bess-f3r5s2', 'bess-f3r5s3', 'bess-f3r5s4', 'bess-f3r5s5', 'bess-f3r5s6', 'bess-f3r5s7', '', 'bess-f3r5s8', 'bess-f3r5s9', 'bess-f3r5s10', 'bess-f3r5s11', 'bess-f3r5s12', 'bess-f3r5s13', ''],
-		['', '', '', '', '', '', '', '', '', 'bess-f3r6s1', 'bess-f3r6s2', 'bess-f3r6s3', 'bess-f3r6s4', 'bess-f3r6s5', 'bess-f3r6s6', 'bess-f3r6s7']
+		['R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
+		['bess-f3r6s7', 'bess-f3r6s6', 'bess-f3r6s5', 'bess-f3r6s4', 'bess-f3r6s3', 'bess-f3r6s2', 'bess-f3r6s1', '', '', '', '', '', '', '', '', ''],
+		['', 'bess-f3r5s13', 'bess-f3r5s12', 'bess-f3r5s11', 'bess-f3r5s10', 'bess-f3r5s9', 'bess-f3r5s8', '', 'bess-f3r5s7', 'bess-f3r5s6', 'bess-f3r5s5', 'bess-f3r5s4', 'bess-f3r5s3', 'bess-f3r5s2', 'bess-f3r5s1', ''],
+		['', 'bess-f3r4s13', 'bess-f3r4s12', 'bess-f3r4s11', 'bess-f3r4s10', 'bess-f3r4s9', 'bess-f3r4s8', '', '', 'bess-f3r4s7', 'bess-f3r4s6', 'bess-f3r4s5', 'bess-f3r4s4', 'bess-f3r4s3', 'bess-f3r4s2', 'bess-f3r4s1'],
+		['', 'bess-f3r3s14', 'bess-f3r3s13', 'bess-f3r3s12', 'bess-f3r3s11', 'bess-f3r3s10', 'bess-f3r3s9', '', 'bess-f3r3s8', 'bess-f3r3s7', 'bess-f3r3s6', 'bess-f3r3s5', 'bess-f3r3s4', 'bess-f3r3s3', 'bess-f3r3s2', 'bess-f3r3s1'],
+		['', 'bess-f3r2s12', 'bess-f3r2s11', 'bess-f3r2s10', 'bess-f3r2s9', 'bess-f3r2s8', 'bess-f3r2s7', '', '', 'bess-f3r2s6', 'bess-f3r2s5', 'bess-f3r2s4', 'bess-f3r2s3', 'bess-f3r2s2', 'bess-f3r2s1', ''],
+		['bess-f3r1s15', 'bess-f3r1s14', 'bess-f3r1s13', 'bess-f3r1s12', 'bess-f3r1s11', 'bess-f3r1s10', 'bess-f3r1s9', '', 'bess-f3r1s8', 'bess-f3r1s7', 'bess-f3r1s6', 'bess-f3r1s5', 'bess-f3r1s4', 'bess-f3r1s3', 'bess-f3r1s2', 'bess-f3r1s1']
 	],
 	"bess-f4": [
-		['R1', 'R2', 'R3', 'R4', 'R5', 'R6'],
-		['bess-f4r1s1', 'bess-f4r1s2', 'bess-f4r1s3', 'bess-f4r1s4', 'bess-f4r1s5', 'bess-f4r1s6', 'bess-f4r1s7', 'bess-f4r1s8', '', 'bess-f4r1s9', 'bess-f4r1s10', 'bess-f4r1s11', 'bess-f4r1s12', 'bess-f4r1s13', 'bess-f4r1s14'],
-		['bess-f4r2s1', 'bess-f4r2s2', 'bess-f4r2s3', 'bess-f4r2s4', 'bess-f4r2s5', 'bess-f4r2s6', 'bess-f4r2s7', '', '', 'bess-f4r2s8', 'bess-f4r2s9', 'bess-f4r2s10', 'bess-f4r2s11', 'bess-f4r2s12', 'bess-f4r2s13'],
-		['bess-f4r3s1', 'bess-f4r3s2', 'bess-f4r3s3', 'bess-f4r3s4', 'bess-f4r3s5', 'bess-f4r3s6', 'bess-f4r3s7', 'bess-f4r3s8', '', 'bess-f4r3s9', 'bess-f4r3s10', 'bess-f4r3s11', 'bess-f4r3s12', 'bess-f4r3s13', 'bess-f4r3s14'],
-		['bess-f4r4s1', 'bess-f4r4s2', 'bess-f4r4s3', 'bess-f4r4s4', 'bess-f4r4s5', 'bess-f4r4s6', 'bess-f4r4s7', '', '', 'bess-f4r4s8', 'bess-f4r4s9', 'bess-f4r4s10', 'bess-f4r4s11', 'bess-f4r4s12', 'bess-f4r4s13'],
-		['', '', '', 'bess-f4r5s1', 'bess-f4r5s2', 'bess-f4r5s3', 'bess-f4r5s4', 'bess-f4r5s5', '', 'bess-f4r5s6', 'bess-f4r5s7', 'bess-f4r5s8', 'bess-f4r5s9', 'bess-f4r5s10', 'bess-f4r5s11'],
-		['', '', '', '', '', '', '', '', '', 'bess-f4r6s1', 'bess-f4r6s2', 'bess-f4r6s3', 'bess-f4r6s4', 'bess-f4r6s5', '']
+		['R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
+		['', 'bess-f4r6s5', 'bess-f4r6s4', 'bess-f4r6s3', 'bess-f4r6s2', 'bess-f4r6s1', '', '', '', '', '', '', '', '', ''],
+		['bess-f4r5s11', 'bess-f4r5s10', 'bess-f4r5s9', 'bess-f4r5s8', 'bess-f4r5s7', 'bess-f4r5s6', '', 'bess-f4r5s5', 'bess-f4r5s4', 'bess-f4r5s3', 'bess-f4r5s2', 'bess-f4r5s1', '', '', ''],
+		['bess-f4r4s13', 'bess-f4r4s12', 'bess-f4r4s11', 'bess-f4r4s10', 'bess-f4r4s9', 'bess-f4r4s8', '', '', 'bess-f4r4s7', 'bess-f4r4s6', 'bess-f4r4s5', 'bess-f4r4s4', 'bess-f4r4s3', 'bess-f4r4s2', 'bess-f4r4s1'],
+		['bess-f4r3s14', 'bess-f4r3s13', 'bess-f4r3s12', 'bess-f4r3s11', 'bess-f4r3s10', 'bess-f4r3s9', '', 'bess-f4r3s8', 'bess-f4r3s7', 'bess-f4r3s6', 'bess-f4r3s5', 'bess-f4r3s4', 'bess-f4r3s3', 'bess-f4r3s2', 'bess-f4r3s1'],
+		['bess-f4r2s13', 'bess-f4r2s12', 'bess-f4r2s11', 'bess-f4r2s10', 'bess-f4r2s9', 'bess-f4r2s8', '', '', 'bess-f4r2s7', 'bess-f4r2s6', 'bess-f4r2s5', 'bess-f4r2s4', 'bess-f4r2s3', 'bess-f4r2s2', 'bess-f4r2s1'],
+		['bess-f4r1s14', 'bess-f4r1s13', 'bess-f4r1s12', 'bess-f4r1s11', 'bess-f4r1s10', 'bess-f4r1s9', '', 'bess-f4r1s8', 'bess-f4r1s7', 'bess-f4r1s6', 'bess-f4r1s5', 'bess-f4r1s4', 'bess-f4r1s3', 'bess-f4r1s2', 'bess-f4r1s1']
 	],
 	"paul-f3": [
 		['R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
