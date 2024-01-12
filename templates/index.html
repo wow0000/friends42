@@ -12,6 +12,10 @@
 		.btn-width {
 			overflow-x: auto;
 		}
+
+		.range-no-color {
+			min-width: 0 !important;
+		}
 	</style>
 {% endblock %}
 {% block content %}
@@ -70,8 +74,12 @@
 					{%- for y in x -%}
 						{%- if y == 'x' -%}
 							<td class="range">&nbsp;</td>
+						{%- elif y == '|' -%}
+							<td class="range-no-color"></td>
 						{%- elif y == 'h' -%}
 							<td></td>
+						{%- elif y == 'd' -%}
+							<td><i class="fa-solid fa-person-walking fa-2xl"></i></td>
 						{%- elif exrypz(y) == False -%}
 							<td class="small-colors"></td>
 						{%- else -%}

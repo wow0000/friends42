@@ -113,8 +113,12 @@
 						{%- for y in x -%}
 							{%- if y == 'x' -%}
 								<td class="range block">&nbsp;</td>
+							{%- elif y == '|' -%}
+								<td class="range-no-color"></td>
 							{%- elif y == 'h' -%}
 								<td class="block"></td>
+							{%- elif y == 'd' -%}
+								<td><i class="fa-solid fa-walking fa-2xl"></i></td>
 							{%- elif exrypz(y) == False -%}
 								<td class="small-colors block"></td>
 							{%- else -%}
