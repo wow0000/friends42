@@ -2,7 +2,6 @@ from globals import *
 from routes.helpers import *
 from flask import Blueprint, render_template, send_from_directory, make_response, redirect
 import maps.maps as maps
-import arrow
 
 app = Blueprint('api', __name__, template_folder='templates', static_folder='static')
 

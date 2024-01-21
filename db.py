@@ -19,8 +19,9 @@ def dict_factory(cursor, row) -> dict:
 class Db:
 	cur: sqlite3.Cursor = None
 	con: sqlite3.Connection = None
+	is_closed = False
 
-	def __init__(self, filename: str):
+	def __init__(self, filename="database.db"):
 		self.con = sqlite3.connect(filename)
 		self.con.row_factory = dict_factory
 		self.cur = self.con.cursor()
@@ -36,6 +37,18 @@ class Db:
 	def close(self):
 		self.commit()
 		self.con.close()
+		self.is_closed = True
+
+	def __enter__(self):
+		return self
+
+	def __exit__(self, exc_type, exc_val, exc_tb):
+		if not self.is_closed:
+			self.close()
+
+	def __del__(self):
+		if not self.is_closed:
+			self.close()
 
 	def create_table(self, sql_file: str):
 		self.cur.executescript(read_file(sql_file))
@@ -424,3 +437,49 @@ class Db:
 		for user in req.fetchall():
 			parsed.append(user['user'])
 		return parsed
+
+	def shadow_ban(self, user: int, offender: int, reason: str):
+		self.cur.execute("INSERT INTO SHADOW_BAN(user, offender, reason) VALUES(?, ?, ?)", [user, offender, reason])
+		self.commit()
+
+	def remove_shadow_ban(self, ban_id: int):
+		self.cur.execute("DELETE FROM SHADOW_BAN WHERE id = ?", [ban_id])
+		self.commit()
+
+	def get_all_shadow_bans(self):
+		req = self.cur.execute(
+			"SELECT USERS.name as offender_login, SHADOW_BAN.id as ban_id, reason, SHADOW_BAN.user AS victim FROM SHADOW_BAN LEFT JOIN USERS ON USERS.id = SHADOW_BAN.offender")
+		return req.fetchall()
+
+	# Piscines
+	def insert_piscine(self, campus: int, cluster: str):
+		self.cur.execute("INSERT INTO PISCINES(campus, cluster) VALUES(?, ?)", [campus, cluster])
+		self.commit()
+
+	def remove_piscine(self, piscine: int):
+		self.cur.execute("DELETE FROM PISCINES WHERE id = ?", [piscine])
+		self.commit()
+
+	def get_all_piscines(self):
+		req = self.cur.execute("SELECT * FROM PISCINES")
+		return req.fetchall()
+
+	def get_piscines(self, campus: int):
+		req = self.cur.execute("SELECT * FROM PISCINES WHERE campus = ?", [campus])
+		return req.fetchall()
+
+	def is_piscine(self, campus: int, cluster: str):
+		req = self.cur.execute("SELECT 1 FROM PISCINES WHERE campus = ? AND cluster LIKE ?", [campus, cluster])
+		return True if req.fetchone() else False
+
+	# Admin
+	def is_admin(self, user_id: int):
+		req = self.cur.execute("SELECT * FROM PERMISSIONS WHERE user_id = ?", [user_id])
+		res = req.fetchone()
+		if res is None:
+			return False
+		return res
+
+	def admin_change_tag(self, user_id: int, tag: str):
+		self.cur.execute("UPDATE PERMISSIONS SET tag = ? WHERE user_id = ?", [tag, user_id])
+		self.commit()

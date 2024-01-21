@@ -18,6 +18,7 @@ def idle(building, userid):
 		return f'Your campus layout is not yet supported, send a DM to @wow000 or @neoblacks on Discord to get started (Your campus id: {campus_id})', 200
 	issues = db.get_issues()
 	theme = db.get_theme(userid['userid'])
+	piscines = [x['cluster'] for x in db.get_piscines(userid['campus'])]
 	db.close()
 	cache_tab = get_cached_locations(campus_id)
 	campus_map = maps.available[campus_id].map
@@ -60,14 +61,14 @@ def idle(building, userid):
 			for cluster in campus_map['kiosk_classes'][class_name]:
 				if build in cluster and class_name not in classes:
 					classes.append(class_name)
-		for piscine in campus_map['piscine']:
+		for piscine in piscines:
 			if build in piscine and 'Piscine' not in classes:
 				classes.append('<i class="fa-solid fa-person-swimming text-info"></i>')
 		ret_builds.append(
 			{'name': build, 'taken': users, 'all_place': all_place, 'free': all_place - users, 'classes': classes})
 	resp = make_response(
 		render_template('idle.html', locations=location_map, clusters=clusters_list,
-		                issues_map=issues_map, exrypz=campus_map['exrypz'], piscine=campus_map['piscine'],
+		                issues_map=issues_map, exrypz=campus_map['exrypz'], piscine=piscines,
 		                theme=theme, kiosk=True, places=places, scroll=clusters_to_load, last_update=last_update,
 		                kiosk_class=campus_map['kiosk_classes'], buildings=ret_builds, building=building))
 	resp.set_cookie('token', request.cookies.get('token'), expires=time.time() + 30 * 86400, httponly=True)

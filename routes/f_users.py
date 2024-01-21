@@ -8,11 +8,12 @@ app = Blueprint('users', __name__, template_folder='templates')
 @app.route('/getuser/<login>')
 @auth_required
 def getuser(login, userid):
-	db = Db("database.db")
-	user = db.get_user_profile(login, api)
-	if user is None:
-		return '', 404
-	is_friend = db.is_friend(userid['userid'], user['id'])
+	with Db() as db:
+		user = db.get_user_profile(login, api)
+		if user is None:
+			return '', 404
+		is_friend = db.is_friend(userid['userid'], user['id'])
+		user['admin'] = db.is_admin(user['id'])
 	user['is_friend'] = is_friend
 	user["position"] = get_position(user['name'])
 	user["image"] = proxy_images(user["image"])

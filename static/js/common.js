@@ -162,6 +162,7 @@ function openFriend(name, auto_reload = false) {
 				let removeCloseFriend = document.getElementById("removeCloseFriend");
 				let openFriendProfile = document.getElementById("openFriendProfile");
 				let openFriendShowCluster = document.getElementById('openFriendShowCluster');
+				let isAdmin = document.getElementById('modal-admin');
 				let pool = openFriendModalName.querySelector('.pool')
 				let modal_name = openFriendModalName.querySelector('.name')
 
@@ -174,6 +175,9 @@ function openFriend(name, auto_reload = false) {
 
 				config_bio(data)
 				openFriendShowCluster.disabled = !(data['position'] !== null);
+				isAdmin.hidden = !(data.admin !== false);
+				if (data.admin)
+					isAdmin.innerHTML = data.admin.tag;
 
 				openFriendShowCluster.onclick = () => {
 					if (!data.position[0])

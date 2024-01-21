@@ -2,14 +2,16 @@ from globals import *
 from functools import wraps
 from db import Db
 import config
-from flask import request, redirect, make_response
+from flask import request, redirect, make_response, g
 import json
 import requests
 import urllib.parse
 import hashlib
 import hmac
 import collections
-from time import time
+import time
+import secrets
+import datetime
 import arrow
 import zlib
 
@@ -36,7 +38,9 @@ def auth_required(function):
 			resp.set_cookie("previous", str(request.url_rule), secure=True, max_age=None, httponly=True)
 			return resp
 		details = db.get_user_by_id(userid['userid'])
+		is_admin = db.is_admin(userid['userid'])
 		db.close()
+		userid['admin'] = is_admin
 		userid['campus'] = details['campus']
 		userid['login'] = details['name']
 		userid['image_medium'] = proxy_images(details['image_medium'])
@@ -44,6 +48,53 @@ def auth_required(function):
 		return function(*args, **kwargs)
 
 	return wrapper
+
+
+def gen_session():
+	return secrets.token_urlsafe(30)
+
+
+def create_hooks(app):
+	@app.before_request
+	def hook_session():
+		if 'session' not in request.cookies:
+			g.session = gen_session()
+			g.set_session_cookie = True
+		else:
+			g.session = request.cookies['session']
+
+	@app.after_request
+	def after_request(response):
+		if 'set_session_cookie' in g:
+			response.set_cookie('session', g.session, None)
+		return response
+
+
+def create_csrf():
+	timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+	random = secrets.token_urlsafe(20)
+	msg = timestamp + "," + random + ""
+	signature = hmac.new(
+		(config.secret + g.session).encode('ascii'),
+		msg=msg.encode('ascii'),
+		digestmod=hashlib.sha256)
+	return msg + ":" + signature.hexdigest()
+
+
+def verify_csrf(csrf: str):
+	if ':' not in csrf and ',' not in csrf:
+		return False
+	msg = csrf.split(':')[0]
+	signature = csrf.split(':')[1]
+	try:
+		date = time.strptime(csrf.split(',')[0], '%Y-%m-%d-%H-%M-%S')
+	except ValueError:
+		return False
+	if (time.time() - time.mktime(date)) > 1500:
+		return False
+	digest = hmac.new((config.secret + g.session).encode('ascii'), msg=msg.encode('ascii'),
+	                  digestmod=hashlib.sha256).hexdigest()
+	return hmac.compare_digest(digest, signature)
 
 
 def get_position(name):
@@ -62,7 +113,7 @@ def tg_check_hash(data: dict):
 	new_hash = hmac.new(secret_key, data_check_string.encode(), hashlib.sha256).hexdigest()
 	if new_hash == data['hash']:
 		return True
-	if (time() - int(data['auth_date'])) > 86400:
+	if (time.time() - int(data['auth_date'])) > 86400:
 		return False
 	return False
 

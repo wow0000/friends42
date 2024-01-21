@@ -29,6 +29,10 @@ app.jinja_env.globals.update(percent_to_btn=percent_to_btn)
 app.jinja_env.globals.update(proxy_images=routes.helpers.proxy_images)
 app.jinja_env.globals.update(date_relative=routes.helpers.date_relative)
 app.jinja_env.globals.update(date_fmt_locale=routes.helpers.date_fmt_locale)
+app.jinja_env.globals.update(create_csrf=routes.helpers.create_csrf)
+app.jinja_env.globals.update(verify_csrf=routes.helpers.verify_csrf)
+
+routes.helpers.create_hooks(app)
 
 if __name__ == '__main__':
 	app.run(debug=True, host='0.0.0.0', port=8080)
