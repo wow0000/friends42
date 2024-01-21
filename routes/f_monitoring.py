@@ -31,7 +31,7 @@ def monitoring_redis(token):
 	if token != config.update_key:
 		return 'Bad token', 400
 	try:
-		r.set('monitoring', time())
+		r.set('monitoring', time.time())
 	except:
 		return 'BAD', 500
 	return 'OK', 200
