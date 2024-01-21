@@ -11,8 +11,10 @@ app = Blueprint('admin', __name__, template_folder='templates', static_folder='s
 def admin(userid):
 	if userid['admin']['level'] < 1:
 		return 'Not authorized', 401
+	shadow_bans = []
 	with Db() as db:
-		shadow_bans = db.get_all_shadow_bans()
+		if userid['admin']['level'] >= 3:
+			shadow_bans = db.get_all_shadow_bans()
 		piscines = db.get_all_piscines()
 	return render_template('admin.html', user=userid, shadow_bans=shadow_bans, piscines=piscines)
 
@@ -41,18 +43,6 @@ def piscine_remove(ban_id, csrf, userid):
 	return ''
 
 
-@app.route('/admin/shadow_ban', methods=['POST'])
-@auth_required
-def shadow_ban(userid):
-	if userid['admin']['level'] < 1:
-		return 'Not authorized', 401
-	if not verify_csrf(request.form['csrf']):
-		return 'Please refresh and try again', 401
-	with Db() as db:
-		db.shadow_ban(int(request.form['victim']), int(request.form['offender']), request.form['reason'])
-	return ''
-
-
 @app.route('/admin/change_tag', methods=['POST'])
 @auth_required
 def change_tag(userid):
@@ -65,10 +55,22 @@ def change_tag(userid):
 	return ''
 
 
+@app.route('/admin/shadow_ban', methods=['POST'])
+@auth_required
+def shadow_ban(userid):
+	if userid['admin']['level'] < 3:
+		return 'Not authorized', 401
+	if not verify_csrf(request.form['csrf']):
+		return 'Please refresh and try again', 401
+	with Db() as db:
+		db.shadow_ban(int(request.form['victim']), int(request.form['offender']), request.form['reason'])
+	return ''
+
+
 @app.route('/admin/shadow_remove/<int:ban_id>/<csrf>')
 @auth_required
 def del_shadow_ban(ban_id, csrf, userid):
-	if userid['admin']['level'] < 1:
+	if userid['admin']['level'] < 3:
 		return 'Not authorized', 401
 	if not verify_csrf(csrf):
 		return 'Please refresh and try again', 401

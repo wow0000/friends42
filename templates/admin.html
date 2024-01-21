@@ -11,7 +11,6 @@
 	</style>
 {% endblock %}
 {% block content %}
-
 	<div class="modal fade" id="createShadowBanModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -74,10 +73,9 @@
 		</div>
 	</div>
 
-
 	<div class="p-5 mb-3 text-center bg-body-tertiary rounded-3 align-vertical">
 		<img class="bi mt-4 mb-3 rounded-circle" src="{{ user.image_medium }}" width="100" height="100" alt="pp">
-		<h1 class="text-body-emphasis"> {{ user.login }}
+		<h1 class="text-body-emphasis"> {{ user.login }} [perm:{{ user.admin.level }}]
 			<span class="badge badge-sm align-vertical bg-danger">{{ user.admin.tag | safe }}</span></h1>
 	</div>
 
@@ -91,36 +89,37 @@
 			</div>
 		</form>
 	</div>
+	{% if user['admin']['level'] >= 3 %}
 
-	<div class="container mb-2 p-2 shadow rounded bg-body-tertiary">
-		<h4>Shadow bans
-			<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createShadowBanModal">+
-			</button>
-		</h4>
-		<table class="table">
-			<thead>
-			<tr>
-				<th scope="col">Coupable</th>
-				<th scope="col">Utilisateur</th>
-				<th scope="col">Raison</th>
-				<th scope="col">-</th>
-			</tr>
-			</thead>
-			<tbody>
-			{% for ban in shadow_bans %}
+		<div class="container mb-2 p-2 shadow rounded bg-body-tertiary">
+			<h4>Shadow bans
+				<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createShadowBanModal">+
+				</button>
+			</h4>
+			<table class="table">
+				<thead>
 				<tr>
-					<th scope="row">{{ ban.offender_login }}</th>
-					<td>{{ ban.victim }}</td>
-					<td>{{ ban.reason }}</td>
-					<td>
-						<button onclick="del_ban({{ ban.ban_id }})" class="btn btn-danger btn-sm">-</button>
-					</td>
+					<th scope="col">Coupable</th>
+					<th scope="col">Utilisateur</th>
+					<th scope="col">Raison</th>
+					<th scope="col">-</th>
 				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
-	</div>
-
+				</thead>
+				<tbody>
+				{% for ban in shadow_bans %}
+					<tr>
+						<th scope="row">{{ ban.offender_login }}</th>
+						<td>{{ ban.victim }}</td>
+						<td>{{ ban.reason }}</td>
+						<td>
+							<button onclick="del_ban({{ ban.ban_id }})" class="btn btn-danger btn-sm">-</button>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% endif %}
 	<div class="container mb-2 p-2 shadow rounded bg-body-tertiary">
 		<h4>Piscines
 			<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createPiscineModal">+
