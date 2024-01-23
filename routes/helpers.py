@@ -168,7 +168,15 @@ def create_users(db, profiles):
 					send_tg_dm(friend['tg'], elem['user']['login'], elem['user']['location'])
 			r.set('USER>' + str(elem["user"]["id"]), elem['user']["location"], ex=200)
 			r.set('USER>' + str(elem["user"]["login"]), elem['user']["location"], ex=200)
+			r.set('PERM>' + str(elem["user"]["login"]), elem['user']["location"])
 	db.commit()
+
+
+def get_last_pos(login):
+	x = r.get('PERM>' + login)
+	if not x:
+		return 'Unknown'
+	return x.decode('utf-8')
 
 
 def get_cached_locations(campus=1):

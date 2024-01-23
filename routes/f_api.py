@@ -61,6 +61,12 @@ def print_dead_pc(token):
 	return issues
 
 
+@app.route('/public/last_pos/<login>')
+@auth_required
+def last_pos(login, userid):
+	return get_last_pos(login)
+
+
 @app.route('/public/whats_my_token/')
 @auth_required
 def print_token(userid):

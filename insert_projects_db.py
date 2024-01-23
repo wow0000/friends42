@@ -82,4 +82,4 @@ def main(new_subjects=False):
 
 
 if __name__ == "__main__":
-	main()
+	main(True)
