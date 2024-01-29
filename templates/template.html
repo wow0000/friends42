@@ -23,7 +23,7 @@
 	<div class="container-fluid">
 		<a class="navbar-brand position-relative {{ 'no-click' if kiosk else '' }}" href="/">
 			<img src="/static/img/android-chrome-192x192.png" alt="Logo" width="24" height="24" class="d-inline-block align-text-top">
-			Friends42<span class="text-muted text-beta">{{ 'kiosk!' if kiosk else'βeta' }}</span></a>
+			Friends42<span class="text-muted text-beta">{{ 'kiosk!' if kiosk else '' }}</span></a>
 		{%- if not kiosk %}
 			<button class="btn btn-secondary hide-navbar" hidden id="qc-friends">
 				<i class="fa-solid fa-user-group"></i>
