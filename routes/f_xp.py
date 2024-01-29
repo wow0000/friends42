@@ -18,4 +18,4 @@ def xp_front(userid):
 	                      'so_long', 'FdF', 'fract-ol', 'minishell', 'Philosophers', 'NetPractice', 'cub3d', 'miniRT',
 	                      'CPP Module 04', 'Inception', 'CPP Module 09', 'webserv', 'ft_irc', 'ft_transcendence']
 	projects = sorted(projects, key=lambda d: d['experience'])
-	return render_template("xp.html", data=cursus, refreshed=refresh, projectsList=projects, whitelist=hardcode_whitelist)
+	return render_template("xp.html", data=cursus, refreshed=refresh, projectsList=projects, whitelist=hardcode_whitelist, theme=userid['theme'])

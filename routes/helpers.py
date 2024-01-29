@@ -39,11 +39,13 @@ def auth_required(function):
 			return resp
 		details = db.get_user_by_id(userid['userid'])
 		is_admin = db.is_admin(userid['userid'])
+		theme = db.get_theme(userid['userid'])
 		db.close()
 		userid['admin'] = is_admin
 		userid['campus'] = details['campus']
 		userid['login'] = details['name']
 		userid['image_medium'] = proxy_images(details['image_medium'])
+		userid['theme'] = theme
 		kwargs["userid"] = userid
 		return function(*args, **kwargs)
 
