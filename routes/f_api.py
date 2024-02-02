@@ -71,3 +71,12 @@ def last_pos(login, userid):
 @auth_required
 def print_token(userid):
 	return request.cookies['token']
+
+
+@app.route('/bocal/delete_issue/<token>/<station>')
+def delete_issue(token, station):
+	if token != config.bocal_token:
+		return 'Bad token', 401
+	with Db() as db:
+		db.delete_issue(station)
+	return 'OK', 200
