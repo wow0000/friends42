@@ -78,5 +78,6 @@ def delete_issue(token, station):
 	if token != config.bocal_token:
 		return 'Bad token', 401
 	with Db() as db:
-		db.delete_issue(station)
-	return 'OK', 200
+		db.delete_issues(station)
+		issues = db.get_issues()
+	return issues, 200

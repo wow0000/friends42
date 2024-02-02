@@ -37,5 +37,5 @@ Then head to http://localhost:8080/
 * Copy maps/_template.py to maps/campus_name.py
 * Create a map of your own campus (Feel free to look at paris.py)
 * Add your campus to maps/maps.py as an import and to the list (the number is the campus-id) (located end of file)
-* Add your campus to the update list in config.py
+* Add your campus to the update list in config.sample.py
 * Create a push request with your changes and I'll come back to you quickly ! :)
