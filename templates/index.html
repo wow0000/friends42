@@ -16,6 +16,10 @@
 		.range-no-color {
 			min-width: 0 !important;
 		}
+
+		.btn-check:checked+.btn-outline-warning > .text-muted {
+			color: black!important;
+		}
 	</style>
 {% endblock %}
 {% block content %}
@@ -28,7 +32,7 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close report"></button>
 				</div>
 				<div class="modal-body">
-					Le dump <span id="dumpIdIssueModal"></span> ne fonctionne pas comme prévu ? Signalez le problème
+					Le dump<span id="dumpIdIssueModal"></span> ne fonctionne pas comme prévu ? Signalez le problème
 					pour avertir que la place n'est pas
 					libre
 					<div class="form-check" id="issueForm">
@@ -55,7 +59,7 @@
 	<div class="text-center">
 		<div class="btn-group mb-1 btn-width" role="group" aria-label="Change cluster">
 			{% for cluster in clusters %}
-				<input type="radio" class="btn-check cluster_radios" name="btnradio"
+				<input type="radio" class="btn-check cluster_radios" name="btn-radio"
 				       data-cluster="{{ cluster.name }}" id="radio{{ cluster.name }}"
 				       autocomplete="off" {{ "checked" if actual_cluster == cluster['name'] else "" }}>
 				<label class="btn btn-outline-{{ place_to_btn(cluster) }} m-t" for="radio{{ cluster.name }}">
@@ -120,7 +124,7 @@
 			</tbody>
 		</table>
 		<div id="tooltip" hidden class="rounded bg-white zindex9999">
-			<img class="profile-pic rounded no-shadow">
+			<img class="profile-pic rounded no-shadow" alt="pp">
 			<div class="fluid-container text-center text-black name">name</div>
 		</div>
 	</div>

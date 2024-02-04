@@ -100,7 +100,7 @@
 							<textarea class="form-control" name="description" id="biographyArea" style="height: 100px"
 							          maxlength="1500">{{ '' if user['recit'] == None else user.recit }}</textarea>
 							<label for="biographyArea">Biographie (<span
-									id="biocounter">{{ len(user['recit'] or '') or 0 }}</span>/1500)</label>
+									id="biography-counter">{{ len(user['recit'] or '') or 0 }}</span>/1500)</label>
 						</div>
 						<button type="submit" class="btn btn-primary mt-2">Sauvegarder</button>
 						<button type="submit" class="btn btn-secondary mt-2"
@@ -124,7 +124,7 @@
 							{% else %}
 								<p>
 									Compte lié avec l'id: <kbd>{{ notif.telegram_id }}</kbd><br>
-									Les notifications de connexions ne fonctionnent uniquement si vous êtes tout deux en
+									Les notifications de connexions ne fonctionnent uniquement si vous êtes tous deux en
 									ami
 									proche. <i class="fa-solid fa-star text-warning"></i>
 								</p>
@@ -254,7 +254,7 @@
 
 {% block scripts %}
 	<script>
-		addEventListener("load", (event) => {
+		addEventListener("load", () => {
 			if (window.location.hostname !== "friends42.fr") {
 				if (document.getElementById('redirect')) {
 					document.getElementById('redirect').hidden = false;
@@ -313,10 +313,10 @@
 
 		function tg_save() {
 			let tgmsg = encodeURIComponent(document.getElementById('tg-msg').value || '');
-			let tgenabled = document.getElementById('tg-enabled').checked ? '1' : '0';
+			let tg_enabled = document.getElementById('tg-enabled').checked ? '1' : '0';
 			if (tgmsg.length === 0)
 				tgmsg = 'NONONON';
-			fetch(`/telegram/set_status/${tgenabled}/${tgmsg}`).then(req => {
+			fetch(`/telegram/set_status/${tg_enabled}/${tgmsg}`).then(req => {
 				if (req.status === 200) {
 					triggerToast('Vos paramètres ont bien été sauvegardés', true);
 				} else
@@ -395,9 +395,9 @@
 			let elems = profile_form.querySelectorAll('[name]');
 			let data = {};
 			elems.forEach(e => {
-				if (e.type == 'text')
+				if (e.type === 'text')
 					data[e.name] = e.value;
-				else if (e.type == 'textarea')
+				else if (e.type === 'textarea')
 					data[e.name] = e.value;
 			})
 			fetch('/settings/profile', {
@@ -420,11 +420,11 @@
 			location.href = '/logout';
 		});
 
-		let biocounter = document.getElementById('biocounter');
+		let bio_counter = document.getElementById('biography-counter');
 		let biographyArea = document.getElementById('biographyArea');
 
 		biographyArea.addEventListener('input', () => {
-			biocounter.innerText = biographyArea.value.length;
+			bio_counter.innerText = biographyArea.value.length;
 		});
 
 		document.addEventListener('DOMContentLoaded', () => {

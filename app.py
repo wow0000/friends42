@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, g
 from maps.maps import place_to_btn, percent_to_btn
 from db import Db
 import sentry_sdk
@@ -31,6 +31,7 @@ app.jinja_env.globals.update(date_relative=routes.helpers.date_relative)
 app.jinja_env.globals.update(date_fmt_locale=routes.helpers.date_fmt_locale)
 app.jinja_env.globals.update(create_csrf=routes.helpers.create_csrf)
 app.jinja_env.globals.update(verify_csrf=routes.helpers.verify_csrf)
+app.jinja_env.globals.update(g=g)
 
 routes.helpers.create_hooks(app)
 
