@@ -9,7 +9,7 @@ app = Blueprint('admin', __name__, template_folder='templates', static_folder='s
 @app.route('/admin')
 @auth_required
 def admin(userid):
-	if userid['admin']['level'] < 1:
+	if userid['admin'] and userid['admin']['level'] < 1:
 		return 'Not authorized', 401
 	shadow_bans = []
 	with Db() as db:

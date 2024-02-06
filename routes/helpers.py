@@ -256,6 +256,8 @@ def locs(campus=1):
 def date_fmt_locale(date: str, fmt="DD/MM/YYYY HH:mm:ss"):
 	if date is None:
 		return arrow.now().to('local').format(fmt, locale='fr')
+	if type(date) is not str:
+		return '?'
 	return arrow.get(date).to('local').format(fmt, locale='fr')
 
 
