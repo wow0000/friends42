@@ -32,6 +32,7 @@ app.jinja_env.globals.update(date_fmt_locale=routes.helpers.date_fmt_locale)
 app.jinja_env.globals.update(create_csrf=routes.helpers.create_csrf)
 app.jinja_env.globals.update(verify_csrf=routes.helpers.verify_csrf)
 app.jinja_env.globals.update(g=g)
+app.jinja_env.globals.update(int=int)
 
 routes.helpers.create_hooks(app)
 
