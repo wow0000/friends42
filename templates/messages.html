@@ -1,0 +1,40 @@
+{% extends 'template.html' %}
+{% block css %}
+	<style>
+		.font-sm {
+			font-size: 0.7rem;
+		}
+	</style>
+{% endblock %}
+{% block content %}
+	{% include 'open_modal.html' %}
+
+	<div class="container">
+		<h3 class="mb-0">Ma boîte de réception</h3>
+		<small class="text-muted">
+			<i class="fas fa-exclamation-triangle"></i> N'hésitez pas à faire remonter les messages inappropriés
+		</small>
+
+		<div class="mt-2 m-1 p-2 rounded shadow border">
+			{% for message in messages %}
+				<div>
+					<h4 class="mb-2">Message {% if message.anonymous == 0 %} de {% endif %}
+						<a href="#" {% if message.anonymous == 0 %}onclick="openFriend('{{ message.login }}');"{% endif %}>{{ message.login }}</a>
+						<small class="text-muted font-sm"><i class="fa-solid fa-hashtag"></i>{{ message.id }}</small>
+					</h4>
+					<p>{{ message.content }}</p>
+				</div>
+				{% if message != messages[-1] %}
+					<hr>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+	<script>
+	</script>
+{% endblock %}

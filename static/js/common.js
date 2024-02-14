@@ -163,8 +163,9 @@ function openFriend(name, auto_reload = false) {
 				let openFriendProfile = document.getElementById("openFriendProfile");
 				let openFriendShowCluster = document.getElementById('openFriendShowCluster');
 				let isAdmin = document.getElementById('modal-admin');
-				let pool = openFriendModalName.querySelector('.pool')
-				let modal_name = openFriendModalName.querySelector('.name')
+				let pool = openFriendModalName.querySelector('.pool');
+				let modal_name = openFriendModalName.querySelector('.name');
+				let send_msg = document.getElementById('send_msg');
 
 				openFriendLabelAddFriend.hidden = data.is_friend !== false;
 				openFriendLabelDeleteFriend.hidden = data.is_friend === false;
@@ -178,6 +179,15 @@ function openFriend(name, auto_reload = false) {
 				isAdmin.hidden = !(data.admin !== false);
 				if (data.admin)
 					isAdmin.innerHTML = data.admin.tag;
+
+				if (send_msg) {
+					send_msg.onclick = () => {
+						document.getElementById("dest-login").value = name;
+						document.getElementById("msg-area").focus();
+						document.getElementById("msg-area").value = '';
+						document.getElementById("msg-anon").value = 0;
+					}
+				}
 
 				openFriendShowCluster.onclick = () => {
 					if (!data.position[0])
@@ -369,4 +379,26 @@ function isTouchDevice() {
 			location.href = '/friends/';
 		})
 	}
+})();
+
+
+// Send message
+(() => {
+	let msg_form = document.getElementById('sendMessageForm');
+	if (!msg_form) return;
+	msg_form.addEventListener('submit', (e) => {
+		e.preventDefault();
+		let form_data = new FormData(msg_form);
+		fetch('/messages/send/', {
+			method: 'POST',
+			body: form_data
+		}).then(async (response) => {
+			if (response.status === 200) {
+				triggerToast('Message envoyé avec succès !', true);
+				document.getElementById('sendMessageModal').querySelector('.btn-close').click();
+			} else {
+				triggerToast(`Une erreur s'est produite ! ${await response.text()}`);
+			}
+		})
+	});
 })();

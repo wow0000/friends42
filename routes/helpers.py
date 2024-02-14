@@ -40,12 +40,15 @@ def auth_required(function):
 		details = db.get_user_by_id(userid['userid'])
 		is_admin = db.is_admin(userid['userid'])
 		theme = db.get_theme(userid['userid'])
+		msg_unread = db.number_of_unread_msg(userid['userid'])
 		db.close()
 		userid['admin'] = is_admin
 		userid['campus'] = details['campus']
 		userid['login'] = details['name']
 		userid['image_medium'] = proxy_images(details['image_medium'])
 		userid['theme'] = theme
+		g.user = userid
+		g.msg_count = msg_unread
 		kwargs["userid"] = userid
 		return function(*args, **kwargs)
 

@@ -1,8 +1,47 @@
+<div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form id="sendMessageForm">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="sendMessageLabel">Envoyer un message</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="form-floating mb-2">
+						<input class="form-control disabled" placeholder="" readonly="readonly" name="dest" value="" id="dest-login">
+						<label for="dest-login">Destinataire</label>
+					</div>
+					<div class="form-floating">
+						<textarea class="form-control" placeholder="" maxlength="2000" minlength="1" name="message" id="msg-area" style="height: 100px"></textarea>
+						<label for="msg-area">Message</label>
+					</div>
+					<div class="form-check mt-3">
+						<input class="form-check-input" type="checkbox" value="" id="msg-anon" name="anonymous">
+						<label class="form-check-label" for="msg-anon">
+							Envoyer de manière anonyme<br>
+							<small class="text-muted">Veuillez noter que la fonctionnalité permettant l'envoi de
+								messages anonyme ne masque l'identité de l'auteur qu'auprès du destinataire.</small>
+						</label>
+					</div>
+				</div>
+				<input type="hidden" name="csrf" value="{{ create_csrf() }}">
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<button type="submit" class="btn btn-valentine">
+						<i class="fa-solid fa-envelope"></i>Envoyer
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 <div class="modal fade" id="openFriendModal" tabindex="-1" aria-labelledby="openFriendLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h1 class="modal-title fs-5 me-2" id="openFriendLabel"></h1><span hidden id="modal-admin" class="badge badge-sm align-vertical bg-danger">admin</span>
+				<h1 class="modal-title fs-5 me-2" id="openFriendLabel"></h1>
+				<span hidden id="modal-admin" class="badge badge-sm align-vertical bg-danger">admin</span>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 
@@ -72,6 +111,9 @@
 				</div>
 			</div>
 			<div class="modal-footer">
+				<button type="button" class="btn btn-valentine" id="send_msg" data-bs-toggle="modal" data-bs-target="#sendMessageModal">
+					<i class="fa-solid fa-envelope"></i> Envoyer un message
+				</button>
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
 			</div>
 		</div>

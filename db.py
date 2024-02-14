@@ -78,7 +78,7 @@ class Db:
 		return query.fetchone()
 
 	def get_user_by_login(self, login: str):
-		query = self.cur.execute("SELECT name, campus, image_medium FROM USERS WHERE name = ?", [login])
+		query = self.cur.execute("SELECT id, name, campus, image_medium FROM USERS WHERE name = ?", [login])
 		return query.fetchone()
 
 	def search(self, start: str):
@@ -313,21 +313,6 @@ class Db:
 		return query.fetchone() is not None
 
 	# Mates
-	"""
-	id             INTEGER PRIMARY KEY AUTOINCREMENT,
-	project        TEXT,
-	created        DATETIME DEFAULT CURRENT_TIMESTAMP,
-	creator_id     INTEGER,
-	campus         INTEGER,
-	deadline       TEXT     DEFAULT NULL,
-	progress       INTEGER  DEFAULT 0,
-	quick_contacts TEXT,
-	mates          TEXT,
-	description    TEXT,
-	contact        TEXT,
-	UNIQUE (project, creator_id),
-	FOREIGN KEY (creator_id) REFERENCES USERS (id)
-	"""
 
 	def get_mate_by_id(self, mate_id):
 		req = self.cur.execute("SELECT * FROM MATES WHERE id = ?", [mate_id])
@@ -483,3 +468,39 @@ class Db:
 	def admin_change_tag(self, user_id: int, tag: str):
 		self.cur.execute("UPDATE PERMISSIONS SET tag = ? WHERE user_id = ?", [tag, user_id])
 		self.commit()
+
+	# Messages
+
+	"""
+	CREATE TABLE IF NOT EXISTS MESSAGES
+	(
+		id        INTEGER PRIMARY KEY AUTOINCREMENT,
+		author    INTEGER,
+		dest      INTEGER,
+		content   TEXT,
+		anonymous INTEGER   DEFAULT 0,
+		read      INTEGER   DEFAULT 0,
+		created   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (author) REFERENCES USERS (id)
+	);
+	"""
+
+	def insert_message(self, author, dest, content, anon=False):
+		anon = 1 if anon else 0
+		self.cur.execute("INSERT INTO MESSAGES(author, dest, content, anonymous) VALUES(?, ?, ?, ?)",
+		                 [author, dest, content, anon])
+		self.commit()
+
+	def get_messages(self, dest):
+		req = self.cur.execute(
+			"SELECT MESSAGES.id, author, dest, content, anonymous, read, created, USERS.name as login FROM MESSAGES JOIN USERS ON MESSAGES.author = USERS.id WHERE dest = ? ORDER BY created DESC",
+			[dest])
+		return req.fetchall()
+
+	def mark_messages_as_read(self, dest):
+		self.cur.execute("UPDATE MESSAGES SET read = 1 WHERE dest = ?", [dest])
+		self.commit()
+
+	def number_of_unread_msg(self, dest):
+		req = self.cur.execute("SELECT COUNT(1) as c FROM MESSAGES WHERE dest = ? AND read = 0", [dest])
+		return req.fetchone()['c']

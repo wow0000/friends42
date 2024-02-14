@@ -33,3 +33,16 @@
 	pointer-events: none;
 	cursor: default;
 }
+
+.btn-valentine {
+  --bs-btn-color: var(--bs-white);
+  --bs-btn-bg: #ff1a77;
+  --bs-btn-border-color: #ff1a77;
+  --bs-btn-hover-color: var(--bs-white);
+  --bs-btn-hover-bg: #ff1a77;
+  --bs-btn-hover-border-color: #b30049;
+  --bs-btn-focus-shadow-rgb: #ff257e;
+  --bs-btn-active-color: var(--bs-white);
+  --bs-btn-active-bg: #e6005e;
+  --bs-btn-active-border-color: #b30049;
+}
