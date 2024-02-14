@@ -493,8 +493,8 @@ class Db:
 
 	def get_messages(self, dest):
 		req = self.cur.execute(
-			"SELECT MESSAGES.id, author, dest, content, anonymous, read, created, USERS.name as login FROM MESSAGES JOIN USERS ON MESSAGES.author = USERS.id WHERE dest = ? ORDER BY created DESC",
-			[dest])
+			"SELECT MESSAGES.id, author, dest, content, anonymous, read, created, USERS_AUTHOR.name as author_login, USERS_DEST.name as dest_login FROM MESSAGES JOIN USERS AS USERS_AUTHOR ON MESSAGES.author = USERS_AUTHOR.id JOIN USERS AS USERS_DEST ON MESSAGES.dest = USERS_DEST.id WHERE dest = ? OR author = ? ORDER BY created DESC",
+			[dest, dest])
 		return req.fetchall()
 
 	def mark_messages_as_read(self, dest):

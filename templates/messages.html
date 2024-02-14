@@ -25,11 +25,23 @@
 			{% endif %}
 			{% for message in messages %}
 				<div>
-					<h4 class="mb-2">Message {% if message.anonymous == 0 %} de {% endif %}
-						<a href="#" {% if message.anonymous == 0 %}onclick="openFriend('{{ message.login }}');"{% endif %}>{{ message.login }}</a>
-						<small class="text-muted font-sm"><i class="fa-solid fa-hashtag"></i>{{ message.id }}</small>
-					</h4>
-					<p>{{ message.content }}</p>
+					{% if message.author == me %}
+						<h4 class="mb-2 text-secondary">Message {% if message.anonymous == 1 %} anonyme {% endif %} pour
+							<a href="#" onclick="openFriend('{{ message.dest_login }}');">{{ message.dest_login }}</a>
+							<small class="text-muted font-sm"><i class="fa-solid fa-hashtag"></i>{{ message.id }}
+							</small>
+						</h4>
+					{% else %}
+						<h4 class="mb-2">Message {% if message.anonymous == 0 %} de {% endif %}
+							<a href="#" {% if message.anonymous == 0 %}onclick="openFriend('{{ message.author_login }}');"{% endif %}>{{ message.author_login }}</a>
+							<small class="text-muted font-sm"><i class="fa-solid fa-hashtag"></i>{{ message.id }}
+							</small>
+						</h4>
+					{% endif %}
+					<p class="mb-0">{{ message.content }}</p>
+					{% if message.author == me and message.read == 1 %}
+						<small class="font-sm text-muted m-0"><i class="fa-solid fa-check"></i> Vu</small>
+					{% endif %}
 				</div>
 				{% if message != messages[-1] %}
 					<hr>

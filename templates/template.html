@@ -30,7 +30,7 @@
 		{%- if not kiosk %}
 			<button class="btn btn-sm btn-valentine me-2 ms-0 position-relative" id="read-msg-btn" onclick="location.href = '/messages/';">
 				<i class="fa-solid fa-envelope"></i>
-				{% if g.msg_count and g.msg_count >= 1 %}
+				{% if g.msg_count and g.msg_count >= 1 and hide_msg != True %}
 					<span id="unread-msg-number" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
 						{{ g.msg_count }}
 					</span>

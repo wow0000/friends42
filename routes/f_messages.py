@@ -6,11 +6,11 @@ from flask import Blueprint, render_template, send_from_directory
 app = Blueprint('messages', __name__, template_folder='templates')
 
 
-def anonymize_messages(messages):
+def anonymize_messages(messages, userid=-1):
 	for message in messages:
-		if message['anonymous'] == 1:
+		if message['anonymous'] == 1 and message['author'] != int(userid):
 			message['author'] = 0
-			message['login'] = 'Anonyme'
+			message['author_login'] = 'Anonyme'
 	return messages
 
 
@@ -20,7 +20,8 @@ def msg_default_route(userid):
 	with Db() as db:
 		messages = db.get_messages(userid['userid'])
 		db.mark_messages_as_read(userid['userid'])
-	return render_template('messages.html', messages=anonymize_messages(messages))
+	return render_template('messages.html', me=userid['userid'],
+	                       messages=anonymize_messages(messages, userid['userid']), hide_msg=True)
 
 
 @app.route('/messages/send/', methods=['POST'])
