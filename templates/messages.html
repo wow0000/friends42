@@ -16,6 +16,13 @@
 		</small>
 
 		<div class="mt-2 m-1 p-2 rounded shadow border">
+			{% if len(messages) == 0 %}
+				<p class="text-center">Aucun message pour le moment</p>
+				<p class="text-center text-muted">
+					<i class="fa fa-exclamation-circle"></i>
+					N'hésitez pas à envoyer des messages en utilisant le bouton "Envoyer un message" sur le profil des
+					utilisateurs ! (Ami et cluster uniquement)</p>
+			{% endif %}
 			{% for message in messages %}
 				<div>
 					<h4 class="mb-2">Message {% if message.anonymous == 0 %} de {% endif %}
