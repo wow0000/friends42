@@ -15,19 +15,19 @@
 						<textarea class="form-control" placeholder="" maxlength="2000" minlength="1" name="message" id="msg-area" style="height: 100px"></textarea>
 						<label for="msg-area">Message</label>
 					</div>
-					<div class="form-check mt-3">
-						<input class="form-check-input" type="checkbox" value="" id="msg-anon" name="anonymous">
-						<label class="form-check-label" for="msg-anon">
-							Envoyer de manière anonyme<br>
-							<small class="text-muted">Veuillez noter que la fonctionnalité permettant l'envoi de
-								messages anonyme ne masque l'identité de l'auteur qu'auprès du destinataire.</small>
-						</label>
-					</div>
+					{#					<div class="form-check mt-3">#}
+					{#						<input class="form-check-input" type="checkbox" value="" id="msg-anon" name="anonymous">#}
+					{#						<label class="form-check-label" for="msg-anon">#}
+					{#							Envoyer de manière anonyme<br>#}
+					{#							<small class="text-muted">Veuillez noter que la fonctionnalité permettant l'envoi de#}
+					{#								messages anonyme ne masque l'identité de l'auteur qu'auprès du destinataire.</small>#}
+					{#						</label>#}
+					{#					</div>#}
 				</div>
 				<input type="hidden" name="csrf" value="{{ create_csrf() }}">
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-					<button type="submit" class="btn btn-valentine">
+					<button type="submit" class="btn btn-messages">
 						<i class="fa-solid fa-envelope"></i>Envoyer
 					</button>
 				</div>
@@ -111,7 +111,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-valentine" id="send_msg" data-bs-toggle="modal" data-bs-target="#sendMessageModal">
+				<button type="button" class="btn btn-messages" id="send_msg" data-bs-toggle="modal" data-bs-target="#sendMessageModal">
 					<i class="fa-solid fa-envelope"></i> Envoyer un message
 				</button>
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>

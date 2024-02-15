@@ -34,7 +34,7 @@
 	cursor: default;
 }
 
-.btn-valentine {
+.btn-messages {
   --bs-btn-color: var(--bs-white);
   --bs-btn-bg: #ff1a77;
   --bs-btn-border-color: #ff1a77;

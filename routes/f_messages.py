@@ -31,6 +31,9 @@ def msg_send(userid):
 		return 'Please refresh and try again', 401
 	if 'message' not in request.form or not request.form['message']:
 		return 'Message is empty or malformed', 400
+	# Remove this check for special occasions
+	if 'anonymous' in request.form:
+		return "C'est fini déso !", 401
 	msg = request.form['message'].strip()
 	if len(msg) > 2000 or len(msg) <= 1:
 		return 'Message is too long (or too short!)', 400
