@@ -79,19 +79,25 @@ def index(userid):
 		cluster_name = campus_map['default']
 	location_map = {}
 	issues_map = {}
+	# TODO: optimize this
 	for user in cache_tab:
 		user_id = user['user']['id']
 		if user_id in shadow_bans:
 			continue
-		location_map[user['host']] = user
-		location_map[user['host']]['me'] = user_id == userid['userid']
-		location_map[user['host']]['friend'] = user_id in [e['has'] for e in friends]
-		location_map[user['host']]['close_friend'] = user_id in [e['has'] for e in friends if e['relation'] == 1]
+		friend, close_friend = False, False
+		friend = user_id in [e['has'] for e in friends]
+		if friend:
+			close_friend = user_id in [e['has'] for e in friends if e['relation'] == 1]
+		location_map[user['host']] = {
+			**user,
+			"me": user_id == userid['userid'],
+			"friend": friend,
+			"close_friend": close_friend,
+			"pool": False
+		}
 		if me and 'pool' in me:
 			location_map[user['host']]['pool'] = f"{user['user']['pool_month']} {user['user']['pool_year']}" == me[
 				'pool']
-		else:
-			location_map[user['host']]['pool'] = False
 	for issue in issues:
 		if issue['station'] not in issues_map:
 			issues_map[issue['station']] = {"count": 0}

@@ -42,6 +42,12 @@ def msg_send(userid):
 		if not user:
 			return 'User not found', 404
 		db.insert_message(userid['userid'], user['id'], msg, 1 if 'anonymous' in request.form else 0)
+		notifs = db.has_notifications(user['id'])
+		if notifs and notifs['enabled'] == 1:
+			sender = "de " + userid['login']
+			if 'anonymous' in request.form:
+				sender = 'Anonyme'
+			send_raw_tg_dm(notifs['telegram_id'], f"📬 Nouveau message {sender} : {msg}")
 	return 'OK'
 
 

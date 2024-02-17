@@ -135,11 +135,16 @@ def send_tg_dm(tg: dict, who: str, place: str):
 	msg = msg.replace('|id|', who)
 	msg = msg.replace('|dump|', place)
 	msg = urllib.parse.quote(msg, safe='')
-	tg_id = tg["telegram_id"]
+	send_raw_tg_dm(tg['telegram_id'], msg)
+
+def send_raw_tg_dm(tg_id: int, msg: str):
+	if len(msg) > 500:
+		msg = msg[:500] + '...'
 	try:
 		token = config.telegram_token
 		if not token:
-			print('Missing tg token')
+			return print('Missing tg token')
+		msg = urllib.parse.quote(msg, safe='')
 		req = requests.get(f'https://api.telegram.org/bot{token}/sendMessage?chat_id={tg_id}&text={msg}')
 		if req.status_code != 200:
 			print('[Telegram] Request failed: ', req.status_code, req.text)
