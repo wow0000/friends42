@@ -238,9 +238,8 @@ def locs(campus=1):
 	status, data = api.get_paged_locations(campus)
 	if status == 200:
 		data = optimize_locations(data)
-		db = Db("database.db")
-		create_users(db, data)
-		db.close()
+		with Db("database.db") as db:
+			create_users(db, data)
 		r.set("locations/" + str(campus), zlib.compress(json.dumps(data).encode('utf-8')))
 		r.set("location_last_update/" + str(campus), arrow.now().__str__())
 		r.set("location_success/" + str(campus), '1')

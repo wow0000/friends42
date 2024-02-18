@@ -1,0 +1,19 @@
+{% extends 'template.html' %}
+{% block css %}
+{% endblock %}
+{% block content %}
+	<div class="container p-5 mt-4 border shadow rounded">
+		<h4>Votre campus {{ campus_id }} n'est pas supporté</h4>
+		<p>Si le campus indiqué n'est pas à jour, cliquez
+			<button class="btn btn-sm btn-secondary" onclick="location.href='/update_campus_id/';">ici</button>
+		</p>
+
+		<p>
+			Si le campus n'est pas supporté, merci d'envoyer un DM à @wow000 or @neoblacks sur Discord.
+		</p>
+
+	</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

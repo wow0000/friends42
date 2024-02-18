@@ -10,15 +10,14 @@ app = Blueprint('front', __name__, template_folder='templates', static_folder='s
 @app.route('/profile/<login>')
 @auth_required
 def profile(login, userid):
-	db = Db("database.db")
-	user = db.get_user_profile(login, api)
-	if user is None:
-		return '', 404
-	is_friend = db.is_friend(userid['userid'], user['id']) is not False
-	is_banned = db.is_banned(user['id'])
-	theme = db.get_theme(userid['userid'])
-	hide = is_shadow_banned(user['id'], userid['userid'], db)
-	db.close()
+	with Db() as db:
+		user = db.get_user_profile(login, api)
+		if user is None:
+			return '', 404
+		is_friend = db.is_friend(userid['userid'], user['id']) is not False
+		is_banned = db.is_banned(user['id'])
+		theme = db.get_theme(userid['userid'])
+		hide = is_shadow_banned(user['id'], userid['userid'], db)
 	if user is None:
 		return "", 404
 	if hide:
@@ -60,7 +59,7 @@ def index(userid):
 	campus_id = db.get_user_by_id(userid['userid'])['campus']
 	if campus_id not in maps.available:
 		db.close()
-		return f'Your campus layout is not yet supported, send a DM to @wow000 or @neoblacks on Discord to get started (Your campus id: {campus_id})', 200
+		return render_template('campus_refresh.html', campus_id=campus_id)
 	friends = db.get_friends(userid['userid'])
 	issues = db.get_issues()
 	me = db.get_user_profile_id(userid['userid'])
