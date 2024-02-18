@@ -2,7 +2,7 @@ import sqlite3
 import secrets
 import base64
 import json
-
+from routes.api_helpers import *
 
 def read_file(filename: str):
 	with open(filename, 'r') as f:
@@ -61,7 +61,7 @@ class Db:
 
 		uid = int(user_data["id"])
 		active = "CURRENT_TIMESTAMP" if user_data["location"] else god('USERS', 'active', uid)
-		if type(campus) != int:
+		if not campus or type(campus) is not int:
 			campus = 1
 		self.cur.execute(
 			'INSERT OR REPLACE INTO USERS(id, name, image, image_medium, pool, active, campus) '
@@ -294,7 +294,7 @@ class Db:
 			ret_status, ret_data = api.get_unknown_user(login)
 			if ret_status != 200:
 				return None
-			self.create_user(ret_data)
+			self.create_user(ret_data, find_correct_campus(ret_data))
 			return self.get_user_profile(login)
 		return ret
 
@@ -470,20 +470,6 @@ class Db:
 		self.commit()
 
 	# Messages
-
-	"""
-	CREATE TABLE IF NOT EXISTS MESSAGES
-	(
-		id        INTEGER PRIMARY KEY AUTOINCREMENT,
-		author    INTEGER,
-		dest      INTEGER,
-		content   TEXT,
-		anonymous INTEGER   DEFAULT 0,
-		read      INTEGER   DEFAULT 0,
-		created   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		FOREIGN KEY (author) REFERENCES USERS (id)
-	);
-	"""
 
 	def insert_message(self, author, dest, content, anon=False):
 		anon = 1 if anon else 0

@@ -14,6 +14,7 @@ import secrets
 import datetime
 import arrow
 import zlib
+from routes.api_helpers import *
 
 
 def proxy_images(url: str, light=False):
@@ -137,6 +138,7 @@ def send_tg_dm(tg: dict, who: str, place: str):
 	msg = urllib.parse.quote(msg, safe='')
 	send_raw_tg_dm(tg['telegram_id'], msg)
 
+
 def send_raw_tg_dm(tg_id: int, msg: str):
 	if len(msg) > 500:
 		msg = msg[:500] + '...'
@@ -150,19 +152,6 @@ def send_raw_tg_dm(tg_id: int, msg: str):
 			print('[Telegram] Request failed: ', req.status_code, req.text)
 	except requests.exceptions.RequestException as e:
 		print("[Telegram] Request failed ", e)
-
-
-def find_correct_campus(elem):
-	if 'campus_users' in elem['user']:
-		for campus_data in elem['user']['campus_users']:
-			campus_id = campus_data['campus_id']
-			if campus_data['is_primary']:
-				return campus_id
-	if 'campus_id' in elem:
-		return elem['campus_id']
-	if 'campus' in elem['user']:
-		return elem['user']['campus'][0]['id']
-	return 1
 
 
 def create_users(db, profiles):
