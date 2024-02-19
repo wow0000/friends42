@@ -135,7 +135,6 @@ def send_tg_dm(tg: dict, who: str, place: str):
 	msg = tg['message'] or "🧑‍💻 |id| s'est connecté en |dump|"
 	msg = msg.replace('|id|', who)
 	msg = msg.replace('|dump|', place)
-	msg = urllib.parse.quote(msg, safe='')
 	send_raw_tg_dm(tg['telegram_id'], msg)
 
 
