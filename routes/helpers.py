@@ -162,7 +162,7 @@ def create_users(db, profiles):
 		db.create_user(elem["user"], campus)
 		if elem['user']["location"]:
 			db.delete_issues(elem['user']['location'])
-			old_location = r.get('USER>' + str(elem["user"]["id"]))
+			old_location = r.get('PERM>' + str(elem["user"]["login"]))
 			if not old_location or old_location.decode("utf-8") != elem['user']['location']:
 				notif_friends = db.get_notifications_friends(elem['user']['id'])
 				for friend in notif_friends:
