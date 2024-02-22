@@ -39,9 +39,11 @@
 						</h4>
 					{% endif %}
 					<p class="mb-0">{{ message.content }}</p>
-					{% if message.author == me and message.read == 1 %}
-						<small class="font-sm text-muted m-0"><i class="fa-solid fa-check"></i> Vu</small>
-					{% endif %}
+					<div>
+						<small class="font-sm text-muted m-0">Envoyé {{ date_relative(message.created) }}
+							{% if message.author == me and message.read == 1 %}<i class="fa-solid fa-check"></i>
+								Vu{% endif %}</small>
+					</div>
 				</div>
 				{% if message != messages[-1] %}
 					<hr>
