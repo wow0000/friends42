@@ -4,6 +4,7 @@ import base64
 import json
 from routes.api_helpers import *
 
+
 def read_file(filename: str):
 	with open(filename, 'r') as f:
 		return f.read()
@@ -479,7 +480,13 @@ class Db:
 
 	def get_messages(self, dest):
 		req = self.cur.execute(
-			"SELECT MESSAGES.id, author, dest, content, anonymous, read, created, USERS_AUTHOR.name as author_login, USERS_DEST.name as dest_login FROM MESSAGES JOIN USERS AS USERS_AUTHOR ON MESSAGES.author = USERS_AUTHOR.id JOIN USERS AS USERS_DEST ON MESSAGES.dest = USERS_DEST.id WHERE dest = ? OR author = ? ORDER BY created DESC",
+			"""
+			SELECT MESSAGES.id, author, dest, content, anonymous, read, created, USERS_AUTHOR.name as author_login, USERS_DEST.name as dest_login, SPECIAL_USERS.sp_tag, SPECIAL_USERS.sp_tag_style, SPECIAL_USERS.sp_author FROM MESSAGES
+			JOIN USERS AS USERS_DEST ON MESSAGES.dest = USERS_DEST.id
+			LEFT JOIN USERS AS USERS_AUTHOR ON MESSAGES.author = USERS_AUTHOR.id
+			LEFT JOIN SPECIAL_USERS ON (MESSAGES.author < 0 AND (-1 * MESSAGES.author) = SPECIAL_USERS.sp_id)
+			WHERE dest = ? OR author = ?
+			ORDER BY created DESC""",
 			[dest, dest])
 		return req.fetchall()
 
@@ -490,3 +497,16 @@ class Db:
 	def number_of_unread_msg(self, dest):
 		req = self.cur.execute("SELECT COUNT(1) as c FROM MESSAGES WHERE dest = ? AND read = 0", [dest])
 		return req.fetchone()['c']
+
+	def get_special_user_by_key(self, key: str):
+		req = self.cur.execute("SELECT * FROM SPECIAL_USERS WHERE sp_send_key = ?", [key])
+		return req.fetchone()
+
+	def get_special_user_by_id(self, sp_id: int):
+		req = self.cur.execute("SELECT * FROM SPECIAL_USERS WHERE sp_id = ?", [sp_id])
+		return req.fetchone()
+
+	def update_special_user(self, key: str, sp_tag: str, sp_tag_style: str, sp_author: str):
+		self.cur.execute("UPDATE SPECIAL_USERS SET sp_tag = ?, sp_tag_style = ?, sp_author = ? WHERE sp_send_key = ?",
+		                 [sp_tag, sp_tag_style, sp_author, key])
+		self.commit()

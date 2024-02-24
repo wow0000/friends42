@@ -31,6 +31,12 @@
 							<small class="text-muted font-sm"><i class="fa-solid fa-hashtag"></i>{{ message.id }}
 							</small>
 						</h4>
+					{% elif message.sp_author %}
+						<h4 class="mb-2">Message de {{ message.sp_author }}
+							<span style="{{ message.sp_tag_style | safe }}">{{ message.sp_tag }}</span>
+							<small class="text-muted font-sm"><i class="fa-solid fa-hashtag"></i>{{ message.id }}
+							</small>
+						</h4>
 					{% else %}
 						<h4 class="mb-2">Message {% if message.anonymous == 0 %} de {% endif %}
 							<a href="#" {% if message.anonymous == 0 %}onclick="openFriend('{{ message.author_login }}');"{% endif %}>{{ message.author_login }}</a>
@@ -38,7 +44,11 @@
 							</small>
 						</h4>
 					{% endif %}
-					<p class="mb-0">{{ message.content }}</p>
+					{% if message.sp_author %}
+						<p class="mb-0">{{ message.content | safe }}</p>
+					{% else %}
+						<p class="mb-0">{{ message.content }}</p>
+					{% endif %}
 					<div>
 						<small class="font-sm text-muted m-0">Envoyé {{ date_relative(message.created) }}
 							{% if message.author == me and message.read == 1 %}<i class="fa-solid fa-check"></i>
@@ -51,8 +61,6 @@
 			{% endfor %}
 		</div>
 	</div>
-
-
 {% endblock %}
 
 {% block scripts %}

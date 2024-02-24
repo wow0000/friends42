@@ -1,0 +1,51 @@
+{% extends 'template.html' %}
+{% block css %}
+	<style>
+		.font-sm {
+			font-size: 0.7rem;
+		}
+	</style>
+{% endblock %}
+{% block content %}
+	<div class="container">
+	<h4>Gestion message de masse pour {{ user.sp_author }}</h4>
+	<div class="container border rounded shadow p-3">
+		<form method="POST" action="/messages/org_update/{{ user.sp_send_key }}">
+			<div class="input-group mb-3">
+				<span class="input-group-text">Nom</span>
+				<input type="text" class="form-control" name="sp_author" value="{{ user.sp_author }}">
+			</div>
+			<div class="input-group mb-3">
+				<span class="input-group-text">Tag</span>
+				<input type="text" class="form-control" name="sp_tag" value="{{ user.sp_tag }}">
+			</div>
+			<div class="input-group mb-3">
+				<span class="input-group-text">Tag HTML</span>
+				<input type="text" class="form-control" name="sp_tag_style" value="{{ user.sp_tag_style }}">
+			</div>
+			<button class="btn btn-primary" type="submit">Mettre à jour</button>
+		</form>
+	</div>
+	<div class="container border rounded shadow p-3 mt-3">
+		<h5>Message de masse</h5>
+		<form method="POST" action="/messages/send_as_org">
+			<input type="hidden" name="token" value="{{ user.sp_send_key }}">
+			<div class="input-group mb-3">
+				<span class="input-group-text">Utilisateurs</span>
+				<input type="text" class="form-control" name="dest" placeholder="user1,user2,user3">
+			</div>
+			<div class="input-group mb-3">
+				<span class="input-group-text">Message</span>
+				<textarea class="form-control" name="message"></textarea>
+			</div>
+			<button class="btn btn-danger" type="submit">
+				Envoyer <small class="font-sm text-muted">(HTML activé)</small>
+			</button>
+		</form>
+	</div>
+{% endblock %}
+
+{% block scripts %}
+	<script>
+	</script>
+{% endblock %}
