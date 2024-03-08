@@ -6,6 +6,10 @@ import time
 
 app = Blueprint('idle', __name__, template_folder='templates', static_folder='static')
 
+@app.route('/iframe/<building>')
+@auth_required
+def iframe(building, userid):
+	return render_template('iframe.html', url="/idle/" + building)
 
 # one day it'll be clean, but that day is not today
 @app.route('/idle/<building>')

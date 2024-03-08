@@ -32,8 +32,9 @@
 							</small>
 						</h4>
 					{% elif message.sp_author %}
-						<h4 class="mb-2">Message de {{ message.sp_author }}
-							<span style="{{ message.sp_tag_style | safe }}">{{ message.sp_tag }}</span>
+						<h4 class="mb-2">Message de
+							<span style="{{ message.sp_tag_style | safe }}">{{ message.sp_author }}</span>
+							{{ message.sp_tag | safe }}
 							<small class="text-muted font-sm"><i class="fa-solid fa-hashtag"></i>{{ message.id }}
 							</small>
 						</h4>

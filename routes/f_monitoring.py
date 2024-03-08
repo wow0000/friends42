@@ -35,3 +35,8 @@ def monitoring_redis(token):
 	except:
 		return 'BAD', 500
 	return 'OK', 200
+
+
+@app.route('/monitoring/200')
+def get_200():
+	return 'OK', 200
