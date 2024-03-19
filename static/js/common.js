@@ -223,9 +223,7 @@ function openFriend(name, auto_reload = false) {
 				removeCloseFriend.onclick = () => {
 					changeRelation(0, false)
 				};
-				openFriendProfile.onclick = () => {
-					location.href = "https://profile.intra.42.fr/users/" + name;
-				}
+				openFriendProfile.href = "https://profile.intra.42.fr/users/";
 				document.getElementById('openFriendModalPic').src = data.image;
 				if (data.pool)
 					pool.innerText = "Piscine de " + data.pool
