@@ -38,6 +38,8 @@ def auth_required(function):
 			resp = make_response(redirect("/redirect_42", 307))
 			resp.set_cookie("previous", str(request.url_rule), secure=True, max_age=None, httponly=True)
 			return resp
+		if db.is_banned(userid['userid']):
+			return f"You are banned from this website.", 403
 		details = db.get_user_by_id(userid['userid'])
 		is_admin = db.is_admin(userid['userid'])
 		theme = db.get_theme(userid['userid'])
