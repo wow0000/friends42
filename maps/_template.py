@@ -16,6 +16,7 @@ map = {
 	"e1": [],               # Clusters
 	"allowed": ['e1'],      # "Enabled" clusters
 	"piscine": ['e1'],      # "Piscine" reserved clusters
+    "silent": [],           # "Slient" clusters
 	"buildings": {},        # kiosk buildings
 	"kiosk_classes": {},    # kiosk icon classes
 	"default": 'e1',        # Default cluster to appear on the site
