@@ -17,10 +17,10 @@ while 1:
 		headers={"Authorization": "Bearer " + token})
 	if req.status_code != 200:
 		break
-	if int(req.headers['X-Total']) == i:
+	if int(req.headers['x-total']) == i:
 		break
 	num_proj = len(req.json())
-	print(f"[?] {int(req.headers['X-Page']) * 100}/{req.headers['X-Total']}. Got {len(req.json())} projects")
+	# print(f"[?] {int(req.headers['X-Page']) * 100}/{req.headers['X-Total']}. Got {len(req.json())} projects")
 	if num_proj == 0:
 		break
 	time.sleep(1)
