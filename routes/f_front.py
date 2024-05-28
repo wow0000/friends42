@@ -68,6 +68,7 @@ def index(userid):
 	piscines = [x['cluster'] for x in db.get_piscines(userid['campus'])]
 	db.close()
 	campus_map = maps.available[campus_id].map
+	silent = campus_map['silent'];
 	if pos and type(campus_map['exrypz'](pos)) == bool:
 		pos = campus_map['default']
 	else:
@@ -111,7 +112,7 @@ def index(userid):
 		for cluster in campus_map['allowed']]
 	return render_template('index.html', map=campus_map[cluster_name], locations=location_map,
 	                       clusters=clusters_list, actual_cluster=cluster_name, issues_map=issues_map,
-	                       exrypz=campus_map['exrypz'], piscine=piscines, theme=theme,
+	                       exrypz=campus_map['exrypz'], piscine=piscines, theme=theme, silent=silent,
 	                       focus=request.args.get('p'))
 
 
