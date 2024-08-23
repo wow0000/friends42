@@ -135,7 +135,9 @@ class Api:
 			if status == 200:
 				ret += data
 				i += 1
-				page_numbers = math.ceil(int(headers["X-Total"]) / int(headers["X-Per-Page"]))
+				x_total = int(headers.get('x-total'))
+				x_per_page = int(headers.get('x-per-page'))
+				page_numbers = math.ceil(x_total / x_per_page)
 			else:
 				print("Could not get locations", status, data)
 				return status, ret
