@@ -16,7 +16,8 @@ def admin(userid):
 		if userid['admin']['level'] >= 3:
 			shadow_bans = db.get_all_shadow_bans()
 		piscines = db.get_all_piscines()
-	return render_template('admin.html', user=userid, shadow_bans=shadow_bans, piscines=piscines)
+		silents = db.get_all_silents()
+	return render_template('admin.html', user=userid, shadow_bans=shadow_bans, piscines=piscines, silents=silents)
 
 
 @app.route('/admin/piscine_add', methods=['POST'])
@@ -42,6 +43,28 @@ def piscine_remove(ban_id, csrf, userid):
 		db.remove_piscine(int(ban_id))
 	return ''
 
+@app.route('/admin/silent_add', methods=['POST'])
+@auth_required
+def insert_silent(userid):
+	if userid['admin']['level'] < 1:
+		return 'Not authorized', 401
+	if not verify_csrf(request.form['csrf']):
+		return 'Please refresh and try again', 401
+	with Db() as db:
+		db.insert_silent(int(request.form['campus']), request.form['cluster'])
+	return ''
+
+
+@app.route('/admin/silent_remove/<int:ban_id>/<csrf>')
+@auth_required
+def silent_remove(ban_id, csrf, userid):
+	if userid['admin']['level'] < 1:
+		return 'Not authorized', 401
+	if not verify_csrf(csrf):
+		return 'Please refresh and try again', 401
+	with Db() as db:
+		db.remove_silent(int(ban_id))
+	return ''
 
 @app.route('/admin/change_tag', methods=['POST'])
 @auth_required

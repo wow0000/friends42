@@ -58,7 +58,6 @@ map = {
 	"buildings": {'vienna': ['c1', 'c2', 'c3', 'c4']},
 	"kiosk_classes": {},
 	"piscine": [],
-	"silent": [],
 	"default": 'c1'
 }
 # @formatter:on

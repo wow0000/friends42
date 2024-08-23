@@ -159,7 +159,6 @@ map = {
 		"<i class='fa-solid fa-display'></i>": ['bess-f2', 'bess-f4', 'made-f0B', 'made-f0C', 'made-f0D', 'paul-f4', 'paul-f5'],
 	},
 	"piscine": [],
-	"silent": ['paul-f3'],
 	"default": 'bess-f1',
 	"exrypz": exrypz
 }

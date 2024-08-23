@@ -38,7 +38,6 @@ map = {
 	],
 	"allowed": ['c1', 'c2'],
 	"piscine": [''],
-	"silent": [],
 	"buildings": {"Havre": ['c1', 'c2']},
 	"kiosk_classes": {
 		"<i class='fa-solid fa-display'></i>": ['c1', 'c2'],

@@ -52,7 +52,6 @@ map = {
 	],
 	"allowed": ['c1', 'c2', 'c3', 'c4'],
 	"piscine": [''],
-	"silent": [],
 	"buildings": {},
 	"kiosk_classes": {},
 	"default": 'c1',
