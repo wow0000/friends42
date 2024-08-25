@@ -23,6 +23,7 @@ def idle(building, userid):
 	issues = db.get_issues()
 	theme = db.get_theme(userid['userid'])
 	piscines = [x['cluster'] for x in db.get_piscines(userid['campus'])]
+	silents = [x['cluster'] for x in db.get_silents(userid['campus'])]
 	db.close()
 	cache_tab = get_cached_locations(campus_id)
 	campus_map = maps.available[campus_id].map
@@ -72,7 +73,7 @@ def idle(building, userid):
 			{'name': build, 'taken': users, 'all_place': all_place, 'free': all_place - users, 'classes': classes})
 	resp = make_response(
 		render_template('idle.html', locations=location_map, clusters=clusters_list,
-		                issues_map=issues_map, exrypz=campus_map['exrypz'], piscine=piscines,
+		                issues_map=issues_map, exrypz=campus_map['exrypz'], piscine=piscines, silent=silents,
 		                theme=theme, kiosk=True, places=places, scroll=clusters_to_load, last_update=last_update,
 		                kiosk_class=campus_map['kiosk_classes'], buildings=ret_builds, building=building))
 	resp.set_cookie('token', request.cookies.get('token'), expires=time.time() + 30 * 86400, httponly=True)
