@@ -9,7 +9,7 @@ app = Blueprint('admin', __name__, template_folder='templates', static_folder='s
 @app.route('/admin')
 @auth_required
 def admin(userid):
-	if userid['admin'] and userid['admin']['level'] < 1:
+	if not userid['admin'] or userid['admin']['level'] < 1:
 		return 'Not authorized', 401
 	shadow_bans = []
 	with Db() as db:
@@ -23,7 +23,7 @@ def admin(userid):
 @app.route('/admin/piscine_add', methods=['POST'])
 @auth_required
 def insert_piscine(userid):
-	if userid['admin']['level'] < 1:
+	if not userid['admin'] or userid['admin']['level'] < 1:
 		return 'Not authorized', 401
 	if not verify_csrf(request.form['csrf']):
 		return 'Please refresh and try again', 401
@@ -35,7 +35,7 @@ def insert_piscine(userid):
 @app.route('/admin/piscine_remove/<int:ban_id>/<csrf>')
 @auth_required
 def piscine_remove(ban_id, csrf, userid):
-	if userid['admin']['level'] < 1:
+	if not userid['admin'] or userid['admin']['level'] < 1:
 		return 'Not authorized', 401
 	if not verify_csrf(csrf):
 		return 'Please refresh and try again', 401
@@ -46,7 +46,7 @@ def piscine_remove(ban_id, csrf, userid):
 @app.route('/admin/silent_add', methods=['POST'])
 @auth_required
 def insert_silent(userid):
-	if userid['admin']['level'] < 1:
+	if not userid['admin'] or userid['admin']['level'] < 1:
 		return 'Not authorized', 401
 	if not verify_csrf(request.form['csrf']):
 		return 'Please refresh and try again', 401
@@ -58,7 +58,7 @@ def insert_silent(userid):
 @app.route('/admin/silent_remove/<int:ban_id>/<csrf>')
 @auth_required
 def silent_remove(ban_id, csrf, userid):
-	if userid['admin']['level'] < 1:
+	if not userid['admin'] or userid['admin']['level'] < 1:
 		return 'Not authorized', 401
 	if not verify_csrf(csrf):
 		return 'Please refresh and try again', 401
@@ -69,7 +69,7 @@ def silent_remove(ban_id, csrf, userid):
 @app.route('/admin/change_tag', methods=['POST'])
 @auth_required
 def change_tag(userid):
-	if userid['admin']['level'] < 1:
+	if not userid['admin'] or userid['admin']['level'] < 1:
 		return 'Not authorized', 401
 	if not verify_csrf(request.form['csrf']):
 		return 'Please refresh and try again', 401
@@ -81,7 +81,7 @@ def change_tag(userid):
 @app.route('/admin/shadow_ban', methods=['POST'])
 @auth_required
 def shadow_ban(userid):
-	if userid['admin']['level'] < 3:
+	if not userid['admin'] or userid['admin']['level'] < 3:
 		return 'Not authorized', 401
 	if not verify_csrf(request.form['csrf']):
 		return 'Please refresh and try again', 401
@@ -93,7 +93,7 @@ def shadow_ban(userid):
 @app.route('/admin/shadow_remove/<int:ban_id>/<csrf>')
 @auth_required
 def del_shadow_ban(ban_id, csrf, userid):
-	if userid['admin']['level'] < 3:
+	if not userid['admin'] or userid['admin']['level'] < 3:
 		return 'Not authorized', 401
 	if not verify_csrf(csrf):
 		return 'Please refresh and try again', 401

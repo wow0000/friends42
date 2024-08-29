@@ -63,7 +63,7 @@
 				       data-cluster="{{ cluster.name }}" id="radio{{ cluster.name }}"
 				       autocomplete="off" {{ "checked" if actual_cluster == cluster['name'] else "" }}>
 				<label title="{{ int(cluster.users / (cluster.maximum_places - cluster.dead_pc) * 100) }}%" class="btn btn-outline-{{ place_to_btn(cluster) }} m-t" for="radio{{ cluster.name }}">
-			{{ ('<i class="fa-solid fa-person-swimming text-info"></i>' if cluster.name in piscine else '') | safe }}{{ (' ' if cluster.name in piscine and cluster.name in silent else '') | safe }}{{ ('<i class="fa-solid fa-volume-xmark text-info"></i> ' if cluster.name in silent else '') | safe }}{{ cluster.name }}
+			{{ ('<i class="fa-solid fa-person-swimming text-info"></i>' if cluster.name in piscine else '') | safe }}{{ (' ' if cluster.name in piscine and cluster.name in silent else '') | safe }}{{ ('<i class="fa-solid fa-volume-xmark text-secondary"></i> ' if cluster.name in silent else '') | safe }}{{ cluster.name }}
 					<span class="text-muted">{{ cluster.users }}/{{ cluster.maximum_places - cluster.dead_pc }}</span></label>
 			{%- endfor -%}
 		</div>
