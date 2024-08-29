@@ -66,6 +66,7 @@ def index(userid):
 	theme = db.get_theme(userid['userid'])
 	shadow_bans = db.get_shadow_bans(userid['userid'])
 	piscines = [x['cluster'] for x in db.get_piscines(userid['campus'])]
+	silents = [x['cluster'] for x in db.get_silents(userid['campus'])]
 	db.close()
 	campus_map = maps.available[campus_id].map
 	if pos and type(campus_map['exrypz'](pos)) == bool:
@@ -111,7 +112,7 @@ def index(userid):
 		for cluster in campus_map['allowed']]
 	return render_template('index.html', map=campus_map[cluster_name], locations=location_map,
 	                       clusters=clusters_list, actual_cluster=cluster_name, issues_map=issues_map,
-	                       exrypz=campus_map['exrypz'], piscine=piscines, theme=theme,
+	                       exrypz=campus_map['exrypz'], piscine=piscines, theme=theme, silent=silents,
 	                       focus=request.args.get('p'))
 
 

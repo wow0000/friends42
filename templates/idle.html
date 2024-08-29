@@ -68,6 +68,9 @@
 					{% if cluster.name in piscine %}
 						<i class="fa-solid fa-person-swimming text-info"></i>
 					{% endif %}
+					{% if cluster.name in silent %}
+						<i class="fa-solid fa-volume-xmark text-info"></i>
+					{% endif %}
 					{{ cluster.users }}/{{ cluster.maximum_places - cluster.dead_pc }}
 				</small>
 			</a>

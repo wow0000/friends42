@@ -72,6 +72,35 @@
 			</div>
 		</div>
 	</div>
+	
+	<div class="modal fade" id="createSilentModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form method="POST" id="createSilent">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5">Créer un cluster slientieux</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="form-floating mb-3">
+							<input type="number" name="campus" class="form-control" id="input-campus" value="1" placeholder="">
+							<label for="input-campus">ID Campus</label>
+						</div>
+						<div class="form-floating mb-3">
+							<input type="text" name="cluster" class="form-control" id="input-desc" placeholder="Lorem ipsum...">
+							<label for="input-desc">Cluster</label>
+						</div>
+					</div>
+					<input type="hidden" name="csrf" value="{{ create_csrf() }}">
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+						<button type="submit" class="btn btn-primary">Confirmer</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 
 	<div class="p-5 mb-3 text-center bg-body-tertiary rounded-3 align-vertical">
 		<img class="bi mt-4 mb-3 rounded-circle" src="{{ user.image_medium }}" width="100" height="100" alt="pp">
@@ -148,6 +177,34 @@
 			</tbody>
 		</table>
 	</div>
+	<div class="container mb-2 p-2 shadow rounded bg-body-tertiary">
+		<h4>Clusters Sliencieux
+			<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createSilentModal">+
+			</button>
+		</h4>
+		<table class="table">
+			<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Campus</th>
+				<th scope="col">Cluster</th>
+				<th scope="col">-</th>
+			</tr>
+			</thead>
+			<tbody>
+			{% for silent in silents %}
+				<tr>
+					<th scope="row">{{ silent.id }}</th>
+					<td>{{ silent.campus }}</td>
+					<td>{{ silent.cluster }}</td>
+					<td>
+						<button onclick="del_silent({{ silent.id }})" class="btn btn-danger btn-sm">-</button>
+					</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
 
 
 {% endblock %}
@@ -166,6 +223,16 @@
 
 		function del_piscine(piscine_id) {
 			fetch(`/admin/piscine_remove/${piscine_id}/{{ create_csrf() }}`).then(async response => {
+				triggerToast(await response.text(), response.status === 200);
+				location.reload()
+			}).catch(error => {
+				triggerToast(`Une erreur s'est produite (${error.status})`, false);
+				console.log(error)
+			});
+		}
+
+		function del_silent(silent_id) {
+			fetch(`/admin/silent_remove/${silent_id}/{{ create_csrf() }}`).then(async response => {
 				triggerToast(await response.text(), response.status === 200);
 				location.reload()
 			}).catch(error => {
@@ -210,6 +277,20 @@
 			const formData = new FormData(event.target);
 
 			fetch('/admin/piscine_add', {
+				method: 'POST',
+				body: formData
+			}).then(async response => {
+				triggerToast(await response.text(), response.status === 200);
+				location.reload();
+			}).catch(error => triggerToast(`Une erreur s'est produite (${error.status})`, false));
+		});
+		
+		document.getElementById('createSilent').addEventListener('submit', function (event) {
+			event.preventDefault();
+
+			const formData = new FormData(event.target);
+
+			fetch('/admin/silent_add', {
 				method: 'POST',
 				body: formData
 			}).then(async response => {
