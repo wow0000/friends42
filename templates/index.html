@@ -55,6 +55,23 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal fade" id="tutorModal" tabindex="-1" aria-labelledby="tutorModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="tutorModalLabel">Place Tuteur</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close Modal"></button>
+				</div>
+				<div class="modal-body">
+					Le dump <span id="dumpIdTutorModal"></span> est reservé au tuteurs !
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="tutorModalIssueBtn">Signaler</button>
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fermer</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div class="text-center">
 		<div class="btn-group mb-1 btn-width" role="group" aria-label="Change cluster">
@@ -63,7 +80,7 @@
 				       data-cluster="{{ cluster.name }}" id="radio{{ cluster.name }}"
 				       autocomplete="off" {{ "checked" if actual_cluster == cluster['name'] else "" }}>
 				<label title="{{ int(cluster.users / (cluster.maximum_places - cluster.dead_pc) * 100) }}%" class="btn btn-outline-{{ place_to_btn(cluster) }} m-t" for="radio{{ cluster.name }}">
-			{{ ('<i class="fa-solid fa-person-swimming text-info"></i>' if cluster.name in piscine else '') | safe }}{{ (' ' if cluster.name in piscine and cluster.name in silent else '') | safe }}{{ ('<i class="fa-solid fa-volume-xmark text-secondary"></i> ' if cluster.name in silent else '') | safe }}{{ cluster.name }}
+			{{ ('<i class="fa-solid fa-person-swimming text-info"></i>' if cluster.name in piscine else '') | safe }}{{ (' ' if cluster.name in piscine and cluster.name in silent else '') | safe }}{{ ('<i class="fa-solid fa-volume-xmark text-info"></i> ' if cluster.name in silent else '') | safe }}{{ cluster.name }}
 					<span class="text-muted">{{ cluster.users }}/{{ cluster.maximum_places - cluster.dead_pc }}</span></label>
 			{%- endfor -%}
 		</div>
@@ -87,16 +104,21 @@
 						{%- elif exrypz(y) == False -%}
 							<td class="small-colors"></td>
 						{%- else -%}
-							{%- set img = '<i class="fa-solid fa-user"></i>' if y not in locations else '<img loading="lazy" class="profile-pic2" alt="" src="' + proxy_images(locations[y]['user']['image']['versions']['small']) + '">' -%}
+							{%- set img = '<i class="fa-solid fa-user"></i>' -%}
+							{%- if y in locations -%}
+								{%- set img = '<img loading="lazy" class="profile-pic2" alt="" src="' + proxy_images(locations[y]['user']['image']['versions']['small']) + '">' -%}
+							{%- elif y in tutors and actual_cluster in piscine -%}
+								{%- set img = '<i class="fa-solid fa-shield"></i>' -%}
+							{%- endif -%}
 							{%- set relation = '' -%}
 							{%- if focus and focus == y %}
 								{%- set relation = 'focus' -%}
-							{%- elif y in locations and locations[y]['me'] -%}
-								{%- set relation = 'me' -%}
 							{%- elif y in locations and locations[y]['close_friend'] -%}
 								{%- set relation = 'close_friend' -%}
 							{%- elif y in locations and locations[y]['friend'] -%}
 								{%- set relation = 'friend' -%}
+							{%- elif y in locations and locations[y]['me'] -%}
+								{%- set relation = 'me' -%}
 							{%- elif y in issues_map and issues_map[y]['count'] >= 1 and issues_map[y]['issue'] == 1 -%}
 								{%- set relation = 'dead' -%}
 							{%- elif y in issues_map and issues_map[y]['count'] >= 1 and issues_map[y]['issue'] == 2 -%}
@@ -104,15 +126,19 @@
 							{%- elif y in locations and locations[y]['pool'] and actual_cluster not in piscine -%}
 								{%- set relation = 'pooled' -%}
 							{%- endif -%}
+							{%- set tutor_post = '' -%}
+							{%- if y in tutors and actual_cluster in piscine and relation in ['', 'dead', 'attention'] -%}
+								{%- set tutor_post = 'tutor' -%}
+							{%- endif -%}
 							{%- if countB.value % 2 == 0 -%}
 								<td data-pos="{{ y }}"
 								    data-login="{{ locations[y]['user']['login'] if y in locations else '' }}"
-								    class="sm-t case {{ relation }}">{{ img|safe }}<br>{{ y.replace(actual_cluster, '') }}
+								    class="sm-t case {{ relation }} {{tutor_post}}">{{ img|safe }}<br>{{ y.replace(actual_cluster, '') }}
 								</td>
 							{%- else -%}
 								<td data-pos="{{ y }}"
 								    data-login="{{ locations[y]['user']['login'] if y in locations else '' }}"
-								    class="sm-t case {{ relation }}">{{ y.replace(actual_cluster, '') }}<br>{{ img|safe }}
+								    class="sm-t case {{ relation }} {{tutor_post}}">{{ y.replace(actual_cluster, '') }}<br>{{ img|safe }}
 								</td>
 							{%- endif -%}
 						{%- endif -%}
@@ -140,7 +166,8 @@
 			e.addEventListener('click', () => {
 				let login = e.dataset.login
 				let dump = e.dataset.pos
-				if (login.length === 0) {
+				let is_tutor_spot = e.classList.contains('tutor');
+				let open_issue_modal = () => {
 					const modal = new bootstrap.Modal('#issueModal', {});
 					document.getElementById('submitIssue').onclick = async function () {
 						let checked = document.querySelector('input[name="issueRadios"]:checked');
@@ -160,6 +187,18 @@
 					}
 					document.getElementById('dumpIdIssueModal').innerText = dump;
 					modal.show();
+				}
+				console.log(is_tutor_spot);
+				if (is_tutor_spot && login.length === 0)
+				{
+					const modal = new bootstrap.Modal('#tutorModal', {});
+					document.getElementById('dumpIdTutorModal').innerText = dump;
+					document.getElementById('tutorModalIssueBtn').onclick = open_issue_modal;
+					modal.show();
+					return;
+				}
+				if (login.length === 0) {
+					open_issue_modal();
 					return;
 				}
 				openFriend(login, true)

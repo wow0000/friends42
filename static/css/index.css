@@ -112,6 +112,10 @@ div.scroll {
 	/*filter: drop-shadow(0 0 0.75rem #d35400) !important;*/
 }
 
+.tutor {
+	background-color: #d38c21 !important;
+}
+
 .no-shadow {
 	filter: none!important;
 }

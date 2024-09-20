@@ -35,7 +35,7 @@ class Api:
 			return False
 		if r.status_code == 200:
 			self.token = r.json()["access_token"]
-			self.expire_at = r.json()["expires_in"] + time.time()
+			self.expire_at = r.json()["expires_in"] + r.json()["created_at"]
 			return True
 		else:
 			return False

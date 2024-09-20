@@ -174,3 +174,10 @@ wip_*
 session.txt
 projects*.json
 config.py
+
+# so it is easier to make a dev test
+#  used with direnv
+.envrc
+#  used with nix
+flake.nix
+flake.lock

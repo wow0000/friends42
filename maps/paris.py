@@ -60,7 +60,7 @@ map = {
 	"paul-f3": [
 		['R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
 		['', '', '', '', '', '', '', '', '', '', '', '', 'x', '', 'paul-f3Br10s1', 'paul-f3Br10s2', '', '', '', '', '', ''],
-		['', '', '', '', '', '', '', '', '', '', '', 'paul-f3Ar9s1', 'x', 'paul-f3Br9s1', 'paul-f3Br9s2', 'paul-f3Br9s3', '', '', '', '', '', 'paul-f3Br9s4'],
+		['', '', '', '', '', '', '', '', '', '', '', 'paul-f3Ar9s1', 'x', 'paul-f3Br9s1', 'paul-f3Br9s2', 'paul-f3Br9s3', '', '', '', '', '', ''],
 		['', '', '', '', '', '', '', '', '', 'paul-f3Ar8s1', 'paul-f3Ar8s2', 'paul-f3Ar8s3', 'x', 'paul-f3Br8s1', 'paul-f3Br8s2', 'paul-f3Br8s3', '', '', '', '', '', ''],
 		['', '', '', '', '', '', 'paul-f3Ar7s1', 'paul-f3Ar7s2', '', 'paul-f3Ar7s3', 'paul-f3Ar7s4', 'paul-f3Ar7s5', 'x', 'paul-f3Br7s1', 'paul-f3Br7s2', 'paul-f3Br7s3', '', 'paul-f3Br7s4', 'paul-f3Br7s5', 'x', 'paul-f3Br7s6', 'paul-f3Br7s7'],
 		['', 'paul-f3Ar6s1', 'paul-f3Ar6s2', 'paul-f3Ar6s3', 'paul-f3Ar6s4', 'paul-f3Ar6s5', 'paul-f3Ar6s6', 'paul-f3Ar6s7', '', 'paul-f3Ar6s8', 'paul-f3Ar6s9', 'paul-f3Ar6s10', 'x', 'paul-f3Br6s1', 'paul-f3Br6s2', 'paul-f3Br6s3', '', 'paul-f3Br6s4', 'paul-f3Br6s5', 'paul-f3Br6s6', 'paul-f3Br6s7', 'paul-f3Br6s8'],
@@ -160,6 +160,26 @@ map = {
 	},
 	"piscine": [],
 	"default": 'bess-f1',
+    "place_tutors": [
+		"bess-f1r1s9",
+		"bess-f1r5s1",
+		"bess-f1r6s1",
+		"bess-f2r1s15",
+		"bess-f2r5s4",
+		"bess-f3r1s1",
+		"bess-f3r5s1",
+		"bess-f4r1s8",
+		"bess-f4r5s1",
+		"bess-f4r5s5",
+		"paul-f3Ar3s9",
+		"paul-f3Ar8s1",
+		"paul-f3Br3s4",
+		"paul-f3Br8s3",
+		"paul-f4Ar5s8",
+		"paul-f4Ar8s6",
+		"paul-f4Br3s4"
+		"paul-f4Br8s3",
+	],
 	"exrypz": exrypz
 }
 

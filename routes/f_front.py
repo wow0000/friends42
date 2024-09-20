@@ -113,7 +113,7 @@ def index(userid):
 	return render_template('index.html', map=campus_map[cluster_name], locations=location_map,
 	                       clusters=clusters_list, actual_cluster=cluster_name, issues_map=issues_map,
 	                       exrypz=campus_map['exrypz'], piscine=piscines, theme=theme, silent=silents,
-	                       focus=request.args.get('p'))
+	                       focus=request.args.get('p'), tutors=campus_map['place_tutors'])
 
 
 @app.route('/friends/')
