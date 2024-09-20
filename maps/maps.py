@@ -39,14 +39,31 @@ def place_to_btn(info: dict, default="primary"):
 def available_seats(cluster: str, _map: list, exrypz, locations_map: dict, errors_map: dict):
 	return places(exrypz, _map) - count_in_cluster(cluster, locations_map) - count_in_cluster(cluster, errors_map)
 
+def ensure_all_keys(_map: dict):
+	_default = {
+		"allowed": [],
+		"buildings": {},
+		"kiosk_classes": {},
+		"piscine": [],
+		"place_tutors": [],
+	}
+	for k,val in dict.items(_default):
+		if k not in _map.map:
+			print(f"key '{k}' not set in {_map.__name__}!")
+			_map.map[k] = val
+	return _map
 
 paris = map_paris.map
 vienna = map_vienna.map
 forty2 = map_forty2.map
 havre = map_havre.map
-available = {
+# This is to make sure every default key is set by to a know value
+# It'll print an error when in debug mode
+available = {campus: ensure_all_keys(_map) for (campus, _map) in dict.items(
+{
 	66: map_forty2,
 	53: map_vienna,
 	62: map_havre,
 	1: map_paris
 }
+)}

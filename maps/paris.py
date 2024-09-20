@@ -160,6 +160,26 @@ map = {
 	},
 	"piscine": [],
 	"default": 'bess-f1',
+    "place_tutors": [
+		"bess-f1r1s9",
+		"bess-f1r5s1",
+		"bess-f1r6s1",
+		"bess-f2r1s15",
+		"bess-f2r5s4",
+		"bess-f3r1s1",
+		"bess-f3r5s1",
+		"bess-f4r1s8",
+		"bess-f4r5s1",
+		"bess-f4r5s5",
+		"paul-f3Ar3s9",
+		"paul-f3Ar8s1",
+		"paul-f3Br3s4",
+		"paul-f3Br8s3",
+		"paul-f4Ar5s8",
+		"paul-f4Ar8s6",
+		"paul-f4Br3s4"
+		"paul-f4Br8s3",
+	],
 	"exrypz": exrypz
 }
 
