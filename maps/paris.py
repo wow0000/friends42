@@ -118,7 +118,7 @@ map = {
 		['made-f0Br5s1', 'made-f0Br5s2', 'made-f0Br5s3', 'made-f0Br5s4', 'made-f0Br5s5', 'made-f0Br5s6', '', '', '', '', '', '', '', '', '', 'made-f0Br5s7', 'made-f0Br5s8', 'made-f0Br5s9', 'made-f0Br5s10', 'made-f0Br5s11', 'made-f0Br5s12'],
 		['made-f0Br4s1', 'made-f0Br4s2', 'made-f0Br4s3', 'made-f0Br4s4', 'made-f0Br4s5', 'made-f0Br4s6', '', 'x', 'x', 'x', 'x', 'x', 'x', 'x', '', 'made-f0Br4s7', 'made-f0Br4s8', 'made-f0Br4s9', 'made-f0Br4s10', 'made-f0Br4s11', 'made-f0Br4s12'],
 		['made-f0Br3s1', 'made-f0Br3s2', 'made-f0Br3s3', 'made-f0Br3s4', 'made-f0Br3s5', 'made-f0Br3s6', '', 'x', '', '', '', '', '', 'x', '', 'made-f0Br3s7', 'made-f0Br3s8', 'made-f0Br3s9', 'made-f0Br3s10', 'made-f0Br3s11', 'made-f0Br3s12'],
-		['', 'made-f0Br2s1', '', 'made-f0Br2s2', '', 'made-f0Br2s3', '', 'x', 'x', 'x', 'x', 'x', 'x', 'x', '', 'made-f0Br2s4', 'made-f0Br2s5', 'made-f0Br2s6', 'made-f0Br2s7', 'made-f0Br2s8', 'made-f0Br2s9'],
+		['made-f0Br2s1', '', 'made-f0Br2s2', '', 'made-f0Br2s3', '', '', 'x', 'x', 'x', 'x', 'x', 'x', 'x', '', 'made-f0Br2s4', 'made-f0Br2s5', 'made-f0Br2s6', 'made-f0Br2s7', 'made-f0Br2s8', 'made-f0Br2s9'],
 		['', '', '', '', '', '', 'd', '', '', '', '', '', '', '', '', 'made-f0Br1s1', 'made-f0Br1s2', 'made-f0Br1s3', 'made-f0Br1s4', 'made-f0Br1s5', 'made-f0Br1s6']
 	],
 	"made-f0C": [
@@ -135,7 +135,7 @@ map = {
 		['', 'made-f0Cr4s1', 'made-f0Cr4s2', 'made-f0Cr4s3', 'made-f0Cr4s4', 'made-f0Cr4s5', 'made-f0Cr4s6'],
 		['', 'made-f0Cr3s1', 'made-f0Cr3s2', 'made-f0Cr3s3', 'made-f0Cr3s4', 'made-f0Cr3s5', 'made-f0Cr3s6'],
 		['', 'made-f0Cr2s1', 'made-f0Cr2s2', 'made-f0Cr2s3', 'made-f0Cr2s4', 'made-f0Cr2s5', 'made-f0Cr2s6'],
-		['d', '', 'made-f0Cr1s1', '', 'made-f0Cr1s2', '', 'made-f0Cr1s3']
+		['d', 'made-f0Cr1s1', '', 'made-f0Cr1s2', '', 'made-f0Cr1s3', '']
 	],
 	"made-f0D": [
 		['R11', 'R10', 'R9', 'R8', 'R7', 'R6', 'R5', 'R4', 'R3', 'R2', 'R1'],
