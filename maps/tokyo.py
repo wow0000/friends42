@@ -40,11 +40,11 @@ map = {
 		["c3r3s1", "c3r3s2", "c3r3s3", "c3r3s4", "c3r3s5", "c3r3s6", "c3r3s7", "c3r3s8"],
 		["c3r4s1", "c3r4s2", "c3r4s3", "c3r4s4", "c3r4s5", "c3r4s6", "c3r4s7", "c3r4s8"],
 		["c3r5s1", "c3r5s2", "c3r5s3", "c3r5s4", "c3r5s5", "c3r5s6", "c3r5s7", "c3r5s8"],
-		["c3r6s1", "c3r6s2", "c3r6s3", "c3r6s4", "c3r6s5", "c3r6s6", "c3r6s7", "c3r6s8", ],
+		["c3r6s1", "c3r6s2", "c3r6s3", "c3r6s4", "c3r6s5", "c3r6s6", "c3r6s7", "c3r6s8"],
 	],
 	"c4 - FUJI": [
 		["R01", "R02", "R03"],
-		["c4r1s1", "c4r1s2", "c4r1s3", "c4r1s4", "c4r1s5", "c4r1s6", "c4r1s7", "c4r1s8", "c4r1s9", "c4r1s10", "c4r1s11", "c4r1s12"],
+		["c4r1s1", "c4r1s2", "c4r1s3", "c4r1s4", "c4r1s5", "c4r1s6", "c4r1s7", "c4r1s8", "c4r1s9", "c4r1s10", "c4r1s11", "c4r1s12", "", "", "", "", "", ""],
 		["c4r2s1", "c4r2s2", "c4r2s3", "c4r2s4", "c4r2s5", "c4r2s6", "c4r2s7", "c4r2s8", "c4r2s9", "c4r2s10", "c4r2s11", "c4r2s12", "c4r2s13", "c4r2s14", "c4r2s15", "c4r2s16", "c4r2s17", "c4r2s18"],
 		["c4r3s1", "c4r3s2", "c4r3s3", "c4r3s4", "c4r3s5", "c4r3s6", "c4r3s7", "c4r3s8", "c4r3s9", "c4r3s10", "c4r3s11", "c4r3s12", "c4r3s13", "c4r3s14", "c4r3s15", "c4r3s16", "c4r3s17", "c4r3s18"],
 	],
