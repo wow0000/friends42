@@ -2,6 +2,7 @@ import maps.paris as map_paris
 import maps.vienna as map_vienna
 import maps.forty2 as map_forty2
 import maps.havre as map_havre
+import maps.tokyo as map_tokyo
 
 
 def places(exrypz, _map: list[list[str]]):
@@ -44,9 +45,11 @@ paris = map_paris.map
 vienna = map_vienna.map
 forty2 = map_forty2.map
 havre = map_havre.map
+tokyo = map_tokyo.map
 available = {
 	66: map_forty2,
 	53: map_vienna,
 	62: map_havre,
+	26: map_tokyo,
 	1: map_paris
 }
