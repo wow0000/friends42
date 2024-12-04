@@ -325,7 +325,7 @@ class Db:
 		return req.fetchall()
 
 	def get_latest_mates(self, campus: int):
-		req = self.cur.execute("SELECT * FROM MATES WHERE campus = ? ORDER BY created DESC LIMIT 5",
+		req = self.cur.execute("SELECT * FROM MATES WHERE campus = ? ORDER BY created DESC LIMIT 15",
 		                       [campus])
 		return req.fetchall()
 
