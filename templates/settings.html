@@ -33,6 +33,10 @@
 		.card {
 			margin-top: 0.4rem;
 		}
+
+		#import-status {
+            min-height: 50px;
+        }
 	</style>
 {% endblock %}
 {% block content %}
@@ -106,6 +110,9 @@
 						<button type="submit" class="btn btn-secondary mt-2"
 						        onclick="location.href = '/profile/{{ user.name }}';">Voir mon profil
 						</button>
+						<button type="button" class="btn btn-warning mt-2" onclick="loadJSON()" id="import-button">Importer ses paramètres</button>
+						<input type="file" id="fileInput" style="display: none;" accept=".json" onchange="handleFile(event)">						
+						<div id="import-status" class="mt-3"></div>					
 					</form>
 				</div>
 				<div hidden id="settings">
@@ -114,7 +121,7 @@
 						<div class="card-body">
 							<h5 class="card-title"><i class="fa-solid fa-bell"></i> Notifications</h5>
 							{% if not notif %}
-								<a hidden id="redirect" href="https://friends42.fr/settings/">
+								<a hidden id="redirect" href="http://localhost:8080/settings/">
 									Cliquez-ici pour aller sur friends42.fr
 								</a>
 								<script async src="https://telegram.org/js/telegram-widget.js?22"
@@ -155,7 +162,7 @@
 								Ils seront chargé à chaque page. (5 000 caractères maximum)<br>
 								<i class="fa-solid fa-warning text-warning"></i>Si le site est inaccessible suite à un
 								changement, accédez à
-								<a href="/reset">https://friends42.fr/reset</a>
+								<a href="/reset">http://localhost:8080/reset</a>
 							</p>
 							<div class="form-check mb-3">
 								<input class="form-check-input" {{ 'checked' if theme.enabled == 1 else '' }} type="checkbox" value="" id="theme-enabled">
@@ -433,5 +440,96 @@
 		document.addEventListener('DOMContentLoaded', () => {
 			kiosk_load();
 		});
+	
+		function loadJSON() {
+			document.getElementById('fileInput').click();
+		}
+
+		function handleFile(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                triggerToast("Aucun fichier sélectionné.", false);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const jsonData = JSON.parse(e.target.result);
+                    validateAndSendJSON(jsonData);
+                } catch (error) {
+                    triggerToast("Le fichier n'est pas un JSON valide.", false);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function validateAndSendJSON(data) {
+            fetch('/settings/import_json', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.status === 202) {
+                    return response.json().then(data => ({status: response.status, data}));
+                } else {
+                    return response.json().then(data => ({status: response.status, data}));
+                }
+            })
+            .then(({status, data}) => {
+                if (status === 202) {
+                    const importButton = document.getElementById('import-button');
+                    const importStatus = document.getElementById('import-status');
+                    
+                    importButton.disabled = true;
+                    importStatus.innerHTML = `<div class="alert alert-info">Importation en cours, cela peut prendre un certain temps.</div>`;
+
+                    const taskId = data.task_id;
+                    const statusInterval = setInterval(() => {
+                        fetch(`/settings/import_status/${taskId}`)
+                            .then(res => res.json())
+                            .then(statusData => {
+                                console.log(`Statut de la tâche ${taskId}: ${statusData.status}`);
+                                importStatus.innerHTML = `<div class="alert alert-info">Statut de l'importation: ${statusData.status}</div>`;
+                                if (statusData.status === 'Terminé') {
+                                    triggerToast('Importation réussie!', true);
+                                    clearInterval(statusInterval);
+                                    importButton.disabled = false;
+                                    location.reload();
+                                } else if (statusData.status.startsWith('Erreur') || statusData.status.startsWith('Annulée')) {
+                                    triggerToast(`Importation échouée: ${statusData.status}`, false);
+                                    clearInterval(statusInterval);
+                                    importButton.disabled = false;
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Erreur lors de la vérification du statut:", error);
+                                clearInterval(statusInterval);
+                                importButton.disabled = false;
+                            });
+                    }, 10000);
+                } else {
+                    triggerToast(`Erreur: ${data.message}`, false);
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de l'importation:", error);
+                triggerToast("Une erreur s'est produite lors de l'importation.", false);
+            });
+        }
+
+		function checkImportStatus(taskId) {
+			fetch(`/settings/import_status/${taskId}`)
+			.then(response => response.json())
+			.then(data => {
+				console.log(`Statut de la tâche ${data.task_id}: ${data.status}`);
+			})
+			.catch(error => {
+				console.error("Erreur lors de la vérification du statut:", error);
+			});
+		}
 	</script>
 {% endblock %}

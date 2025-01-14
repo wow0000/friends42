@@ -5,7 +5,6 @@ import config
 from flask import request, redirect, make_response, g
 import json
 import requests
-import urllib.parse
 import hashlib
 import hmac
 import collections
@@ -21,10 +20,10 @@ def proxy_images(url: str, light=False):
 	if not url:
 		return "/static/img/unknown.jpg"
 	if light:
-		return url.replace('https://cdn.intra.42.fr/users/', 'https://friends42.fr/proxy/resize/70/')
+		return url.replace('https://cdn.intra.42.fr/users/', 'https://cdn.intra.42.fr/users/')
 	if 'small' in url or 'medium' in url:
-		return url.replace('https://cdn.intra.42.fr/users/', 'https://friends42.fr/proxy/')
-	return url.replace('https://cdn.intra.42.fr/users/', 'https://friends42.fr/proxy/resize/512/')
+		return url.replace('https://cdn.intra.42.fr/users/', 'https://cdn.intra.42.fr/users/')
+	return url.replace('https://cdn.intra.42.fr/users/', 'https://cdn.intra.42.fr/users/')
 
 
 def auth_required(function):
