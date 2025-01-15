@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template
 from globals import *
 from routes.helpers import *
-import arrow
 
 app = Blueprint('friends', __name__, template_folder='templates')
 

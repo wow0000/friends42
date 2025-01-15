@@ -10,20 +10,20 @@ import routes.tasks
 from globals import *
 
 if config.sentry and config.sentry != '':
-    sentry_sdk.init(
-        dsn=config.sentry,
-        traces_sample_rate=config.sentry_traces_sample_rate,
-        profiles_sample_rate=config.sentry_profiles_sample_rate
-    )
+	sentry_sdk.init(
+		dsn=config.sentry,
+		traces_sample_rate=config.sentry_traces_sample_rate,
+		profiles_sample_rate=config.sentry_profiles_sample_rate
+	)
 
 with Db("database.db") as db:
-    db.initialize()
+	db.initialize()
 
 app = Flask(__name__)
 
 for route in routes.finder.get_all_routes():
-    blueprint = importlib.import_module('routes.' + route, package=None).app
-    app.register_blueprint(blueprint)
+	blueprint = importlib.import_module('routes.' + route, package=None).app
+	app.register_blueprint(blueprint)
 
 app.jinja_env.globals.update(len=len)
 app.jinja_env.globals.update(enumerate=enumerate)
@@ -40,4 +40,4 @@ app.jinja_env.globals.update(int=int)
 routes.helpers.create_hooks(app)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8080)
+	app.run(debug=True, host='0.0.0.0', port=8080)

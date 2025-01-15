@@ -11,7 +11,6 @@ app = Blueprint('locations', __name__, template_folder='templates')
 def update_locs(token, campus):
 	if token != config.update_key:
 		return 'Bad token', 400
-	
 	locs(campus)
 	return 'OK', 200
 
