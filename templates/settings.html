@@ -121,7 +121,7 @@
 						<div class="card-body">
 							<h5 class="card-title"><i class="fa-solid fa-bell"></i> Notifications</h5>
 							{% if not notif %}
-								<a hidden id="redirect" href="http://localhost:8080/settings/">
+								<a hidden id="redirect" href="https://friends.42paris.fr//settings/">
 									Cliquez-ici pour aller sur friends42.fr
 								</a>
 								<script async src="https://telegram.org/js/telegram-widget.js?22"
@@ -162,7 +162,7 @@
 								Ils seront chargé à chaque page. (5 000 caractères maximum)<br>
 								<i class="fa-solid fa-warning text-warning"></i>Si le site est inaccessible suite à un
 								changement, accédez à
-								<a href="/reset">http://localhost:8080/reset</a>
+								<a href="/reset">https://friends.42paris.fr//reset</a>
 							</p>
 							<div class="form-check mb-3">
 								<input class="form-check-input" {{ 'checked' if theme.enabled == 1 else '' }} type="checkbox" value="" id="theme-enabled">
