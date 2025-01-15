@@ -20,10 +20,10 @@ def proxy_images(url: str, light=False):
 	if not url:
 		return "/static/img/unknown.jpg"
 	if light:
-		return url.replace('https://cdn.intra.42.fr/users/', 'https://cdn.intra.42.fr/users/')
+		return url.replace('https://cdn.intra.42.fr/users/', 'https://friends.42paris.fr/proxy/resize/70/')
 	if 'small' in url or 'medium' in url:
-		return url.replace('https://cdn.intra.42.fr/users/', 'https://cdn.intra.42.fr/users/')
-	return url.replace('https://cdn.intra.42.fr/users/', 'https://cdn.intra.42.fr/users/')
+		return url.replace('https://cdn.intra.42.fr/users/', 'https://friends.42paris.fr/proxy/')
+	return url.replace('https://cdn.intra.42.fr/users/', 'https://friends.42paris.fr/proxy/resize/512/')
 
 
 def auth_required(function):
