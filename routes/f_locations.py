@@ -9,7 +9,6 @@ app = Blueprint('locations', __name__, template_folder='templates')
 
 @app.route('/locations/<token>/<int:campus>')
 def update_locs(token, campus):
-	print(token, campus)
 	if token != config.update_key:
 		return 'Bad token', 400
 	
