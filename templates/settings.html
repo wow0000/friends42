@@ -439,6 +439,7 @@
 
 		document.addEventListener('DOMContentLoaded', () => {
 			kiosk_load();
+			checkExistingImport();
 		});
 	
 		function loadJSON() {
@@ -446,90 +447,89 @@
 		}
 
 		function handleFile(event) {
-            const file = event.target.files[0];
-            if (!file) {
-                triggerToast("Aucun fichier sélectionné.", false);
-                return;
-            }
+			const file = event.target.files[0];
+			if (!file) {
+				triggerToast("Aucun fichier sélectionné.", false);
+				return;
+			}
+			const reader = new FileReader();
+			reader.onload = function(e) {
+				try {
+					const jsonData = JSON.parse(e.target.result);
+					validateAndSendJSON(jsonData);
+				} catch (error) {
+					triggerToast("Le fichier n'est pas un JSON valide.", false);
+				}
+			};
+			reader.readAsText(file);
+		}
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const jsonData = JSON.parse(e.target.result);
-                    validateAndSendJSON(jsonData);
-                } catch (error) {
-                    triggerToast("Le fichier n'est pas un JSON valide.", false);
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        function validateAndSendJSON(data) {
-            fetch('/settings/import_json', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (response.status === 202) {
-                    return response.json().then(data => ({status: response.status, data}));
-                } else {
-                    return response.json().then(data => ({status: response.status, data}));
-                }
-            })
-            .then(({status, data}) => {
-                if (status === 202) {
-                    const importButton = document.getElementById('import-button');
-                    const importStatus = document.getElementById('import-status');
-                    
-                    importButton.disabled = true;
-                    importStatus.innerHTML = `<div class="alert alert-info">Importation en cours, cela peut prendre un certain temps.</div>`;
-
-                    const taskId = data.task_id;
-                    const statusInterval = setInterval(() => {
-                        fetch(`/settings/import_status/${taskId}`)
-                            .then(res => res.json())
-                            .then(statusData => {
-                                console.log(`Statut de la tâche ${taskId}: ${statusData.status}`);
-                                importStatus.innerHTML = `<div class="alert alert-info">Statut de l'importation: ${statusData.status}</div>`;
-                                if (statusData.status === 'Terminé') {
-                                    triggerToast('Importation réussie!', true);
-                                    clearInterval(statusInterval);
-                                    importButton.disabled = false;
-                                    location.reload();
-                                } else if (statusData.status.startsWith('Erreur') || statusData.status.startsWith('Annulée')) {
-                                    triggerToast(`Importation échouée: ${statusData.status}`, false);
-                                    clearInterval(statusInterval);
-                                    importButton.disabled = false;
-                                }
-                            })
-                            .catch(error => {
-                                console.error("Erreur lors de la vérification du statut:", error);
-                                clearInterval(statusInterval);
-                                importButton.disabled = false;
-                            });
-                    }, 10000);
-                } else {
-                    triggerToast(`Erreur: ${data.message}`, false);
-                }
-            })
-            .catch(error => {
-                console.error("Erreur lors de l'importation:", error);
-                triggerToast("Une erreur s'est produite lors de l'importation.", false);
-            });
-        }
-
-		function checkImportStatus(taskId) {
-			fetch(`/settings/import_status/${taskId}`)
-			.then(response => response.json())
-			.then(data => {
-				console.log(`Statut de la tâche ${data.task_id}: ${data.status}`);
+		function validateAndSendJSON(data) {
+			fetch('/settings/import_json', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+			.then(response => response.json().then(data => ({status: response.status, data})))
+			.then(({status, data}) => {
+				if (status === 202) {
+					const taskId = data.task_id;
+					sessionStorage.setItem('importTaskId', taskId);
+					startImportStatusPolling(taskId);
+				} else {
+					triggerToast(`Erreur: ${data.message}`, false);
+				}
 			})
 			.catch(error => {
-				console.error("Erreur lors de la vérification du statut:", error);
+				console.error("Erreur lors de l'importation:", error);
+				triggerToast("Une erreur s'est produite lors de l'importation.", false);
 			});
 		}
+		let statusInterval = null;
+		function startImportStatusPolling(taskId) {
+			const importButton = document.getElementById('import-button');
+			const importStatus = document.getElementById('import-status');
+			
+			importButton.disabled = true;
+			importStatus.innerHTML = `<div class="alert alert-info">Importation en cours, cela peut prendre un certain temps.</div>`;
+			statusInterval = setInterval(() => {
+				fetch(`/settings/import_status/${taskId}`)
+					.then(res => res.json())
+					.then(statusData => {
+						console.log(`Statut de la tâche ${taskId}: ${statusData.status}`);
+						importStatus.innerHTML = `<div class="alert alert-info">Statut de l'importation: ${statusData.status}</div>`;
+						if (statusData.status === 'Terminé') {
+							triggerToast('Importation réussie!', true);
+							clearInterval(statusInterval);
+							statusInterval = null;
+							importButton.disabled = false;
+							sessionStorage.removeItem('importTaskId');
+							location.reload();
+						} else if (statusData.status.startsWith('Erreur') || statusData.status.startsWith('Annulée')) {
+							triggerToast(`Importation échouée: ${statusData.status}`, false);
+							clearInterval(statusInterval);
+							statusInterval = null;
+							importButton.disabled = false;
+							sessionStorage.removeItem('importTaskId');
+						}
+					})
+					.catch(error => {
+						console.error("Erreur lors de la vérification du statut:", error);
+						clearInterval(statusInterval);
+						statusInterval = null;
+						importButton.disabled = false;
+					});
+			}, 10000);
+		}
+
+		function checkExistingImport() {
+			const taskId = sessionStorage.getItem('importTaskId');
+			if (taskId) {
+				startImportStatusPolling(taskId);
+			}
+		}
+
 	</script>
 {% endblock %}
