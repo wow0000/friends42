@@ -14,7 +14,7 @@ git clone git@github.com:wow0000/friends42.git && cd friends42
 pip install -r requirements.txt
 vim config.py
 python3 app.py
-python updater.py
+python3 updater.py
 ```
 OR
 with Docker
