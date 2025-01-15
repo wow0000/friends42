@@ -122,7 +122,7 @@
 							<h5 class="card-title"><i class="fa-solid fa-bell"></i> Notifications</h5>
 							{% if not notif %}
 								<a hidden id="redirect" href="https://friends.42paris.fr//settings/">
-									Cliquez-ici pour aller sur friends42.fr
+									Cliquez-ici pour aller sur friends.42paris.fr
 								</a>
 								<script async src="https://telegram.org/js/telegram-widget.js?22"
 								        data-telegram-login="friends42bot"
@@ -265,7 +265,7 @@
 {% block scripts %}
 	<script>
 		addEventListener("load", () => {
-			if (window.location.hostname !== "friends42.fr") {
+			if (window.location.hostname !== "friends.42paris.fr") {
 				if (document.getElementById('redirect')) {
 					document.getElementById('redirect').hidden = false;
 					document.getElementById('telegram-login-friends42bot').hidden = true;
