@@ -65,12 +65,14 @@
 			</ul>
 			<div class="d-flex" role="search">
 				{%- if not kiosk %}
-					<button type="button" class="btn btn-outline-primary me-1" onclick="newTab('https://discord.gg/E8jbpgxz2s');" aria-label="Discord">
+					<a class="btn btn-outline-primary me-1" href="https://discord.gg/E8jbpgxz2s" target="_blank"
+						aria-label="Discord">
 						<i class="fa-brands fa-discord"></i> <i hidden class="spinner-border spinner-border-sm"></i>
-					</button>
-					<button type="button" class="btn btn-outline-secondary me-1" onclick="newTab('https://github.com/wow0000/friends42');" aria-label="Github">
+					</a>
+					<a class="btn btn-outline-secondary me-1" href="https://github.com/wow0000/friends42"
+						target="_blank" aria-label="Github">
 						<i class="fa-brands fa-github"></i> <i hidden class="spinner-border spinner-border-sm"></i>
-					</button>
+					</a>
 					<input class="form-control" list="global_suggestions" id="globalSearch" type="search" placeholder="Rechercher..." aria-label="Search">
 					<datalist id="global_suggestions"></datalist>
 					<button type="button" id="globalSearchButton" aria-label="Search" class="btn btn-outline-light mx-1">

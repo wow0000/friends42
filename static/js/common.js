@@ -254,10 +254,6 @@ function open(url) {
 	window.location.href = url;
 }
 
-function newTab(url) {
-	window.open(url, '_blank').focus();
-}
-
 function isTouchDevice() {
 	return (('ontouchstart' in window) ||
 		(navigator.maxTouchPoints > 0) ||
