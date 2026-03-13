@@ -12,8 +12,15 @@ You'll need the followings:
 ```bash
 git clone git@github.com:wow0000/friends42.git && cd friends42
 pip install -r requirements.txt
+cp config.sample.py config.py
 vim config.py
 python3 app.py
+python3 updater.py
+```
+OR
+with Docker
+```bash
+docker compose up --build -d
 ```
 
 Then head to http://localhost:8080/

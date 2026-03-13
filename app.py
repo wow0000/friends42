@@ -6,6 +6,8 @@ import config
 import routes.finder
 import importlib
 import routes.helpers
+import routes.tasks
+from globals import *
 
 if config.sentry and config.sentry != '':
 	sentry_sdk.init(
@@ -14,13 +16,14 @@ if config.sentry and config.sentry != '':
 		profiles_sample_rate=config.sentry_profiles_sample_rate
 	)
 
-db = Db("database.db")
-db.initialize()
+with Db("database.db") as db:
+	db.initialize()
 
 app = Flask(__name__)
 
 for route in routes.finder.get_all_routes():
-	app.register_blueprint(importlib.import_module('routes.' + route, package=None).app)
+	blueprint = importlib.import_module('routes.' + route, package=None).app
+	app.register_blueprint(blueprint)
 
 app.jinja_env.globals.update(len=len)
 app.jinja_env.globals.update(enumerate=enumerate)

@@ -33,6 +33,10 @@
 		.card {
 			margin-top: 0.4rem;
 		}
+
+		#import-status {
+			min-height: 50px;
+		}
 	</style>
 {% endblock %}
 {% block content %}
@@ -42,27 +46,27 @@
 			<div class="col-md-2 p-1 rounded">
 				<ul class="list-group">
 					<button type="button" class="list-group-item settings-switcher list-group-item-action active"
-					        data-category="profile" aria-current="true">
+							data-category="profile" aria-current="true">
 						<i class="fa-solid fa-user"></i> Profile
 					</button>
 					<button type="button" class="list-group-item settings-switcher list-group-item-action"
-					        data-category="settings">
+							data-category="settings">
 						<i class="fa-solid fa-gear"></i> Paramètres
 					</button>
 					<button type="button" class="list-group-item settings-switcher list-group-item-action"
-					        data-category="sessions">
+							data-category="sessions">
 						<i class="fa-solid fa-key"></i> Sessions
 					</button>
 					<button type="button" class="list-group-item settings-switcher list-group-item-action"
-					        data-category="kiosk">
+							data-category="kiosk">
 						<i class="fa-solid fa-info-circle"></i> Kiosk
 					</button>
 					<button type="button" class="list-group-item settings-switcher list-group-item-action"
-					        data-category="questions">
+							data-category="questions">
 						<i class="fa-solid fa-question-circle"></i> Questions
 					</button>
 					<button type="button" class="list-group-item settings-switcher list-group-item-action"
-					        data-category="changelog">
+							data-category="changelog">
 						<i class="fa-solid fa-newspaper"></i> Changelog
 					</button>
 				</ul>
@@ -75,37 +79,40 @@
 								<i class="fa-brands fa-github"></i>&nbsp;GitHub
 							</span>
 							<input type="text" name="github" class="form-control"
-							       value="{{ '' if user['github'] == None else user.github }}"
-							       placeholder="https://github.com/username" aria-label="github link"
-							       aria-describedby="github-input">
+								   value="{{ '' if user['github'] == None else user.github }}"
+								   placeholder="https://github.com/username" aria-label="github link"
+								   aria-describedby="github-input">
 						</div>
 						<div class="input-group mb-3">
 							<span class="input-group-text input-size" id="discord-input">
 								<i class="fa-brands fa-discord"></i>&nbsp;Discord
 							</span>
 							<input type="text" name="discord" class="form-control"
-							       value="{{ '' if user['discord'] == None else user.discord }}"
-							       placeholder="Norminet#1234" aria-label="discord tag"
-							       aria-describedby="discord-input">
+								   value="{{ '' if user['discord'] == None else user.discord }}"
+								   placeholder="Norminet#1234" aria-label="discord tag"
+								   aria-describedby="discord-input">
 						</div>
 						<div class="input-group mb-3">
 							<span class="input-group-text input-size" id="website-input"><i
 									class="fa-solid fa-globe"></i>&nbsp;Website</span>
 							<input type="text" name="website" class="form-control"
-							       value="{{ '' if user['website'] == None else user.website }}"
-							       placeholder="https://example.com" aria-label="Website url"
-							       aria-describedby="website-input">
+								   value="{{ '' if user['website'] == None else user.website }}"
+								   placeholder="https://example.com" aria-label="Website url"
+								   aria-describedby="website-input">
 						</div>
 						<div class="form-floating">
 							<textarea class="form-control" name="description" id="biographyArea" style="height: 100px"
-							          maxlength="1500">{{ '' if user['recit'] == None else user.recit }}</textarea>
+									  maxlength="1500">{{ '' if user['recit'] == None else user.recit }}</textarea>
 							<label for="biographyArea">Biographie (<span
 									id="biography-counter">{{ len(user['recit'] or '') or 0 }}</span>/1500)</label>
 						</div>
 						<button type="submit" class="btn btn-primary mt-2">Sauvegarder</button>
 						<button type="submit" class="btn btn-secondary mt-2"
-						        onclick="location.href = '/profile/{{ user.name }}';">Voir mon profil
+								onclick="location.href = '/profile/{{ user.name }}';">Voir mon profil
 						</button>
+						<button type="button" class="btn btn-warning mt-2" onclick="loadJSON()" id="import-button">Importer ses paramètres</button>
+						<input type="file" id="fileInput" style="display: none;" accept=".json" onchange="handleFile(event)">						
+						<div id="import-status" class="mt-3"></div>					
 					</form>
 				</div>
 				<div hidden id="settings">
@@ -114,13 +121,13 @@
 						<div class="card-body">
 							<h5 class="card-title"><i class="fa-solid fa-bell"></i> Notifications</h5>
 							{% if not notif %}
-								<a hidden id="redirect" href="https://friends42.fr/settings/">
-									Cliquez-ici pour aller sur friends42.fr
+								<a hidden id="redirect" href="https://friends.42paris.fr//settings/">
+									Cliquez-ici pour aller sur friends.42paris.fr
 								</a>
 								<script async src="https://telegram.org/js/telegram-widget.js?22"
-								        data-telegram-login="friends42bot"
-								        data-size="large" data-userpic="false" data-onauth="onTelegramAuth(user)"
-								        data-request-access="write"></script>
+										data-telegram-login="friends42bot"
+										data-size="large" data-userpic="false" data-onauth="onTelegramAuth(user)"
+										data-request-access="write"></script>
 							{% else %}
 								<p>
 									Compte lié avec l'id: <kbd>{{ notif.telegram_id }}</kbd><br>
@@ -155,7 +162,7 @@
 								Ils seront chargé à chaque page. (5 000 caractères maximum)<br>
 								<i class="fa-solid fa-warning text-warning"></i>Si le site est inaccessible suite à un
 								changement, accédez à
-								<a href="/reset">https://friends42.fr/reset</a>
+								<a href="/reset">https://friends.42paris.fr/reset</a>
 							</p>
 							<div class="form-check mb-3">
 								<input class="form-check-input" {{ 'checked' if theme.enabled == 1 else '' }} type="checkbox" value="" id="theme-enabled">
@@ -258,7 +265,7 @@
 {% block scripts %}
 	<script>
 		addEventListener("load", () => {
-			if (window.location.hostname !== "friends42.fr") {
+			if (window.location.hostname !== "friends.42paris.fr") {
 				if (document.getElementById('redirect')) {
 					document.getElementById('redirect').hidden = false;
 					document.getElementById('telegram-login-friends42bot').hidden = true;
@@ -432,6 +439,97 @@
 
 		document.addEventListener('DOMContentLoaded', () => {
 			kiosk_load();
+			checkExistingImport();
 		});
+	
+		function loadJSON() {
+			document.getElementById('fileInput').click();
+		}
+
+		function handleFile(event) {
+			const file = event.target.files[0];
+			if (!file) {
+				triggerToast("Aucun fichier sélectionné.", false);
+				return;
+			}
+			const reader = new FileReader();
+			reader.onload = function(e) {
+				try {
+					const jsonData = JSON.parse(e.target.result);
+					validateAndSendJSON(jsonData);
+				} catch (error) {
+					triggerToast("Le fichier n'est pas un JSON valide.", false);
+				}
+			};
+			reader.readAsText(file);
+		}
+
+		function validateAndSendJSON(data) {
+			fetch('/settings/import_json', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			})
+			.then(response => response.json().then(data => ({status: response.status, data})))
+			.then(({status, data}) => {
+				if (status === 202) {
+					const taskId = data.task_id;
+					sessionStorage.setItem('importTaskId', taskId);
+					startImportStatusPolling(taskId);
+				} else {
+					triggerToast(`Erreur: ${data.message}`, false);
+				}
+			})
+			.catch(error => {
+				console.error("Erreur lors de l'importation:", error);
+				triggerToast("Une erreur s'est produite lors de l'importation.", false);
+			});
+		}
+		let statusInterval = null;
+		function startImportStatusPolling(taskId) {
+			const importButton = document.getElementById('import-button');
+			const importStatus = document.getElementById('import-status');
+			
+			importButton.disabled = true;
+			importStatus.innerHTML = `<div class="alert alert-info">Importation en cours, cela peut prendre un certain temps.</div>`;
+			statusInterval = setInterval(() => {
+				fetch(`/settings/import_status/${taskId}`)
+					.then(res => res.json())
+					.then(statusData => {
+						console.log(`Statut de la tâche ${taskId}: ${statusData.status}`);
+						importStatus.innerHTML = `<div class="alert alert-info">Statut de l'importation: ${statusData.status}</div>`;
+						if (statusData.status === 'Terminé') {
+							triggerToast('Importation réussie!', true);
+							clearInterval(statusInterval);
+							statusInterval = null;
+							importButton.disabled = false;
+							sessionStorage.removeItem('importTaskId');
+							location.reload();
+						} else if (statusData.status.startsWith('Erreur') || statusData.status.startsWith('Annulée')) {
+							triggerToast(`Importation échouée: ${statusData.status}`, false);
+							clearInterval(statusInterval);
+							statusInterval = null;
+							importButton.disabled = false;
+							sessionStorage.removeItem('importTaskId');
+						}
+					})
+					.catch(error => {
+						console.error("Erreur lors de la vérification du statut:", error);
+						clearInterval(statusInterval);
+						statusInterval = null;
+						importButton.disabled = false;
+					});
+			}, 10000);
+		}
+
+		function checkExistingImport() {
+			const taskId = sessionStorage.getItem('importTaskId');
+			if (taskId) {
+				startImportStatusPolling(taskId);
+			}
+		}
+
 	</script>
 {% endblock %}

@@ -1,14 +1,15 @@
+# db.py
 import sqlite3
 import secrets
+import threading
 import base64
 import json
+from contextlib import contextmanager
 from routes.api_helpers import *
-
 
 def read_file(filename: str):
 	with open(filename, 'r') as f:
 		return f.read()
-
 
 def dict_factory(cursor, row) -> dict:
 	d = {}
@@ -16,16 +17,22 @@ def dict_factory(cursor, row) -> dict:
 		d[col[0]] = row[idx]
 	return d
 
-
 class Db:
+	_lock = threading.Lock()
 	cur: sqlite3.Cursor = None
-	con: sqlite3.Connection = None
 	is_closed = False
 
 	def __init__(self, filename="database.db"):
-		self.con = sqlite3.connect(filename)
-		self.con.row_factory = dict_factory
-		self.cur = self.con.cursor()
+		self.conn = sqlite3.connect(
+			filename,
+			check_same_thread=False,
+			isolation_level=None
+		)
+		self.conn.execute('PRAGMA foreign_keys = ON')
+		self.conn.execute('PRAGMA journal_mode = WAL')
+		self.conn.execute('PRAGMA synchronous = NORMAL')
+		self.conn.row_factory = dict_factory
+		self.cur = self.conn.cursor()
 
 	# Management
 	def initialize(self):
@@ -33,12 +40,24 @@ class Db:
 		self.close()
 
 	def commit(self):
-		self.con.commit()
+		if self.conn:
+			self.conn.commit()
 
 	def close(self):
-		self.commit()
-		self.con.close()
-		self.is_closed = True
+		if not self.is_closed and self.conn:
+			self.commit()
+			self.conn.close()
+			self.is_closed = True
+
+	@contextmanager
+	def transaction(self):
+		try:
+			self.cur.execute('BEGIN')
+			yield
+			self.commit()
+		except Exception:
+			self.conn.rollback()
+			raise
 
 	def __enter__(self):
 		return self
@@ -66,9 +85,9 @@ class Db:
 			campus = 1
 		self.cur.execute(
 			'INSERT OR REPLACE INTO USERS(id, name, image, image_medium, pool, active, campus) '
-			f"VALUES(?, ?, ?, ?, ?, {active}, {campus})",
+			f"VALUES(?, ?, ?, ?, ?, {active}, ?)",
 			[uid, user_data["login"], user_data["image"]["link"], user_data["image"]["versions"]["medium"],
-			 f"{user_data['pool_month']} {user_data['pool_year']}"])
+			 f"{user_data['pool_month']} {user_data['pool_year']}", campus])
 
 	def get_user(self, user_id):
 		query = self.cur.execute("SELECT id FROM USERS WHERE name = ?", [user_id])
@@ -156,7 +175,7 @@ class Db:
 		if who is None or add_id is None or add_id <= 0:
 			return False
 		self.cur.execute("INSERT OR REPLACE INTO FRIENDS(who, has) VALUES (?, ?)",
-		                 [who, add_id])
+						 [who, add_id])
 		self.commit()
 		return True
 
@@ -186,7 +205,7 @@ class Db:
 		if who is None or remove is None or remove <= 0:
 			return False
 		self.cur.execute("DELETE FROM FRIENDS WHERE who = ? AND has = ?", [who, remove])
-		self.con.commit()
+		self.commit()
 		return True
 
 	def set_relation(self, who: int, has: int, relation: int):
@@ -226,7 +245,7 @@ class Db:
 		if who is None:
 			return False
 		self.cur.execute('DELETE FROM COOKIES WHERE userid = ?', [who])
-		self.con.commit()
+		self.commit()
 		return True
 
 	def create_cookie(self, who: int, user_agent) -> str:
@@ -267,7 +286,7 @@ class Db:
 		if self.already_created(who, station):
 			return False
 		self.cur.execute('INSERT INTO DEAD_PC(issuer, station, issue) VALUES(?, ?, ?)',
-		                 [who, station, issue])
+						 [who, station, issue])
 		self.commit()
 		return True
 
@@ -302,7 +321,7 @@ class Db:
 
 	def get_user_profile(self, login, api=None):
 		query = self.cur.execute("SELECT * FROM USERS LEFT JOIN PROFILES ON PROFILES.userid = USERS.id WHERE name = ?",
-		                         [str(login)])
+								 [str(login)])
 		ret = query.fetchone()
 		if api and ret is None:
 			ret_status, ret_data = api.get_unknown_user(login)
@@ -327,7 +346,6 @@ class Db:
 		return query.fetchone() is not None
 
 	# Mates
-
 	def get_mate_by_id(self, mate_id):
 		req = self.cur.execute("SELECT * FROM MATES WHERE id = ?", [mate_id])
 		return req.fetchone()
@@ -338,12 +356,12 @@ class Db:
 
 	def get_mates(self, project: str, campus: int):
 		req = self.cur.execute("SELECT * FROM MATES WHERE project = ? AND campus = ? ORDER BY created DESC",
-		                       [project, campus])
+							   [project, campus])
 		return req.fetchall()
 
 	def get_latest_mates(self, campus: int):
 		req = self.cur.execute("SELECT * FROM MATES WHERE campus = ? ORDER BY created DESC LIMIT 15",
-		                       [campus])
+							   [campus])
 		return req.fetchall()
 
 	def delete_mate(self, project_id):
@@ -351,7 +369,7 @@ class Db:
 		self.commit()
 
 	def new_mate(self, creator: int, project: str, deadline: str, progress: int, quick_contacts: str, mates: str,
-	             description: str, contact: str, people: int) -> int:
+				 description: str, contact: str, people: int) -> int:
 		if len(quick_contacts) > 35 or len(mates) > 60 or len(description) > 1000 or len(contact) > 500 or len(
 				deadline) > 10:
 			return 1
@@ -372,7 +390,6 @@ class Db:
 		return 0
 
 	# Projects
-
 	def get_project_list(self, redis):
 		rds_ret = redis.get('db_project_list')
 		if rds_ret:
@@ -416,13 +433,13 @@ class Db:
 	def search_project_solo(self, keyword: str, solo: False) -> list:
 		keyword = f"%{keyword}%"
 		req = self.cur.execute("SELECT * FROM PROJECTS WHERE (name LIKE ? OR slug LIKE ?) AND solo = ?",
-		                       [keyword, keyword, solo])
+							   [keyword, keyword, solo])
 		return req.fetchall()
 
 	def search_project(self, keyword: str) -> list:
 		keyword = f"%{keyword}%"
 		req = self.cur.execute("SELECT * FROM PROJECTS WHERE name LIKE ? OR slug LIKE ?",
-		                       [keyword, keyword])
+							   [keyword, keyword])
 		return req.fetchall()
 
 	# Update process
@@ -509,11 +526,10 @@ class Db:
 		self.commit()
 
 	# Messages
-
 	def insert_message(self, author, dest, content, anon=False):
 		anon = 1 if anon else 0
 		self.cur.execute("INSERT INTO MESSAGES(author, dest, content, anonymous) VALUES(?, ?, ?, ?)",
-		                 [author, dest, content, anon])
+						 [author, dest, content, anon])
 		self.commit()
 
 	def get_messages(self, dest):
@@ -550,5 +566,5 @@ class Db:
 
 	def update_special_user(self, key: str, sp_tag: str, sp_tag_style: str, sp_author: str):
 		self.cur.execute("UPDATE SPECIAL_USERS SET sp_tag = ?, sp_tag_style = ?, sp_author = ? WHERE sp_send_key = ?",
-		                 [sp_tag, sp_tag_style, sp_author, key])
+						 [sp_tag, sp_tag_style, sp_author, key])
 		self.commit()

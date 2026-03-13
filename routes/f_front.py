@@ -1,37 +1,38 @@
 from globals import *
 from routes.helpers import *
-from flask import Blueprint, render_template, send_from_directory, make_response, redirect
+from flask import Blueprint, render_template, send_from_directory, request, jsonify
+from routes.tasks import import_queue, task_status, task_lock
 import maps.maps as maps
 import arrow
+import uuid
 
 app = Blueprint('front', __name__, template_folder='templates', static_folder='static')
-
 
 @app.route('/profile/<login>')
 @auth_required
 def profile(login, userid):
-	with Db() as db:
+	with Db("database.db") as db:
 		user = db.get_user_profile(login, api)
 		if user is None:
 			return '', 404
 		is_friend = db.is_friend(userid['userid'], user['id']) is not False
 		is_banned = db.is_banned(user['id'])
 		theme = db.get_theme(userid['userid'])
-		hide = is_shadow_banned(user['id'], userid['userid'], db)
-	if user is None:
-		return "", 404
-	if hide:
-		user['position'] = None
-	else:
-		user["position"] = get_position(user['name'])
-	if user['active'] and user['position'] is None and hide == False:
-		user["last_active"] = "depuis " + (
-			arrow.get(user['active'], "YYYY-MM-DD HH:mm:ss", tzinfo='UTC')).humanize(locale='FR', only_distance=True)
-	else:
-		user["last_active"] = ""
-	return render_template('profile.html', user=user, is_friend=is_friend, userid=userid, is_banned=is_banned,
-	                       theme=theme)
-
+		hide = db.is_shadow_banned(user['id'], userid['userid'])
+		
+		if hide:
+			user['position'] = None
+		else:
+			user["position"] = get_position(user['name'])
+		
+		if user['active'] and user['position'] is None and not hide:
+			user["last_active"] = "depuis " + (
+				arrow.get(user['active'], "YYYY-MM-DD HH:mm:ss", tzinfo='UTC')).humanize(locale='FR', only_distance=True)
+		else:
+			user["last_active"] = ""
+		
+		return render_template('profile.html', user=user, is_friend=is_friend, userid=userid, is_banned=is_banned,
+							   theme=theme)
 
 @app.route('/settings/', methods=['GET', 'POST'])
 @auth_required
@@ -48,7 +49,44 @@ def settings(userid):
 	if campus_id in maps.available:
 		kiosk_buildings = maps.available[campus_id].map['buildings']
 	return render_template('settings.html', user=user, notif=notif, theme=theme, cookies=cookies,
-	                       kiosk_buildings=kiosk_buildings)
+						   kiosk_buildings=kiosk_buildings)
+
+
+@app.route('/settings/import_json', methods=['POST'])
+@auth_required
+def import_settings_json(userid):
+	data = request.get_json()
+	if not data:
+		return jsonify({"message": "Aucune donnée JSON reçue."}), 400
+	user_data = data.get('user')
+	friends = data.get('friends')
+	theme = data.get('theme')
+	if not user_data:
+		return jsonify({"message": "Le champ 'user' est manquant."}), 400
+	required_user_fields = ['website', 'github', 'discord', 'recit']
+	for field in required_user_fields:
+		if field not in user_data:
+			return jsonify({"message": f"Le champ utilisateur '{field}' est manquant."}), 400
+	if not isinstance(friends, list):
+		return jsonify({"message": "Le champ 'friends' doit être un tableau."}), 400
+	if not theme or not isinstance(theme, dict):
+		return jsonify({"message": "Le champ 'theme' est manquant ou invalide."}), 400
+	task_id = str(uuid.uuid4())
+	with task_lock:
+		task_status[task_id] = 'En attente'
+	import_queue.put((task_id, data, userid))
+	return jsonify({
+		"message": "Importation en cours, cela peut prendre un certain temps.",
+		"task_id": task_id
+	}), 202
+
+
+@app.route('/settings/import_status/<task_id>', methods=['GET'])
+@auth_required
+def import_status(task_id, userid):
+	with task_lock:
+		status = task_status.get(task_id, 'Tâche inconnue')
+	return jsonify({"task_id": task_id, "status": status}), 200
 
 
 @app.route('/')
@@ -111,9 +149,9 @@ def index(userid):
 		 "places": maps.available_seats(cluster, campus_map[cluster], campus_map['exrypz'], location_map, issues_map)}
 		for cluster in campus_map['allowed']]
 	return render_template('index.html', map=campus_map[cluster_name], locations=location_map,
-	                       clusters=clusters_list, actual_cluster=cluster_name, issues_map=issues_map,
-	                       exrypz=campus_map['exrypz'], piscine=piscines, theme=theme, silent=silents,
-	                       focus=request.args.get('p'))
+						   clusters=clusters_list, actual_cluster=cluster_name, issues_map=issues_map,
+						   exrypz=campus_map['exrypz'], piscine=piscines, theme=theme, silent=silents,
+						   focus=request.args.get('p'))
 
 
 @app.route('/friends/')

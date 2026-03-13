@@ -5,7 +5,6 @@ import config
 from flask import request, redirect, make_response, g
 import json
 import requests
-import urllib.parse
 import hashlib
 import hmac
 import collections
@@ -21,10 +20,10 @@ def proxy_images(url: str, light=False):
 	if not url:
 		return "/static/img/unknown.jpg"
 	if light:
-		return url.replace('https://cdn.intra.42.fr/users/', 'https://friends42.fr/proxy/resize/70/')
+		return url.replace('https://cdn.intra.42.fr/users/', 'https://friends.42paris.fr/proxy/resize/70/')
 	if 'small' in url or 'medium' in url:
-		return url.replace('https://cdn.intra.42.fr/users/', 'https://friends42.fr/proxy/')
-	return url.replace('https://cdn.intra.42.fr/users/', 'https://friends42.fr/proxy/resize/512/')
+		return url.replace('https://cdn.intra.42.fr/users/', 'https://friends.42paris.fr/proxy/')
+	return url.replace('https://cdn.intra.42.fr/users/', 'https://friends.42paris.fr/proxy/resize/512/')
 
 
 def auth_required(function):
@@ -101,7 +100,7 @@ def verify_csrf(csrf: str):
 	if (time.time() - time.mktime(date)) > 1500:
 		return False
 	digest = hmac.new((config.secret + g.session).encode('ascii'), msg=msg.encode('ascii'),
-	                  digestmod=hashlib.sha256).hexdigest()
+					  digestmod=hashlib.sha256).hexdigest()
 	return hmac.compare_digest(digest, signature)
 
 
@@ -148,10 +147,10 @@ def send_raw_tg_dm(tg_id: int, msg: str):
 		if not token:
 			return print('Missing tg token')
 		req = requests.post(f'https://api.telegram.org/bot{token}/sendMessage',
-		                    {
-			                    'chat_id': tg_id,
-			                    'text': msg,
-		                    })
+							{
+								'chat_id': tg_id,
+								'text': msg,
+							})
 		if req.status_code != 200:
 			print('[Telegram] Request failed: ', req.status_code, req.text)
 	except requests.exceptions.RequestException as e:
