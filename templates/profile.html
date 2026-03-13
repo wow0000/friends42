@@ -41,11 +41,12 @@
 									Retirer {{ user.name }} des amis
 								</button>
 							{% endif %}
-							<button type="button" onclick="newTab('https://profile.intra.42.fr/users/{{ user.name }}');"
-							        class="btn btn-sm btn-outline-secondary">
+							<a href="https://profile.intra.42.fr/users/{{ user.name }}"
+									class="btn btn-sm btn-outline-secondary"
+									target="_blank">
 								<i class="fa-solid fa-circle-info"></i>
 								Profil intra de {{ user.name }}
-							</button>
+							</a>
 
 						</span>
 					</div>
